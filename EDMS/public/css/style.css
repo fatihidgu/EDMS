@@ -53,6 +53,16 @@ a{
     transition: .2s opacity;
     font-size: 16px;
 }
+label{
+    color: #283792;
+    font-size: 14px;
+}
+select{
+    font-size: 14px;
+}
+text{
+    font-size: 14px;
+}
 
 a:hover, a:focus {
     text-decoration: none;
