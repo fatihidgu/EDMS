@@ -1,7 +1,7 @@
 	<!-- Navigation -->
 	<nav class="navbar navbar-container navbar-expand-lg navbar-dark fixed-top" id="mainNav">
 		<div class="container">
-			<a class="navbar-brand js-scroll-trigger" href="#page-top">EDMS</a>
+			<a class="navbar-brand js-scroll-trigger" href="/">EDMS</a>
 			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
 				data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
 				aria-label="Toggle navigation">
@@ -10,16 +10,25 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav text-uppercase ml-auto">
+					{{#unless links}}
 					<li class="nav-item">
-						<a class="nav-link" href="/registeredusers/register">Workflows</a>
+						<a class="nav-link" href="/registeredusers/register">Register</a>
 					</li>
+
 					<li class="nav-item">
-						<a class="nav-link" href="/registeredusers/login">Approved WorkflowFiles</a>
+						<a class="nav-link" href="/registeredusers/login">Login</a>
 					</li>
+					{{/unless}}
+					{{#if links}}
 					<li class="nav-item">
-						<a class="nav-link" href="blog.html">Work Units</a>
+						<a class="nav-link" href="/registeredusers/logout">Logout</a>
+					</li>
+										<li class="nav-item">
+						 <a class="nav-link" href="#" aria-disabled="true">{{usernameye}}</a>
 					</li>
 					
+					{{/if}}
+
 				</ul>
 				
 			</div>

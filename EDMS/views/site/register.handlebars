@@ -1,56 +1,120 @@
-
 <!--==========================
     INSIDE HERO SECTION Section
-============================-->	
-<section class="page-image page-image-contact md-padding">
-    <h1 class="text-white text-center">REGISTER</h1>
+============================-->
+<section class="page-image page-image-about md-padding">
+	<h1 class="text-white text-center">REGISTER</h1>
 </section>
-    
-    <!--==========================
+
+<!--==========================
     Contact Section
 ============================-->
 <section id="contact" class="md-padding">
 	<div class="container">
 
-			<div class="row text-center">
-				<div class="col-md-4 offset-md-4">
-					<div class="section-header">
-						<h2 class="title">Register</h2>
-					</div>
+		<div class="row text-center">
+			<div class="col-md-4 offset-md-4">
+				<div class="section-header">
+					<h2 class="title">Register</h2>
 				</div>
 			</div>
+		</div>
 
 		<div class="row">
 			<div class="col-lg-12">
+				{{#if sessionFlash.message}}
+				<div class="{{sessionFlash.type}}">
+					{{sessionFlash.message}}
+				</div>
+				{{/if}}
 				<form action="/registeredusers/register" method="POST">
 					<div class="row">
 						<div class="offset-2 col-md-8">
-                            <div class="form-group">
-								<input class="form-control" name="name" type="text" placeholder="Name *" required="required" data-validation-required-message="Please enter your name.">
-								<p class="help-block text-danger"></p>
-							</div>
+
+							{{#if User}}
 							<div class="form-group">
-								<input class="form-control" name="surname" type="text" placeholder="Surname *" required="required" data-validation-required-message="Please enter your surname.">
+								<input class="form-control" name="name" type="text" placeholder="Name *"
+									value="{{User.name}}" required="required"
+									data-validation-required-message="Please enter your name.">
 								<p class="help-block text-danger"></p>
 							</div>
+							{{/if}}
+
+							{{#unless User}}
 							<div class="form-group">
-								<input class="form-control" name="email" type="email" placeholder="Email *" required="required" data-validation-required-message="Please enter your email.">
+								<input class="form-control" name="name" type="text" placeholder="Name *"
+									required="required" data-validation-required-message="Please enter your name.">
 								<p class="help-block text-danger"></p>
 							</div>
+							{{/unless }}
+
+							{{#if User}}
 							<div class="form-group">
-								<input class="form-control" name="password" type="password" placeholder="Password *" required="required" data-validation-required-message="Please enter your password.">
+								<input class="form-control" name="surname" type="text" placeholder="Surname *" value="{{User.surname}}"
+									required="required" data-validation-required-message="Please enter your surname.">
 								<p class="help-block text-danger"></p>
-							</div>
+							</div> {{/if}}
+
+							{{#unless User}}
 							<div class="form-group">
-								<input class="form-control" name="password2" type="password" placeholder="Password again *" required="required" data-validation-required-message="Please enter your password again correctly.">
+								<input class="form-control" name="surname" type="text" placeholder="Surname *" value=""
+									required="required" data-validation-required-message="Please enter your surname.">
+								<p class="help-block text-danger"></p>
+							</div>{{/unless }}
+
+							{{#if User}}
+							<div class="form-group">
+								<input class="form-control" name="email" type="email" placeholder="Email *" value="{{User.email}}"
+									required="required" data-validation-required-message="Please enter your email.">
+								<p class="help-block text-danger"></p>
+							</div> {{/if}}
+
+							{{#unless User}}
+							<div class="form-group">
+								<input class="form-control" name="email" type="email" placeholder="Email *" value=""
+									required="required" data-validation-required-message="Please enter your email.">
+								<p class="help-block text-danger"></p>
+							</div>{{/unless }}
+
+							{{#if User}}
+							<div class="form-group">
+								<input class="form-control" name="password" type="password" placeholder="Password *"
+									value="{{User.password}}" required="required"
+									data-validation-required-message="Please enter your password.">
+								<p class="help-block text-danger"></p>
+							</div> {{/if}}
+
+							{{#unless User}}
+							<div class="form-group">
+								<input class="form-control" name="password" type="password" placeholder="Password *"
+									value="" required="required"
+									data-validation-required-message="Please enter your password.">
+								<p class="help-block text-danger"></p>
+							</div>{{/unless }}
+
+							{{#if User}}
+							<div class="form-group">
+								<input class="form-control" name="password2" type="password" value="{{User.password2}}"
+									placeholder="Password again *" required="required"
+									data-validation-required-message="Please enter your password again correctly.">
+								<p class="help-block text-danger"></p>
+							</div> {{/if}}
+
+							{{#unless User}}
+							<div class="form-group">
+								<input class="form-control" name="password2" type="password" value=""
+									placeholder="Password again *" required="required"
+									data-validation-required-message="Please enter your password again correctly.">
 								<p class="help-block text-danger"></p>
 							</div>
+							{{/unless }}
 						</div>
-						
+
 						<div class="clearfix"></div>
 						<div class="col-lg-12 text-center">
 							<div id="success"></div>
 							<button id="sendRegisterButton" class="main-btn" type="submit">Register</button>
+
+
 						</div>
 					</div>
 				</form>
@@ -59,5 +123,3 @@
 
 	</div>
 </section>
-
-	
