@@ -37,7 +37,7 @@ app.use(expressSession({
 //mesaj
 app.use((req,res,next)=>{
   res.locals.sessionFlash=req.session.sessionFlash
-  console.log(res.locals.sessionFlash)
+  //console.log(res.locals.sessionFlash)
   delete req.session.sessionFlash
   next()
 })
