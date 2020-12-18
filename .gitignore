@@ -1,2 +1,2 @@
-node_modules
-EDMS/EDMS/uploads/*
+node_modules/
+EDMS/EDMS/uploads/files/.*
