@@ -10,7 +10,6 @@ const app = express()
 const hostname = '127.0.0.1'
 const port = 3000
 
-
 mongoose.connect("mongodb://127.0.0.1/EDMS", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -59,7 +58,7 @@ app.use((req,res,next)=>{
     links:false
    }
  }
- 
+
  next()
  })
 })
@@ -73,11 +72,12 @@ app.use(bodyParser.json())
 
 const main = require('./routes/main')
 const users = require('./routes/registeredusers')
+const createfile = require('./routes/createfile')
 
 app.use('/',main)
 app.use('/registeredusers',users)
+app.use('/',createfile)
 
 app.listen(port, hostname,()=>{
     console.log( 'Server Çalışıyor, http://'+hostname+":"+port+"/")
 })
-
