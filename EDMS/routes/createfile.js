@@ -50,9 +50,12 @@ router.post('/upload', upload.single('file'), (req, res) => {
   const work_unit = req.body.work_unit;
   const work_process = req.body.workflow;
   var fileNo = file_type + "-" + main_process + "-" + work_unit + "-" + work_process + "-" + "0";
+  const ext = path.extname(req.file.path);
+  var filename=fileNo+ext
+  
   //start
   const oldFilePath = req.file.path;
-  const newFilePath = path.join(__dirname, '..', 'uploads', 'files', fileNo);
+  const newFilePath = path.join(__dirname, '..', 'uploads', 'files', filename);
   fs.rename(oldFilePath, newFilePath, function(err) {
     if (err) {
       console.log(err);
@@ -74,9 +77,12 @@ router.post('/upload', upload.single('file'), (req, res) => {
   fileObject.save();
 
   //end
-
-  res.render('site/createfile');
-
+  req.session.sessionFlash={
+    type:'alert alert-success',
+    message:'Your file created Successfully.'
+}
+  res.render('site/onchange',{sessionFlash: req.session.sessionFlash});
+  
 });
 
 function oneFileUpdate(filter, update) {
@@ -124,9 +130,11 @@ router.post('/delete', (req, res) => {
         fileAttributes.approvalStatus = 5;
         const oldFilePath = choosenFile.filePath;
         console.log("old",oldFilePath);
-        const fileName = choosenFile.fileNo +"("+todayStrDate+")";
+        const fileName = choosenFile.fileNo +"("+todayStrDate+")"+".pdf";
         const newFilePath = path.join(__dirname, '..', 'uploads', 'oldFiles', fileName);
         console.log("ne",newFilePath);
+        fileAttributes.approvalStatus = choosenFile.approvalStatus;
+        fileAttributes.filePath = newFilePath
         oneFileUpdate(filterId, fileAttributes);
         fs.rename(oldFilePath, newFilePath, function(err) {
           if (err) {
@@ -134,10 +142,13 @@ router.post('/delete', (req, res) => {
           }
         });
       } else {
-        oneFileUpdate(filterId, fileAttributes);
+        
         const oldFilePath = choosenFile.filePath;
-        const fileName = choosenFile.fileNo + fileAttributes.deleteDate;
+        const fileName = choosenFile.fileNo + fileAttributes.deleteDate+".pdf";
         const newFilePath = path.join(__dirname, '..', 'uploads', 'oldFiles', fileName);
+        fileAttributes.approvalStatus = choosenFile.approvalStatus;
+        fileAttributes.filePath = newFilePath
+        oneFileUpdate(filterId, fileAttributes);
         fs.rename(oldFilePath, newFilePath, function(err) {
           if (err) {
             console.log(err);

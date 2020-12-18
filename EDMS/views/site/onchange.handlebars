@@ -9,7 +9,11 @@
 
 <section id="aboutus" class="md-padding">
     <div class="container">
-
+        {{#if sessionFlash.message}}
+        <div class="{{sessionFlash.type}}">
+            {{sessionFlash.message}}
+        </div>
+        {{/if}}
         <div class="container">
             <div class="row">
                 <div class="col-md-2 text-left"></div>
@@ -77,9 +81,10 @@
                                     aria-labelledby="nav-home-tab">
                                     <div class="table-responsive">
                                         <div>
-                                          <form action="/createfile" method="get">
-                                            <button type="submit" class="btn" style="background:none">Add New File</button>
-                                          </form>
+                                            <form action="/createfile" method="get">
+                                                <button type="submit" class="btn" style="background:none">Add New
+                                                    File</button>
+                                            </form>
                                         </div>
                                         <table class="table table-hover" cellspacing="0">
                                             <thead>
@@ -109,13 +114,15 @@
                                                             <span class="material-icons">
                                                                 visibility
                                                             </span> </a>
-                                                            <form action="/createfile/delete" method="post">
-                                                              <button type="submit" class="btn" style="background:none"><i class="fa fa-ban" value="1"></i></button>
-                                                            </form>
-                                                            <form action="/createfile/upload" method="post">
-                                                              <button type="submit" class="btn" style="background:none"><i class="fa fa-upload" value="1"></i></button>
-                                                            </form>
-                                                           </td>
+                                                        <form action="/delete" method="post">
+                                                            <button type="submit" class="btn" style="background:none"><i
+                                                                    class="fa fa-ban" value="1"></i></button>
+                                                        </form>
+                                                        <form action="#" method="post">
+                                                            <button type="submit" class="btn" style="background:none"><i
+                                                                    class="fa fa-upload" value="1"></i></button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
