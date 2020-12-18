@@ -51,11 +51,12 @@ router.post('/upload', upload.single('file'), (req, res) => {
   const work_process = req.body.workflow;
   var fileNo = file_type + "-" + main_process + "-" + work_unit + "-" + work_process + "-" + "0";
   const ext = path.extname(req.file.path);
-  var filename=fileNo+ext
+  var filen=fileNo+ext
   
   //start
   const oldFilePath = req.file.path;
-  const newFilePath = path.join(__dirname, '..', 'uploads', 'files', filename);
+  
+  const newFilePath = path.join(__dirname, '..', 'uploads', 'files', filen);
   fs.rename(oldFilePath, newFilePath, function(err) {
     if (err) {
       console.log(err);
