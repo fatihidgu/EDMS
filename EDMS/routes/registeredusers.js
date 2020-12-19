@@ -17,7 +17,9 @@ router.post('/register',(req,res)=>{
                     type:'alert alert-success',
                     message:'Registered Successfully'
                 }
-             res.redirect('/registeredusers/login')
+            console.log("Burası çıkış",res.locals.sessionFlash)    
+            console.log("Buraadn dönüyorum",req.session.sessionFlash)
+            res.redirect('/registeredusers/login')
             }
             else{
                 console.log('email unieq değil')
@@ -38,7 +40,7 @@ router.post('/register',(req,res)=>{
             message:'Passwords are not match'
         }
         res.render('site/register', {User:req.body,sessionFlash: req.session.sessionFlash})
-        delete req.session.sessionFlash
+       delete req.session.sessionFlash
     }
 }
 )
@@ -65,8 +67,8 @@ router.post('/login', (req, res) => {
                     type:'alert alert-success',
                     message:'Password is wrong'
                 }
-                res.render('site/login', {User:req.body,sessionFlash: req.session.sessionFlash})
-                delete req.session.sessionFlash
+               res.render('site/login', {User:req.body,sessionFlash: req.session.sessionFlash})
+               delete req.session.sessionFlash
             }
         }else{
             console.log('kullanıcı yokk')
@@ -74,8 +76,8 @@ router.post('/login', (req, res) => {
                 type:'alert alert-success',
                 message:'There is no user with that e-mail.'
             }
-            res.render('site/login', {User:req.body,sessionFlash: req.session.sessionFlash})
-            delete req.session.sessionFlash
+           res.render('site/login', {User:req.body,sessionFlash: req.session.sessionFlash})
+           delete req.session.sessionFlash
         }
     })
 })

@@ -82,7 +82,7 @@ router.post('/upload', upload.single('file'), (req, res) => {
     type:'alert alert-success',
     message:'Your file created Successfully.'
 }
-  res.render('site/onchange',{sessionFlash: req.session.sessionFlash});
+ return res.redirect('/onchangefiles');
   
 });
 
@@ -121,7 +121,7 @@ router.post('/delete', (req, res) => {
   File.findOne(filterId, function(err, choosenFile) {
     if (err) {
       console.log("File Approval Status Can Not Be Accessed", err);
-      res.render('site/onchange');
+      res.rendder('site/onchange');
     } else {
 
       fileAttributes.approvalStatus = choosenFile.approvalStatus;
@@ -171,7 +171,11 @@ router.post('/delete', (req, res) => {
   //   console.log(files);
   // });
   console.log("Bitti");
-  res.render('site/onchange');
+  req.session.sessionFlash={
+    type:'alert alert-success',
+    message:'Your file deleted successfully.'
+}
+ return res.redirect('/onchangefiles');
 });
 
 
@@ -180,8 +184,12 @@ router.post('/delete', (req, res) => {
 //   res.render('site/createfile');
 // });
 router.get('/createfile', (req, res) => {
-  console.log("hello fatih");
+  if(req.session.userId){
   res.render('site/createfile');
+}
+else{
+  res.redirect('/registeredusers/login')
+}
 });
 
 module.exports = router

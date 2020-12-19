@@ -139,16 +139,18 @@
                                                     <th>Options</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            
+                                                {{#each wff}}
                                                 <tr>
-                                                    <td>SPRS-İK-3-3-0</td>
-                                                    <td>02-10-2020</td>
-                                                    <td style="text-align:center"><a href="#">
+                                                    <td>{{fileNo}}</td>
+                                                    <td>{{creatDate}}</td>
+                                                    <td style="text-align:center"><a href="#" target="_blank" >
                                                             <span class="material-icons">
                                                                 visibility
                                                             </span> </a></td>
                                                 </tr>
-                                            </tbody>
+                                                 {{/each}} 
+                                           
                                         </table>
                                     </div>
                                 </div>

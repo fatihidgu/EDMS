@@ -34,17 +34,9 @@ app.use(expressSession({
   saveUninitialized: true,
   store: new mongoStore({ mongooseConnection: mongoose.connection })
 }))
-//mesaj
-app.use((req,res,next)=>{
-  res.locals.sessionFlash=req.session.sessionFlash
-  //console.log(res.locals.sessionFlash)
-  delete req.session.sessionFlash
-  next()
-})
 
 //middle ware
 app.use((req,res,next)=>{
-
   const {userId} = req.session
   User.findOne({_id:userId},(error,user)=>{
 
@@ -62,6 +54,13 @@ app.use((req,res,next)=>{
 
  next()
  })
+})
+
+//mesaj
+app.use((req,res,next)=>{
+  res.locals.sessionFlash=req.session.sessionFlash
+  delete req.session.sessionFlash
+  next()
 })
 
 app.engine('handlebars', hbsHelpers.engine);
