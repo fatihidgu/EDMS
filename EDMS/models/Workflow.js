@@ -5,7 +5,7 @@ const WorkflowSchema = new mongoose.Schema({
     workprocess:{type:String ,required:true},
     acad:{type:Number, required:true},
     //mainprocessid:{type:number, required:true},
-    creatorid:{type: Number, required:true},
+    creatorid:{type: String, required:true},
     creationdate:{type:Date, default:Date.now, require:true},
     deletedate:{type:Date}
 })

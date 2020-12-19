@@ -42,13 +42,15 @@ app.use((req,res,next)=>{
 
  if(userId){
    res.locals ={
+     userid:userId,
      links:true,
-     usernameye: user.name
+     usernameye: user.name+" "+user.surname
    }
 
  }else{
    res.locals ={
-    links:false
+    links:false,
+    userid:null
    }
  }
 

@@ -14,6 +14,8 @@
             {{sessionFlash.message}}
         </div>
         {{/if}}
+
+        {{#unless create}}
         <div class="container">
             <div class="row">
                 <div class="col-md-2 text-left"></div>
@@ -50,7 +52,47 @@
                     </form>
                 </div>
             </div>
+        {{/unless}}
 
+        {{#if create}}
+ <div class="container">
+            <div class="row">
+                <div class="col-md-2 text-left"></div>
+                <div class="col-md-4 text-left">
+                    <label id="" for="">Work Process:</label>
+                    <br><br>
+                    <label for="">Academic/Administrative:</label>
+                    <br><br>
+                    <label for="">Related Work Units:</label>
+                    <br>
+                    <label for="">Category:</label>
+                    <br>
+                </div>
+                <div class="col-md-6">
+                    <form action="/onchangefiles" method="POST">
+                        <input type="text"  name="workprocess"><br><br>
+                        <select size="1px" name="acad">
+                            <option value="1">Academic</option>
+                            <option value="0">Administrative</option>
+                            
+                        </select><br><br>
+                        <select name="" id="" >
+                            <option value="">Human Resources</option>
+                            <option value=""></option>
+                            <option value=""></option>
+                            <option value=""></option>
+                        </select><br><br>
+                        <select name="mainprocessid">
+                            <option value="">Permit Processes</option>
+                            <option value=""></option>
+                            <option value=""></option>
+                            <option value=""></option>
+                        </select><br><br>
+                        <button type="submit" class="main-btn" type="submit">Create</button>
+                    </form>
+                </div>
+            </div>
+        {{/if}}
 
 
 
