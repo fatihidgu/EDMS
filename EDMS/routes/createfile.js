@@ -99,7 +99,7 @@ function oneFileUpdate(filter, update) {
 
 
 router.post('/delete', (req, res) => {
-  console.log("Sa ben geldidm")
+
   const filterId = {
     //_id: req.body.fileId
     fileId: 6
@@ -175,7 +175,7 @@ router.post('/delete', (req, res) => {
     type:'alert alert-success',
     message:'Your file deleted successfully.'
 }
-console.log("İşte burada")
+
  return res.redirect('/onchangefiles');
 });
 

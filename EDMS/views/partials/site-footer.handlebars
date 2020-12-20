@@ -1,35 +1,57 @@
 {{!-- <footer>
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<ul class="footer-follow" style="visibility: hidden;" >
-						<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-						<li><a href="#"><i class="fab fa-twitter"></i></a></li>
-						<li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
-						<li><a href="#"><i class="fab fa-instagram"></i></a></li>
-						<li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-						<li><a href="#"><i class="fab fa-youtube"></i></a></li>
-					</ul>
-					<div class="footer-copyrights">
-						<p>BY FATO&OGUZ</p>
-					</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<ul class="footer-follow" style="visibility: hidden;">
+					<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+					<li><a href="#"><i class="fab fa-twitter"></i></a></li>
+					<li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
+					<li><a href="#"><i class="fab fa-instagram"></i></a></li>
+					<li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+					<li><a href="#"><i class="fab fa-youtube"></i></a></li>
+				</ul>
+				<div class="footer-copyrights">
+					<p>BY FATO&OGUZ</p>
 				</div>
 			</div>
 		</div>
-	</footer> --}}
+	</div>
+</footer> --}}
 
 
-	
 
-	<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
-	<!-- Optional JavaScript -->
-	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-	<script src="/js/lightbox-plus-jquery.js"></script>
-	<script src="/js/owl.carousel.min.js"></script>
-	<script src="/js/main.js"></script>
+
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script>src="https://fontawesome.com/v4.7.0/icons"</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="/js/lightbox-plus-jquery.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/js/main.js"></script>
+<script>
+	function SwitchButtons(buttonId) {
+		var hideBtn, showBtn;
+		if (buttonId == 'button1') {
+			showBtn = 'button2';
+			hideBtn = 'button1';
+			
+		} else {
+			showBtn = 'button1';
+			hideBtn = 'button2';
+			//document.getElementById("workproc").disabled=ture
+		}
+		
+		//I don't have your menus, so this is commented out.  just uncomment for your usage
+		// document.getElementById(menuToggle).toggle(); //step 1: toggle menu
+		document.getElementById(hideBtn).style.display = 'none'; //step 2 :additional feature hide button
+		document.getElementById(showBtn).style.display = ''; //step 3:additional feature show button
+		document.getElementById("workproc").disabled=false
+
+	}
+</script>
 </body>
 
 </html>

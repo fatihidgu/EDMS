@@ -12,7 +12,7 @@ router.post('/register',(req,res)=>{
     if(password==password2){
         User.create(req.body, (error,user)=>{
             if(error==null){
-                User.update({password})
+                //User.update({password})
                 req.session.sessionFlash={
                     type:'alert alert-success',
                     message:'Registered Successfully'
