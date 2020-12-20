@@ -17,12 +17,12 @@ router.post('/register',(req,res)=>{
                     type:'alert alert-success',
                     message:'Registered Successfully'
                 }
-            console.log("Burası çıkış",res.locals.sessionFlash)    
-            console.log("Buraadn dönüyorum",req.session.sessionFlash)
+            ////console.log("Burası çıkış",res.locals.sessionFlash)    
+            ////console.log("Buraadn dönüyorum",req.session.sessionFlash)
             res.redirect('/registeredusers/login')
             }
             else{
-                console.log('email unieq değil')
+                ////console.log('email unieq değil')
                 req.session.sessionFlash={
                     type:'alert alert-success',
                     message:'Email is not unique'
@@ -34,7 +34,7 @@ router.post('/register',(req,res)=>{
         })
     }
     else{
-        console.log('passwordlar uyuşmuyor')
+        ////console.log('passwordlar uyuşmuyor')
         req.session.sessionFlash={
             type:'alert alert-success',
             message:'Passwords are not match'
@@ -56,13 +56,13 @@ router.post('/login', (req, res) => {
         if(user){
             if(user.password==password){
             // User session
-            console.log(user._id)
+            //console.log(user._id)
             req.session.userId = user._id
             res.redirect('/')
-            console.log('giriş yapıldı')
+            //console.log('giriş yapıldı')
             }
             else{
-                console.log('şifre yanlış')
+                //console.log('şifre yanlış')
                 req.session.sessionFlash={
                     type:'alert alert-success',
                     message:'Password is wrong'
@@ -71,7 +71,7 @@ router.post('/login', (req, res) => {
                delete req.session.sessionFlash
             }
         }else{
-            console.log('kullanıcı yokk')
+            //console.log('kullanıcı yokk')
             req.session.sessionFlash={
                 type:'alert alert-success',
                 message:'There is no user with that e-mail.'

@@ -9,9 +9,9 @@ const fs = require('fs');
 //Create file
 var filePath = path.join(__dirname, '..', 'uploads');
 if (fs.existsSync(('../EDMS/uploads/' + 'files/0.pdf'))) {
-  console.log('exist');
+  //console.log('exist');
 } else {
-  console.log("not existy");
+  //console.log("not existy");
 }
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -22,14 +22,14 @@ const storage = multer.diskStorage({
     //const id = uuid();
     const fileN = path.basename(file.originalname, ext);
     var filePath = `files/${fileN}${ext}`;
-    console.log(filePath);
+    //console.log(filePath);
 
     while (fs.existsSync(('../EDMS/uploads/' + filePath))) {
       lastIndex = filePath.lastIndexOf(ext);
       filePath = filePath.slice(0, lastIndex);
       filePath = filePath + '(1)' + ext;
     }
-    console.log("multer end" + filePath);
+    //console.log("multer end" + filePath);
 
     cb(null, filePath);
   }
@@ -44,7 +44,7 @@ router.use(express.static('public'));
 router.use(express.static('uploads'));
 router.post('/upload', upload.single('file'), (req, res) => {
 
-  console.log(JSON.stringify(req.body));
+  //console.log(JSON.stringify(req.body));
   const file_type = req.body.file_type;
   const main_process = req.body.main_process;
   const work_unit = req.body.work_unit;
@@ -59,7 +59,7 @@ router.post('/upload', upload.single('file'), (req, res) => {
   const newFilePath = path.join(__dirname, '..', 'uploads', 'files', filen);
   fs.rename(oldFilePath, newFilePath, function(err) {
     if (err) {
-      console.log(err);
+      //console.log(err);
     }
   });
   const fileObject = new File({
@@ -91,7 +91,7 @@ function oneFileUpdate(filter, update) {
     new: true
   }, (err, doc) => {
     if (err) {
-      console.log("Something wrong when updating data!");
+      //console.log("Something wrong when updating data!");
     }
     //console.log(doc);
   });
@@ -99,7 +99,7 @@ function oneFileUpdate(filter, update) {
 
 
 router.post('/delete', (req, res) => {
-
+  console.log("Sa ben geldidm")
   const filterId = {
     //_id: req.body.fileId
     fileId: 6
@@ -116,11 +116,11 @@ router.post('/delete', (req, res) => {
   };
   var update = {};
 
-  console.log("*******");
+  //console.log("*******");
 
   File.findOne(filterId, function(err, choosenFile) {
     if (err) {
-      console.log("File Approval Status Can Not Be Accessed", err);
+      //console.log("File Approval Status Can Not Be Accessed", err);
       res.rendder('site/onchange');
     } else {
 
@@ -130,16 +130,16 @@ router.post('/delete', (req, res) => {
       if (fileAttributes.approvalStatus == 0) {
         fileAttributes.approvalStatus = 5;
         const oldFilePath = choosenFile.filePath;
-        console.log("old",oldFilePath);
+        //console.log("old",oldFilePath);
         const fileName = choosenFile.fileNo +"("+todayStrDate+")"+".pdf";
         const newFilePath = path.join(__dirname, '..', 'uploads', 'oldFiles', fileName);
-        console.log("ne",newFilePath);
+        //console.log("ne",newFilePath);
         fileAttributes.approvalStatus = choosenFile.approvalStatus;
         fileAttributes.filePath = newFilePath
         oneFileUpdate(filterId, fileAttributes);
         fs.rename(oldFilePath, newFilePath, function(err) {
           if (err) {
-            console.log(err);
+            //console.log(err);
           }
         });
       } else {
@@ -152,7 +152,7 @@ router.post('/delete', (req, res) => {
         oneFileUpdate(filterId, fileAttributes);
         fs.rename(oldFilePath, newFilePath, function(err) {
           if (err) {
-            console.log(err);
+            //console.log(err);
           }
         });
       }
@@ -164,17 +164,18 @@ router.post('/delete', (req, res) => {
   //   fileId: req.body.fileId
   // }).
   // then(files => {
-  //   console.log(files[0]);
+  //   //console.log(files[0]);
   //
   //   files[0].approvalStatus = files[0].approvalStatus + 1;
   //   files.save();
   //   console.log(files);
   // });
-  console.log("Bitti");
+  //console.log("Bitti");
   req.session.sessionFlash={
     type:'alert alert-success',
     message:'Your file deleted successfully.'
 }
+console.log("İşte burada")
  return res.redirect('/onchangefiles');
 });
 
@@ -183,7 +184,7 @@ router.post('/delete', (req, res) => {
 // router.get('/', (req, res) => {
 //   res.render('site/createfile');
 // });
-router.get('/createfile', (req, res) => {
+router.get('/create', (req, res) => {
   if(req.session.userId){
   res.render('site/createfile');
 }

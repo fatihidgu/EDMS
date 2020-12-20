@@ -75,10 +75,14 @@ app.use(bodyParser.json())
 const main = require('./routes/main')
 const users = require('./routes/registeredusers')
 const createfile = require('./routes/createfile')
+const workflows = require('./routes/workflows')
+const onchange = require('./routes/onchange')
 
 app.use('/',main)
 app.use('/registeredusers',users)
-app.use('/',createfile)
+app.use('/createfile',createfile)
+app.use('/workflows',workflows)
+app.use('/onchangefiles',onchange)
 
 app.listen(port, hostname,()=>{
     console.log( 'Server Çalışıyor, http://'+hostname+":"+port+"/")

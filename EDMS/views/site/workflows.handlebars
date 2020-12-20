@@ -62,7 +62,7 @@
 											{{#if (or
 											(eq creatorid ../userid )
 											)}}
-											<td style="text-align:center"><a href="/onchangefiles">
+											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
 													<span class="material-icons">
 														pan_tool
 													</span> </a></td>
@@ -83,7 +83,7 @@
 							<div class="tab-pane fade" id="nav-profile" role="tabpanel"
 								aria-labelledby="nav-profile-tab">
 								<div class="table-responsive">
-									<form action="/onchangefiles" method="POST">
+									<form action="/onchangefiles/addworkflow" method="POST">
 
 										<div class="form-group">
 											<input class="form-control" name="create" type="text" value="1"
@@ -115,10 +115,10 @@
 
 											<td> </td>
 											<td> </td>
-											<td style="text-align:center"><a href="/onchangefiles">
+											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
 													<span class="material-icons">
 														pan_tool
-													</span> </a></td>
+													</span> </a> </td>
 										</tr>
 										{{/each}}
 									</table>
