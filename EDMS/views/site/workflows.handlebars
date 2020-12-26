@@ -1,10 +1,20 @@
 <section class="page-image page-image-about md-padding">
-	<h1 class="text-white text-center">Workflows</h1>
+
 </section>
 
 <!--==========================
     ABOUTUS Section Bizim mekan
 ============================-->
+	<section id="contact"  style="background-color: #283792;;">
+	<div class="container">
+
+		<div class="row text-center" style="background-color: #283792;;">
+			<div class="col-md-12 ">
+			{{> site-alt-nav}}
+			</div>
+		</div>
+	</div>
+	</section>
 <section id="aboutus" class="md-padding">
 	<div class="container">
 
@@ -85,6 +95,7 @@
 							<div class="tab-pane fade" id="nav-profile" role="tabpanel"
 								aria-labelledby="nav-profile-tab">
 								<div class="table-responsive">
+									{{#if admin}}
 									<form action="/onchangefiles/addworkflow" method="POST">
 
 										<div class="form-group">
@@ -94,7 +105,7 @@
 										<button type="submit" class="btn" style="background:none">Create New Work Flow
 											Process</button>
 									</form>
-
+{{/if}}
 									<table class="table table-hover" cellspacing="0">
 										<thead>
 											<tr>

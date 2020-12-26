@@ -47,7 +47,7 @@
 
 		//I don't have your menus, so this is commented out.  just uncomment for your usage
 		// document.getElementById(menuToggle).toggle(); //step 1: toggle menu
-		alert(buttonId)
+
 		document.getElementById(hideBtn).style.display = 'none'; //step 2 :additional feature hide button
 		document.getElementById(showBtn).style.display = ''; //step 3:additional feature show button
 		document.getElementById("workproc").disabled = false
@@ -253,6 +253,59 @@
 		}
 
 	}
+</script>
+
+<script>
+
+
+
+	function addTable() {
+
+
+		var table = document.getElementById('demo1');
+		var tableBody = document.createElement('tbody');
+		table.appendChild(tableBody);
+		var tr = document.createElement('tr');
+		tableBody.appendChild(tr);
+		var td = document.createElement('td');
+		var td1 = document.createElement('td');
+		var td2 = document.createElement('td');
+		td.appendChild(document.createTextNode("Cell " + ","));
+		td1.appendChild(document.createTextNode("Cell " + ","));
+		td2.appendChild(document.createTextNode("Cell " + ","));
+		tr.appendChild(td);
+		tr.appendChild(td1);
+		tr.appendChild(td2);
+
+		//inputs
+
+
+		var form = document.getElementById('workform');
+		//id="workform"
+
+
+		// Create an input element for emailID 
+		var work = document.createElement("input");
+		work.setAttribute("type", "text");
+		work.setAttribute("name", "workprocess");
+		work.setAttribute("value", document.getElementById('workprocessid').value);
+		//ID.style.display = 'none';
+
+		// Create an input element for password 
+		var workno = document.createElement("input");
+		workno.setAttribute("type", "text");
+		workno.setAttribute("name", "workprocessno");
+		//PWD.style.display = 'none';
+		workno.setAttribute("value", document.getElementById('workprocessnoid').value);
+		// Append the email_ID input to the form 
+		form.append(work);
+		// Append the password to the form 
+		form.append(workno);
+		let sil1= document.getElementById('workprocessid')
+		sil1.setAttribute("value","");
+
+	}
+
 </script>
 
 </body>

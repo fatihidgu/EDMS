@@ -1,20 +1,32 @@
 const express = require('express')
 const router = express.Router()
-const User= require('../models/RegisteredUser')
-const Swal = require('sweetalert2')
+const User = require('../models/RegisteredUser')
+
+
 router.get('/', (req, res) => {
     res.redirect('/workflows/allworkflows')
 })
 
-router.get('/roles', (req, res) => {
+router.get('/mainprocess', (req, res) => {
+   
 
-    if (req.session.userId) {
-        User.find().lean().then(us=>{
-           // console.log(us)
-           
-            res.render('site/roles',{user:us})
+    res.render('site/mainprocess')
+})
+router.post('/mainprocess', (req, res) => {
+   console.log(req.body)
+
+    res.render('site/mainprocess')
+})
+
+router.get('/roles', (req, res) => {
+    console.log(res.locals.userid)
+    if (res.locals.userid && !res.locals.isblocked && res.locals.admin) {
+        User.find().lean().then(us => {
+            // console.log(us)
+
+            res.render('site/roles', { user: us })
         })
-      
+
     }
     else {
         res.redirect('/registeredusers/login')
@@ -22,20 +34,19 @@ router.get('/roles', (req, res) => {
 })
 
 router.get('/ornek', (req, res) => {
-        User.find().lean().then(us=>{
-            res.send(({user:us}))
-        })
+    User.find().lean().then(us => {
+        res.send(({ user: us }))
+    })
 })
 
 router.post('/roles', (req, res) => {
-console.log(req.body)
-User.findOneAndUpdate({email:req.body.email},{...req.body}).then(us=>{
-    //console.log("Denedik bakak",us)
-})
+    User.findOneAndUpdate({ email: req.body.email }, { ...req.body }).then(us => {
+        //console.log("Denedik bakak",us)
+    })
 
 
 
-res.redirect('/roles')
+    res.redirect('/roles')
 })
 
 router.get('/editworkunit', (req, res) => {

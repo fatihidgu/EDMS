@@ -3,8 +3,8 @@ const router = express.Router()
 const Workflow = require('../models/Workflow')
 
 router.get('/allworkflows', (req, res) => {
-    ////console.log(req.session.userId)
-    if (req.session.userId) {
+    
+    if (res.locals.userid) {
         //console.log(req.session)
         Workflow.find({ deletedate: null }).lean().then(workflows => {
             //console.log(workflows.acad)
