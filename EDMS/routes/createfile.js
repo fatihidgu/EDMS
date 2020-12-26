@@ -69,6 +69,7 @@ const upload = multer({
 
 // UPLOAD FILE
 router.post('/upload', upload.single('file'), async (req, res) => {
+  console.log("upload");
   console.log(req.body);
   const file_type = await WorkflowFileType.findById(req.body.file_type_id).exec();
   const work_unit = await WorkUnit.findById(req.body.work_unit_id).exec();
@@ -115,14 +116,16 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     type: 'alert alert-success',
     message: 'Your file created Successfully.'
   }
-  return res.redirect('/onchangefiles');
+  const address = '/onchangefiles/'+work_process._id;
+  return res.redirect(address);
 
 });
 
 // DELETE FILE
 router.post('/delete', (req, res) => {
-  file_id = req.body.fileId;
+  file_id = req.body.file_id;
   console.log("delete",file_id)
+
   const filterId = {
     _id: file_id
   };
@@ -139,6 +142,7 @@ router.post('/delete', (req, res) => {
     deleteDate: todayDate
   };
   var update = {};
+  var a = []
   File.findOne(filterId, function(err, choosenFile) {
     if (err) {
       //console.log("File Approval Status Can Not Be Accessed", err);
@@ -148,8 +152,9 @@ router.post('/delete', (req, res) => {
       fileAttributes.approvalStatus = choosenFile.approvalStatus;
       fileAttributes.filePath = choosenFile.filePath;
       const ext = path.extname(choosenFile.filePath);
+      a.push({_id:choosenFile._id});
 
-      if (fileAttributes.approvalStatus == 0) {
+      if (fileAttributes.approvalStatus == 4) {
         fileAttributes.approvalStatus = 5;
         const oldFilePath = choosenFile.filePath;
 
@@ -165,6 +170,8 @@ router.post('/delete', (req, res) => {
             //console.log(err);
           }
         });
+        const address = '/onchangefiles/' + choosenFile.workflowId;
+        return res.redirect(address);
       } else {
         const oldFilePath = choosenFile.filePath;
         const fileName = choosenFile.fileNo + fileAttributes.deleteDate + ext;
@@ -177,6 +184,8 @@ router.post('/delete', (req, res) => {
             console.log(err);
           }
         });
+        const address = '/onchangefiles/' + choosenFile.workflowId;
+        return res.redirect(address);
       }
     }
   });
@@ -185,8 +194,9 @@ router.post('/delete', (req, res) => {
     type: 'alert alert-success',
     message: 'Your file deleted successfully.'
   }
-
-  return res.redirect('/onchangefiles');
+  console.log("a",a);
+  //const address = '/onchangefiles/' + a._id;
+  //return res.redirect(address);
 });
 
 // DOWNLOAD FILE
@@ -212,6 +222,7 @@ router.post('/download', (req, res) => {
 
 //UPDATE File
 router.post('/update', upload.single('file'), (req, res) => {
+  console.log("update")
   //const ext = path.extname(req.file.path);
   //const oldFilePath = req.file.path;
   console.log("update",req.body);
@@ -266,6 +277,8 @@ router.post('/update', upload.single('file'), (req, res) => {
         });
         fileObject.save();
         console.log("saved");
+        const address = '/onchangefiles/'+fileObject.workflowId;
+        return res.redirect(address);
 
       } else {
         const newFileCurrentPath = req.file.path;
@@ -283,6 +296,15 @@ router.post('/update', upload.single('file'), (req, res) => {
           filePath: newFileGoesTo
         });
         File.findByIdAndUpdate({_id:id},update).exec()
+        console.log("*-*-");
+
+
+        req.session.sessionFlash = {
+          type: 'alert alert-success',
+          message: 'Your file updated Successfully.'
+        }
+        const address = '/onchangefiles/'+update.workflowId;
+        return res.redirect(address);
 
 
       }
@@ -294,7 +316,8 @@ router.post('/update', upload.single('file'), (req, res) => {
     type: 'alert alert-success',
     message: 'Your file created Successfully.'
   }
-  return res.redirect('site/onchange');
+  //return res.render('site/workflows');
+  //return res.redirect('onchangefiles/'+update.workflowId);
 
 });
 //Create file
@@ -345,7 +368,7 @@ router.get('/create/:workflowId', (req, res) => {
                 });
               });
 
-              return res.render('./site/onchange', {
+              return res.render('site/createfile', {
                 main_process_id: main_process_id,
                 main_process_name: main_process_name,
                 work_unit: work_unit,
@@ -372,7 +395,6 @@ router.get('/upload/:fileId', async (req, res) => {
     const mainProcess = await MainProcess.findById(workflow.mainProcessId).exec();
     const workUnit = await WorkUnit.findById(file.workUnitId).exec();
     const file_type = await WorkflowFileType.findById(file.workflowFileTypeId).exec();
-    console.log(file_type,"h")
 
     return res.render('site/createfile', {
       fileId: fileId,

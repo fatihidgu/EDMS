@@ -21,7 +21,7 @@
           <h4 class="d-flex justify-content-center">{{fileNo}}</h4>
           <br><br>
 
-            <form action="/createfile/update" method="post" enctype="multipart/form-data">
+            <form action="/createfile/update" method="POST" enctype="multipart/form-data">
               <input type="hidden" name="fileId" value="{{fileId}}">
               <label class="col-5 col-sm-5" id="" for="">File Type:</label>
               <select class="col-5 col-sm-5" size="1px" name="file_type" id="" disabled>
@@ -55,7 +55,7 @@
 <!--file upload-->
 
           {{#unless fileId}}
-            <form action="/createfile/upload" method="post" enctype="multipart/form-data">
+            <form action="/createfile/upload" method="POST" enctype="multipart/form-data">
               <label class="col-5 col-sm-5" id="" for="" required>File Type:</label>
               <select class="col-5 col-sm-5" size="1px" name="file_type_id" id="">
                 {{#each file_type}}
