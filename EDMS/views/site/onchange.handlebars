@@ -8,97 +8,54 @@
 
 
 <section id="aboutus" class="md-padding">
-    <div class="container">
-        {{#if sessionFlash.message}}
-        <div class="{{sessionFlash.type}}">
-            {{sessionFlash.message}}
+  <div class="container">
+    {{#if sessionFlash.message}}
+      <div class="{{sessionFlash.type}}">
+        {{sessionFlash.message}}
+      </div>
+    {{/if}}
+
+    {{#unless create}}
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2 text-left"></div>
+          <div class="col-md-4 text-left">
+            <label id="" for="">Work Process:</label>
+            <br><br>
+            <label for="">Academic/Administrative:</label>
+            <br><br>
+            <label for="">Related Work Units:</label>
+            <br>
+            <label for="">Category:</label>
+            <br>
+          </div>
+          <div class="col-md-6">
+            <form action="" method="POST">
+              <input type="text" id="workproc" name="workprocess" value="{{workf.workprocessName}}" disabled><br><br>
+              {{#if workf.acad}}
+                <select size="1px" disabled>
+                  <option>Academic </option>
+                </select>
+              {{/if}}
+              {{#unless workf.acad}}
+                <select size="1px" disabled>
+                  <option>Administrative </option>
+                </select>
+              {{/unless}}<br><br>
+              <select disabled>
+                <option value="">Human Resources</option>
+              </select><br><br>
+              <select disabled>
+                <option value="">Permit Processes</option>
+              </select><br><br>
+
+              <button id="button1" type="submit" class="main-btn" type="submit" style="display: none;" onclick="SwitchButtons()">Save</button>
+            </form>
+            {{#if edit}}
+              <button id="button2" class="main-btn" type="submit" onclick="SwitchButtons()">Edit</button>
+            {{/if}}
+          </div>
         </div>
-        {{/if}}
-
-        {{#unless create}}
-        <div class="container">
-            <div class="row">
-                <div class="col-md-2 text-left"></div>
-                <div class="col-md-4 text-left">
-                    <label id="" for="">Work Process:</label>
-                    <br><br>
-                    <label for="">Academic/Administrative:</label>
-                    <br><br>
-                    <label for="">Related Work Units:</label>
-                    <br>
-                    <label for="">Category:</label>
-                    <br>
-                </div>
-                <div class="col-md-6">
-                    <form action="" method="POST">
-                        <input type="text" id="workproc" name="workprocess" value="{{workf.workprocess}}" disabled><br><br>
-                        {{#if workf.acad}}
-                        <select size="1px"  disabled>
-                            <option>Academic </option>
-                        </select>
-                        {{/if}}
-                        {{#unless workf.acad}}
-                        <select size="1px"  disabled>
-                            <option>Administrative </option>
-                        </select>
-                        {{/unless}}<br><br>
-                        <select  disabled>
-                            <option value="">Human Resources</option>
-                        </select><br><br>
-                        <select  disabled>
-                            <option value="">Permit Processes</option>
-                        </select><br><br>
-
-                        <button id="button1" type="submit" class="main-btn" type="submit" style="display: none;"
-                            onclick="SwitchButtons()">Save</button>
-                    </form> 
-                    {{#if edit}}
-                    <button id="button2" class="main-btn" type="submit" onclick="SwitchButtons()" >Edit</button>
-                    {{/if}}
-                </div>
-            </div>
-            {{/unless}}
-
-            {{#if create}}
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-2 text-left"></div>
-                    <div class="col-md-4 text-left">
-                        <label id="" for="">Work Process:</label>
-                        <br><br>
-                        <label for="">Academic/Administrative:</label>
-                        <br><br>
-                        <label for="">Related Work Units:</label>
-                        <br>
-                        <label for="">Category:</label>
-                        <br>
-                    </div>
-                    <div class="col-md-6">
-                        <form action="/onchangefiles/addworkflow" method="POST">
-                            <input type="text" name="workprocess"><br><br>
-                            <select size="1px" name="acad">
-                                <option value="1">Academic</option>
-                                <option value="0">Administrative</option>
-
-                            </select><br><br>
-                            <select name="" id="">
-                                <option value="">Human Resources</option>
-                                <option value=""></option>
-                                <option value=""></option>
-                                <option value=""></option>
-                            </select><br><br>
-                            <select name="mainprocessid">
-                                <option value="">Permit Processes</option>
-                                <option value=""></option>
-                                <option value=""></option>
-                                <option value=""></option>
-                            </select><br><br>
-                            <button type="submit" class="main-btn" type="submit">Create</button>
-                        </form>
-                    </div>
-                </div>
-                {{/if}}
-=======
     {{/unless}}
 
     {{#if create}}
@@ -140,7 +97,6 @@
           </div>
         </div>
     {{/if}}
->>>>>>> 9d7eea54da5526dd40113d2b18893e1aef97fcc7
 
 
 

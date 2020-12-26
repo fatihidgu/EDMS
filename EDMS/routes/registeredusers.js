@@ -76,12 +76,12 @@ router.post('/login', (req, res) => {
                         }
                     res.render('site/login', { User: req.body, sessionFlash: req.session.sessionFlash })
                     delete req.session.sessionFlash
-                    console.log(res.locals.userid)
+                    
                 }else{
                     req.session.userId = user._id
                     req.session.isBlocked = false
-                    console.log("sa"+ req.session.userId)
-                    console.log(res.locals.userid)
+                  
+                  
                     res.redirect('/')
                 }
                   
