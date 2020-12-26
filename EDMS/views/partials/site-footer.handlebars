@@ -270,9 +270,9 @@
 		var td = document.createElement('td');
 		var td1 = document.createElement('td');
 		var td2 = document.createElement('td');
-		td.appendChild(document.createTextNode("Cell " + ","));
-		td1.appendChild(document.createTextNode("Cell " + ","));
-		td2.appendChild(document.createTextNode("Cell " + ","));
+		td.appendChild(document.createTextNode( document.getElementById('workprocessid').value));
+		td1.appendChild(document.createTextNode(document.getElementById('workprocessnoid').value));
+		td2.appendChild(document.createTextNode(""));
 		tr.appendChild(td);
 		tr.appendChild(td1);
 		tr.appendChild(td2);
