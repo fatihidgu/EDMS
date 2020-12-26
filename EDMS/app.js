@@ -15,7 +15,7 @@ mongoose.connect("mongodb://127.0.0.1/EDMS", {
   useUnifiedTopology: true,
   useCreateIndex: true
 })
-
+mongoose.set('useFindAndModify', false);
 app.use(express.static('public'))
 
 //app.engine('handlebars',exphbs())
@@ -37,20 +37,23 @@ app.use(expressSession({
 
 //middle ware
 app.use((req,res,next)=>{
-  const {userId} = req.session
+  const {userId,isBlocked} = req.session
   User.findOne({_id:userId},(error,user)=>{
-
- if(userId){
+ if(userId && !isBlocked){
    res.locals ={
      userid:userId,
      links:true,
-     usernameye: user.name+" "+user.surname
+     usernameye: user.name+" "+user.surname,
+     admin:user.isadmin,
+     isblocked:user.isblocked
    }
 
  }else{
    res.locals ={
     links:false,
-    userid:null
+    userid:null,
+    admin:false,
+    isblocked:false
    }
  }
 

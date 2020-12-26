@@ -1,0 +1,75 @@
+<section class="page-image page-image-about md-padding">
+
+</section>
+
+<!--==========================
+    ABOUTUS Section Bizim mekan
+============================-->
+
+
+<section id="aboutus" class="md-padding">
+    <div class="container">
+    <div class="row text-center">
+            <div class="col-md-4 offset-md-4">
+                <div class="section-header">
+                    <h2 class="title">Main Processes</h2>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 text-left"></div>
+                <button class="main-btn" onclick="addTable()">Add</button>
+                <div class="col-md-8 bg-light py-3">
+                    <p id="GFG_DOWN"></p>
+                    <form action="" method="POST" id="workform">
+
+                        <label class="col-5 col-sm-5">Main Process:</label>
+
+                        <input type="text" id="workprocessid" ><br><br>
+
+                        <label class="col-5 col-sm-5">No:</label>
+
+                        <input type="number"min="0" id="workprocessnoid" ><br><br>
+
+                        <br><br>
+                        <div class="table-responsive">
+                            <table class="table table-hover" cellspacing="0" id="demo1">
+                                <thead>
+                                    <tr>
+                                        <th>Main Process</th>
+                                        <th>No</th>
+                                        <th>Options</th>
+                                    </tr>
+                                </thead>
+                                {{#each mainprocesses}}
+                                <tr>
+                                    <td>{{mainProcessName}}</td>
+                                    <td>{{mainProcessNo}}</td>
+                                    <td></td>
+
+                                </tr>
+                                {{/each}}
+                            </table>
+                        </div>
+                        <button type="submit" class="main-btn float-right" type="submit">Create</button>
+                    </form>
+
+                </div>
+            </div>
+
+
+
+
+
+
+            <!-- <div class="row text-center">
+				<div class="col-md-4 offset-md-4">
+					<div class="section-header">
+						<h2 class="title">How We Begin</h2>
+					</div>
+				</div>
+			</div> -->
+
+        </div>
+</section>

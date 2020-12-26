@@ -1,10 +1,20 @@
 <section class="page-image page-image-about md-padding">
-	<h1 class="text-white text-center">Workflows</h1>
+
 </section>
 
 <!--==========================
     ABOUTUS Section Bizim mekan
 ============================-->
+	<section id="contact"  style="background-color: #283792;;">
+	<div class="container">
+
+		<div class="row text-center" style="background-color: #283792;;">
+			<div class="col-md-12 ">
+			{{> site-alt-nav}}
+			</div>
+		</div>
+	</div>
+	</section>
 <section id="aboutus" class="md-padding">
 	<div class="container">
 
@@ -74,7 +84,6 @@
 
 											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
 													<i class="fas fa-eye">
-														
 													</i> </a>
 												{{/if}}
 
@@ -86,6 +95,7 @@
 							<div class="tab-pane fade" id="nav-profile" role="tabpanel"
 								aria-labelledby="nav-profile-tab">
 								<div class="table-responsive">
+									{{#if admin}}
 									<form action="/onchangefiles/addworkflow" method="POST">
 
 										<div class="form-group">
@@ -95,7 +105,7 @@
 										<button type="submit" class="btn" style="background:none">Create New Work Flow
 											Process</button>
 									</form>
-
+{{/if}}
 									<table class="table table-hover" cellspacing="0">
 										<thead>
 											<tr>
@@ -120,8 +130,9 @@
 											<td> </td>
 											<td style="text-align:center">
 												<form action="/onchangefiles/{{_id}}" method="POST">
-													<button type="submit" class="btn"
-														style="background:none; color:pink"><i class="fa fa-upload"
+													<button type="submit" class="btn" 
+														style="background:none; none;color:#283792">
+														<i class="fas fa-hand-paper" aria-hidden="true"
 															value="1"></i></button>
 												</form>
 													 </td>
@@ -154,10 +165,8 @@
 											{{/unless}}
 											<td> </td>
 											<td> </td>
-											<td style="text-align:center"><a href="#">
-													<span class="material-icons">
-														visibility
-													</span> </a></td>
+											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
+													<i class="fas fa-eye"></a></td>
 										</tr>
 										{{/each}}
 									</table>

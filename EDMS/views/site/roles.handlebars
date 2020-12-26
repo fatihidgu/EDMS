@@ -1,0 +1,109 @@
+<!--==========================
+    INSIDE HERO SECTION Section
+============================-->
+<section class="page-image page-image-about md-padding">
+
+</section>
+
+<!--==========================
+    about Section
+============================-->
+	<section id="contact"  style="background-color: #283792;;">
+	<div class="container">
+
+		<div class="row text-center" style="background-color: #283792;;">
+			<div class="col-md-12 ">
+			{{> site-alt-nav}}
+			</div>
+		</div>
+	</div>
+	</section>
+    
+<section id="about" class="md-padding">
+    <div class="container">
+
+        <div class="row text-center">
+            <div class="col-md-4 offset-md-4">
+                <div class="section-header">
+                    <h2 class="title">Roles</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                {{#if sessionFlash.message}}
+                <div class="{{sessionFlash.type}}">
+                    {{sessionFlash.message}}
+                </div>
+                {{/if}}
+
+                <form action="" method="POST" id="rolgonderme">
+                    <div class="offset-2 col-md-8">
+
+                        <div class="form-group">
+                            <label>Select an E-mail to assign roles</label>
+                            <select class="form-control" data-role="select-dropdown" name="email" id="selectmail"
+                                onchange="deneme(this)" id="eemail" required>
+                                <option value="notselectedemail" >Select an Email</option>
+                                {{#each user}} <option value="{{email}}">{{email}}</option> {{/each}}
+                            </select>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox7" value="true"
+                                    name="isblocked" onchange="switchChck4()">
+                                <label class="form-check-label" for="inlineCheckbox7">Disable</label>
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox8" value="false"
+                                    name="isblocked" onchange="switchChck4()" hidden>
+                                {{!-- <label class="form-check-label" for="inlineCheckbox8">Disable</label> --}}
+                            </div>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="true"
+                                    name="isorganiser" onchange="switchChck()">
+                                <label class="form-check-label" for="inlineCheckbox1">Organiser</label>
+                                <h1> &nbsp;</h1>
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="false"
+                                    name="isorganiser" onchange="switchChck()" hidden>
+                                {{!-- <label class="form-check-label" for="inlineCheckbox2">Organiser </label> --}}
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="true"
+                                    name="ismanager" onchange="switchChck2()">
+                                <label class="form-check-label" for="inlineCheckbox3">Manager</label>
+                                <h1> &nbsp;</h1>
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="false"
+                                    name="ismanager" onchange="switchChck2()" hidden>
+                                {{!-- <label class="form-check-label" for="inlineCheckbox4">Manager</label> --}}
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="true"
+                                    name="iscommission" onchange="switchChck3()">
+                                <label class="form-check-label" for="inlineCheckbox5">Commission</label>
+                                <h1> &nbsp;</h1>
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="false"
+                                    name="iscommission" onchange="switchChck3()" hidden>
+                                {{!-- <label class="form-check-label" for="inlineCheckbox6">Commission</label> --}}
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12 text-center">
+                                <div id="success"></div>
+                                <button type="submit" class="main-btn" hidden >Save</button>
+                            </div>
+                        </div>
+                </form>
+               
+                     
+            </div>
+            
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12 text-center">
+                                <div id="success"></div>
+                                <button class="main-btn"  onclick="pop()">Save</button>
+                            </div>
+                        </div>
+        </div>
+    </div>
+</section>
