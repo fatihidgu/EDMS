@@ -80,12 +80,14 @@ const users = require('./routes/registeredusers')
 const createfile = require('./routes/createfile')
 const workflows = require('./routes/workflows')
 const onchange = require('./routes/onchange')
+const workunits = require('./routes/workunits')
 
 app.use('/',main)
 app.use('/registeredusers',users)
 app.use('/createfile',createfile)
 app.use('/workflows',workflows)
 app.use('/onchangefiles',onchange)
+app.use('/workunits',workunits)
 
 app.listen(port, hostname,()=>{
     console.log( 'Server Çalışıyor, http://'+hostname+":"+port+"/")

@@ -1,0 +1,124 @@
+<section class="page-image page-image-about md-padding">
+
+</section>
+
+<!--==========================
+    ABOUTUS Section Bizim mekan
+============================-->
+<section id="contact" style="background-color: #283792;;">
+	<div class="container">
+
+		<div class="row text-center" style="background-color: #283792;;">
+			<div class="col-md-12 ">
+				{{> site-alt-nav}}
+			</div>
+		</div>
+	</div>
+</section>
+<section id="aboutus" class="md-padding">
+	<div class="container">
+
+		<!-- <div class="row text-center">
+				<div class="col-md-4 offset-md-4">
+					<div class="section-header">
+						<h2 class="title">How We Begin</h2>
+					</div>
+				</div>
+			</div> -->
+		<section id="tabs" class="project-tab">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<nav>
+							<div class="nav nav-tabs nav-fill" role="tablist" style="border:2px solid #ccc; font-weight: bolder;">
+								<a class="nav-item nav-link active" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All
+									Work Units</a>
+								<a class="nav-item nav-link" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">My Work Units</a>
+								<a class="nav-item nav-link" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Old Work Units</a>
+							</div>
+						</nav>
+						<div class="tab-content" id="nav-tabContent " style="border:1px solid #ccc;">
+							<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+								<div class="table-responsive">
+									<table class="table table-hover" cellspacing="0">
+										<thead>
+											<tr>
+												<th>Unit Code</th>
+												<th>Unit Name</th>
+												<th>Manager</th>
+
+											</tr>
+										</thead>
+										{{#each workunits}}
+											<tr>
+												<td> {{workUnitCode}} </td>
+												<td> {{workUnitName}} </td>
+												<td> {{managerEmail}}</td>
+											</tr>
+										{{/each}}
+									</table>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+								<div class="table-responsive">
+									{{#if admin}}
+										<form action="/onchangefiles/addworkflow" method="POST">
+
+											<div class="form-group">
+												<input class="form-control" name="create" type="text" value="1" required="required" hidden>
+											</div>
+											<button type="submit" class="btn" style="background:none">Create New Work Flow
+												Process</button>
+										</form>
+									{{/if}}
+									<table class="table table-hover" cellspacing="0">
+										<thead>
+											<tr>
+												<th>Unit Code</th>
+												<th>Unit Name</th>
+											</tr>
+										</thead>
+										{{#each myworkunits}}
+											<tr>
+												<td> {{workUnitCode}} </td>
+
+												<td> {{workUnitName}}</td>
+												<td style="text-align:center">
+													<form action="/onchangefiles/{{_id}}" method="POST">
+														<button type="submit" class="btn" style="background:none; none;color:#283792">
+															<i class="fas fa-hand-paper" aria-hidden="true" value="1"></i></button>
+													</form>
+												</td>
+											</tr>
+										{{/each}}
+									</table>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+								<div class="table-responsive">
+									<table class="table table-hover " cellspacing="0">
+										<thead>
+											<tr>
+												<th>Unit Name</th>
+												<th>Unit Code</th>
+											</tr>
+										</thead>
+										{{#each oldworkunits}}
+											<tr>
+												<td> {{workUnitCode}} </td>
+												<td> {{workUnitName}}</td>
+												<td> </td>
+												<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
+														<i class="fas fa-eye"></a></td>
+											</tr>
+										{{/each}}
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</section>
