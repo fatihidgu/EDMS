@@ -15,7 +15,7 @@ mongoose.connect("mongodb://127.0.0.1/EDMS", {
   useUnifiedTopology: true,
   useCreateIndex: true
 })
-
+mongoose.set('useFindAndModify', false);
 app.use(express.static('public'))
 
 //app.engine('handlebars',exphbs())

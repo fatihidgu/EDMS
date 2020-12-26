@@ -25,7 +25,7 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script>src="https://fontawesome.com/v4.7.0/icons"</script>
+<script>src = "https://fontawesome.com/v4.7.0/icons"</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="/js/lightbox-plus-jquery.js"></script>
@@ -37,21 +37,224 @@
 		if (buttonId == 'button1') {
 			showBtn = 'button2';
 			hideBtn = 'button1';
-			
+
+
 		} else {
 			showBtn = 'button1';
 			hideBtn = 'button2';
 			//document.getElementById("workproc").disabled=ture
 		}
-		
+
 		//I don't have your menus, so this is commented out.  just uncomment for your usage
 		// document.getElementById(menuToggle).toggle(); //step 1: toggle menu
+		alert(buttonId)
 		document.getElementById(hideBtn).style.display = 'none'; //step 2 :additional feature hide button
 		document.getElementById(showBtn).style.display = ''; //step 3:additional feature show button
-		document.getElementById("workproc").disabled=false
+		document.getElementById("workproc").disabled = false
 
 	}
 </script>
+
+<script>
+	function switchChck() {
+
+		if (document.getElementById('inlineCheckbox2').checked) {
+			document.getElementById('inlineCheckbox2').checked = false
+		}
+		else if (!document.getElementById('inlineCheckbox1').checked) {
+			document.getElementById('inlineCheckbox2').checked = true
+
+		}
+
+	}
+</script>
+
+<script>
+	function switchChck2() {
+
+		if (document.getElementById('inlineCheckbox4').checked) {
+			document.getElementById('inlineCheckbox4').checked = false
+		}
+		else if (!document.getElementById('inlineCheckbox3').checked) {
+			document.getElementById('inlineCheckbox4').checked = true
+
+		}
+
+	}
+</script>
+
+<script>
+	function switchChck3() {
+
+		if (document.getElementById('inlineCheckbox6').checked) {
+			document.getElementById('inlineCheckbox6').checked = false
+		}
+		else if (!document.getElementById('inlineCheckbox5').checked) {
+			document.getElementById('inlineCheckbox6').checked = true
+
+		}
+
+	}
+</script>
+
+<script>
+	function switchChck4() {
+
+		if (document.getElementById('inlineCheckbox8').checked) {
+			document.getElementById('inlineCheckbox8').checked = false
+		}
+		else if (!document.getElementById('inlineCheckbox7').checked) {
+			document.getElementById('inlineCheckbox8').checked = true
+
+		}
+
+	}
+</script>
+
+<script>
+	function mydeneme() {
+		alert("oluyoo")
+	}
+</script>
+
+<script>
+	function deneme(response) {
+		$.ajax({
+			url: "/ornek", // the endpoint
+			type: "GET", // http method
+			//console.log(json.user[i]['iscommission'])
+			success: function (json) {
+				//response.value
+
+				//console.log(json.user)
+				for (i = 0; i < json.user.length; i++) {
+					let usermap = json.user[i];
+					if (response.value == usermap['email']) {
+						if (usermap['iscommission']) {
+							document.getElementById('inlineCheckbox5').checked = true
+							document.getElementById('inlineCheckbox6').checked = false
+						}
+						else {
+							document.getElementById('inlineCheckbox6').checked = true
+							document.getElementById('inlineCheckbox5').checked = false
+						}
+						if (usermap['ismanager']) {
+							document.getElementById('inlineCheckbox3').checked = true
+							document.getElementById('inlineCheckbox4').checked = false
+						}
+						else {
+							document.getElementById('inlineCheckbox4').checked = true
+							document.getElementById('inlineCheckbox3').checked = false
+						}
+						if (usermap['isorganiser']) {
+							document.getElementById('inlineCheckbox1').checked = true
+							document.getElementById('inlineCheckbox2').checked = false
+						}
+						else {
+							document.getElementById('inlineCheckbox2').checked = true
+							document.getElementById('inlineCheckbox1').checked = false
+						}
+						if (usermap['isblocked']) {
+							document.getElementById('inlineCheckbox7').checked = true
+							document.getElementById('inlineCheckbox8').checked = false
+						}
+						else {
+							document.getElementById('inlineCheckbox8').checked = true
+							document.getElementById('inlineCheckbox7').checked = false
+						}
+					}
+					if (response.value == "") {
+						document.getElementById('inlineCheckbox1').checked = false
+						document.getElementById('inlineCheckbox2').checked = false
+						document.getElementById('inlineCheckbox3').checked = false
+						document.getElementById('inlineCheckbox4').checked = false
+						document.getElementById('inlineCheckbox5').checked = false
+						document.getElementById('inlineCheckbox6').checked = false
+						document.getElementById('inlineCheckbox7').checked = false
+						document.getElementById('inlineCheckbox8').checked = false
+					}
+				}
+			}
+		});
+
+	}
+</script>
+{{!--
+<script>
+	Swal.fire({
+		title: 'Are you sure?',
+		text: "You won't be able to revert this!",
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Yes, delete it!'
+	}).then((result) => {
+		if (result.isConfirmed) {
+			Swal.fire(
+				'Deleted!',
+				'Your file has been deleted.',
+				'success'
+			)
+		}
+	})
+</script> --}}
+
+
+{{!--
+<script>
+	function pop() {
+		console.log("işte geldi özelhareket")
+		alert("işte geldim")
+		const Toast = Swal.mixin({
+			toast: true,
+			position: 'bottom-start',
+			showConfirmButton: false,
+			timer: 3500
+		});
+		Toast.fire({
+			icon: 'success',
+			title: "kendin bişi"
+		})
+	};
+</script> --}}
+
+<script>
+
+
+	function pop() {
+		if (document.getElementById('selectmail').value == 'notselectedemail') {
+			Swal.fire('You need to select an E-mail', '', 'error')
+		}
+		else {
+			Swal.fire({
+				title: 'Do you want to save the changes?',
+				showDenyButton: true,
+				showCancelButton: true,
+				confirmButtonText: `Save`,
+				denyButtonText: `Don't save`,
+			}).then((result) => {
+
+				/* Read more about isConfirmed, isDenied below */
+				if (result.isConfirmed) {
+					let form = document.getElementById("rolgonderme")
+					$.ajax({
+						type: "POST",
+						url: "/roles",
+						data: $(form).serialize(),
+						success: function () {
+							Swal.fire('Saved!', '', 'success')
+						}
+					});
+				} else if (result.isDenied) {
+					Swal.fire('Changes are not saved', '', 'info')
+				}
+			})
+		}
+
+	}
+</script>
+
 </body>
 
 </html>

@@ -74,7 +74,6 @@
 
 											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
 													<i class="fas fa-eye">
-														
 													</i> </a>
 												{{/if}}
 
@@ -120,8 +119,9 @@
 											<td> </td>
 											<td style="text-align:center">
 												<form action="/onchangefiles/{{_id}}" method="POST">
-													<button type="submit" class="btn"
-														style="background:none; color:pink"><i class="fa fa-upload"
+													<button type="submit" class="btn" 
+														style="background:none; none;color:#283792">
+														<i class="fas fa-hand-paper" aria-hidden="true"
 															value="1"></i></button>
 												</form>
 													 </td>
@@ -154,10 +154,8 @@
 											{{/unless}}
 											<td> </td>
 											<td> </td>
-											<td style="text-align:center"><a href="#">
-													<span class="material-icons">
-														visibility
-													</span> </a></td>
+											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
+													<i class="fas fa-eye"></a></td>
 										</tr>
 										{{/each}}
 									</table>
