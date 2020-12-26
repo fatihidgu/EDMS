@@ -1,21 +1,40 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/RegisteredUser')
-
+const Mainprocess = require('../models/MainProcess')
 
 router.get('/', (req, res) => {
     res.redirect('/workflows/allworkflows')
 })
 
 router.get('/mainprocess', (req, res) => {
-   
+    Mainprocess.find({ deleteDate: null }).lean().then(mainprocesses => {
+        res.render('site/mainprocess',{mainprocesses:mainprocesses})
+    })
 
-    res.render('site/mainprocess')
+   
 })
 router.post('/mainprocess', (req, res) => {
-   console.log(req.body)
 
-    res.render('site/mainprocess')
+    const mainname = req.body.workprocess
+    const mainno = req.body.workprocessno
+    if(typeof mainname === 'object'){
+        for (let index = 0; index < mainname.length; index++) {
+            Mainprocess.create({
+                mainProcessName: mainname[index], 
+                mainProcessNo: mainno[index]
+            })
+    }
+    }else{
+        Mainprocess.create({
+            mainProcessName: mainname, 
+            mainProcessNo: mainno
+        })
+    }
+
+
+
+   return res.redirect('mainprocess')
 })
 
 router.get('/roles', (req, res) => {

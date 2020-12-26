@@ -20,11 +20,11 @@
 
                         <label class="col-5 col-sm-5">Main Process:</label>
 
-                        <input type="text" id="workprocessid" onfocus="this.value=''"><br><br>
+                        <input type="text" id="workprocessid" ><br><br>
 
                         <label class="col-5 col-sm-5">No:</label>
 
-                        <input type="text" id="workprocessnoid" onfocus="this.value=''"><br><br>
+                        <input type="text" id="workprocessnoid" ><br><br>
 
                         <br><br>
                         <div class="table-responsive">
@@ -36,13 +36,14 @@
                                         <th>Options</th>
                                     </tr>
                                 </thead>
-
+                                {{#each mainprocesses}}
                                 <tr>
+                                    <td>{{mainProcessName}}</td>
+                                    <td>{{mainProcessNo}}</td>
                                     <td></td>
 
-
                                 </tr>
-
+                                {{/each}}
                             </table>
                         </div>
                         <button type="submit" class="main-btn float-right" type="submit">Create</button>

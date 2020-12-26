@@ -270,7 +270,7 @@
 		var td = document.createElement('td');
 		var td1 = document.createElement('td');
 		var td2 = document.createElement('td');
-		td.appendChild(document.createTextNode( document.getElementById('workprocessid').value));
+		td.appendChild(document.createTextNode(document.getElementById('workprocessid').value));
 		td1.appendChild(document.createTextNode(document.getElementById('workprocessnoid').value));
 		td2.appendChild(document.createTextNode(""));
 		tr.appendChild(td);
@@ -289,20 +289,21 @@
 		work.setAttribute("type", "text");
 		work.setAttribute("name", "workprocess");
 		work.setAttribute("value", document.getElementById('workprocessid').value);
-		//ID.style.display = 'none';
+		work.style.display = 'none';
 
 		// Create an input element for password 
 		var workno = document.createElement("input");
 		workno.setAttribute("type", "text");
 		workno.setAttribute("name", "workprocessno");
-		//PWD.style.display = 'none';
+		workno.style.display = 'none';
 		workno.setAttribute("value", document.getElementById('workprocessnoid').value);
 		// Append the email_ID input to the form 
 		form.append(work);
 		// Append the password to the form 
 		form.append(workno);
-		let sil1= document.getElementById('workprocessid')
-		sil1.setAttribute("value","");
+		document.getElementById('workprocessid').value = ""
+		document.getElementById('workprocessnoid').value = ""
+
 
 	}
 
