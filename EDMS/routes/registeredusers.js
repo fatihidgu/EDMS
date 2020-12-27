@@ -3,26 +3,30 @@ const router = express.Router()
 const User = require('../models/RegisteredUser')
 
 router.get('/register', (req, res) => {
-    res.render('site/register')
+    if(res.locals.userid){
+        res.redirect('/')
+    }
+    else{
+        res.render('site/register')
+    }
 })
 
 router.post('/register', (req, res) => {
     const { password, password2 } = req.body
-
+   
     if (password == password2) {
         User.create(req.body, (error, user) => {
             if (error == null) {
-                //User.update({password})
+               
                 req.session.sessionFlash = {
                     type: 'alert alert-success',
                     message: 'Registered Successfully'
                 }
-                ////console.log("Burası çıkış",res.locals.sessionFlash)    
-                ////console.log("Buraadn dönüyorum",req.session.sessionFlash)
+                
                 res.redirect('/registeredusers/login')
             }
             else {
-                ////console.log('email unieq değil')
+               
                 req.session.sessionFlash = {
                     type: 'alert alert-success',
                     message: 'Email is not unique'
@@ -67,9 +71,9 @@ router.post('/login', (req, res) => {
                 if (user.password == password) {
                     // User session
                     //console.log(user._id)
-                    
-                    if (user.isblocked) {
-                        req.session.isBlocked = true
+                  
+                    if (user.isBlocked) {
+                        req.session.isBlockedSession = true
                         req.session.sessionFlash = {
                             type: 'alert alert-danger',
                             message: 'Your account is disabled. Please contact an Admin'
@@ -79,9 +83,8 @@ router.post('/login', (req, res) => {
                     
                 }else{
                     req.session.userId = user._id
-                    req.session.isBlocked = false
-                  
-                  
+                    req.session.isBlockedSession = false
+
                     res.redirect('/')
                 }
                   

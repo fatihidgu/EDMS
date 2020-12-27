@@ -8,10 +8,10 @@ const WorkflowSchema = new Schema({
 
     workprocessName:{type:String ,required:true},
     acad:{type:Number, required:true}, // 1=Academic 0=Administrative
-    mainProcessId:{type: Schema.Types.ObjectId, ref: 'MainProcess',require:true},
-    workflowNo:{type: Number,require:true},
-    creatorId:{type: Schema.Types.ObjectId, ref: 'Administrator',require:true},
-    creationDate:{type:Date, default:Date.now, require:true},
+    mainProcessId:{type: Schema.Types.ObjectId, ref: 'MainProcess',required:true},
+    workflowNo:{type: Number,required:true},
+    creatorId:{type: Schema.Types.ObjectId, ref: 'Administrator',required:true},
+    creationDate:{type:Date, default:Date.now, required:true},
     deleteDate:{type:Date,default:null}
 })
 

@@ -4,7 +4,7 @@ const RegisteredUser = require('./RegisteredUser')
 
 const Schema = mongoose.Schema;
 const CommissionSchema = new Schema({
-  startDate:{type:Date, default:Date.now, require:true},
+  startDate:{type:Date, default:Date.now, required:true},
   endDate:{type:Date},
   registeredUserId:{type: Schema.Types.ObjectId, ref:'RegisteredUser'}
 })

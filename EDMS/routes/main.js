@@ -2,39 +2,55 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/RegisteredUser')
 const Mainprocess = require('../models/MainProcess')
+const Workunit = require('../models/WorkUnit')
 
 router.get('/', (req, res) => {
     res.redirect('/workflows/allworkflows')
 })
 
 router.get('/mainprocess', (req, res) => {
-    Mainprocess.find({ deleteDate: null }).lean().then(mainprocesses => {
-        res.render('site/mainprocess',{mainprocesses:mainprocesses})
+    Workunit.find({ endDate: null }).lean().then(workunits => {
+        Mainprocess.find({ deleteDate: null }).lean().then(mainprocesses => {
+          return  res.render('site/mainprocess', { mainprocesses: mainprocesses, workunits: workunits })
+        })
     })
-
-   
 })
 router.post('/mainprocess', (req, res) => {
 
     const mainname = req.body.workprocess
     const mainno = req.body.workprocessno
-    if(typeof mainname === 'object'){
+    const mainwid=req.body.workunitid
+    
+    if (typeof mainname === 'object') {
         for (let index = 0; index < mainname.length; index++) {
+            const mainnamestr = JSON.stringify(mainname[index]);
+            if (mainnamestr.charAt(1) == " " || mainname[index] == "" || mainno[index] == "") {
+                //console.log('olusturulamaz',mainnamestr)
+            }
+            else {
+                Mainprocess.create({
+                    mainProcessName: mainname[index],
+                    mainProcessNo: mainno[index],
+                    workUnitId:mainwid[index]
+                })
+            }
+
+        }
+        return res.redirect('mainprocess')
+    } else {
+        if (mainname==null || mainname.charAt(0) == ' ' || mainname == '' || mainno == "") {
+            //console.log('olusturulamaz')
+        }
+        else {
             Mainprocess.create({
-                mainProcessName: mainname[index], 
-                mainProcessNo: mainno[index]
+                mainProcessName: mainname,
+                mainProcessNo: mainno,
+                workUnitId:mainwid
             })
-    }
-    }else{
-        Mainprocess.create({
-            mainProcessName: mainname, 
-            mainProcessNo: mainno
-        })
+        }
+        return res.redirect('mainprocess')
     }
 
-
-
-   return res.redirect('mainprocess')
 })
 
 router.get('/roles', (req, res) => {

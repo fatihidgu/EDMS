@@ -9,7 +9,7 @@
 
 <section id="aboutus" class="md-padding">
     <div class="container">
-    <div class="row text-center">
+        <div class="row text-center">
             <div class="col-md-4 offset-md-4">
                 <div class="section-header">
                     <h2 class="title">Main Processes</h2>
@@ -21,18 +21,28 @@
                 <div class="col-md-2 text-left"></div>
                 <button class="main-btn" onclick="addTable()">Add</button>
                 <div class="col-md-8 bg-light py-3">
+
                     <p id="GFG_DOWN"></p>
+
                     <form action="" method="POST" id="workform">
 
                         <label class="col-5 col-sm-5">Main Process:</label>
 
-                        <input type="text" id="workprocessid" ><br><br>
+                        <input type="text" id="workprocessid"><br><br>
 
                         <label class="col-5 col-sm-5">No:</label>
 
-                        <input type="number"min="0" id="workprocessnoid" ><br><br>
+                        <input type="number" min="0" id="workprocessnoid"><br><br>
+
+                        <label class="col-5 col-sm-5">Related Work Unit:</label>
+
+                        <select class="form-control" data-role="select-dropdown" style="width: fit-content;" id="workunitid">
+                            <option value="">Select a Work Unit</option>
+                            {{#each workunits}} <option value="{{_id}}">{{workUnitName}}-{{workUnitCode}}</option> {{/each}}
+                        </select>
 
                         <br><br>
+
                         <div class="table-responsive">
                             <table class="table table-hover" cellspacing="0" id="demo1">
                                 <thead>
