@@ -5,11 +5,11 @@ const RegisteredUserSchema = new mongoose.Schema({
     surname:{type:String, required:true},
     email:{type:String, required:true, unique:true,},
     password:{type:String, required:true},
-    isblocked:{type:Boolean, default:false},
-    isadmin:{type:Boolean, default:false},
-    isorganiser:{type:Boolean, default:false},
-    iscommission:{type:Boolean, default:false},
-    ismanager:{type:Boolean, default:false},
+    isBlocked:{type:Boolean, default:false},
+    isAdmin:{type:Boolean, default:false},
+    isOrganiser:{type:Boolean, default:false},
+    isCommittee:{type:Boolean, default:false},
+    isManager:{type:Boolean, default:false},
 
 })
 

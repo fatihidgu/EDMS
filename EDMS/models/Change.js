@@ -3,7 +3,7 @@ const File = require('./File')
 const Organiser = require('./Organiser')
 const Manager = require('./Manager')
 const Administrator = require('./Administrator')
-const Commission = require('./Commission')
+const Commission = require('./Committee')
 
 
 const Schema = mongoose.Schema;
@@ -15,8 +15,8 @@ const ChangeSchema = new Schema({
     managerApprovalDate:{type:Date},
     administratorId:{type: Schema.Types.ObjectId, ref: 'Administrator'},
     administratorApprovalDate:{type:Date},
-    commissionId:{type: Schema.Types.ObjectId, ref: 'Commission'},
-    commissionApprovalDate:{type:Date}
+    committeeId:{type: Schema.Types.ObjectId, ref: 'Committee'},
+    committeeApprovalDate:{type:Date}
 })
 
 module.exports = mongoose.model('Change',ChangeSchema)
