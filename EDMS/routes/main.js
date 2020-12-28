@@ -54,8 +54,8 @@ router.post('/mainprocess', (req, res) => {
 })
 
 router.get('/roles', (req, res) => {
-    console.log(res.locals.userid)
-    if (res.locals.userid && !res.locals.isblocked && res.locals.admin) {
+    
+    if (res.locals.userid && res.locals.admin) {
         User.find().lean().then(us => {
             // console.log(us)
 

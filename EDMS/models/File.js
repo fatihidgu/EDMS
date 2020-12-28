@@ -10,8 +10,6 @@ const FileSchema = new Schema(
     {
         workflowId:{type: Schema.Types.ObjectId, ref: 'Workflow',required:true},
         fileNo:{type: String,required:true},
-        organiserId:{type: Schema.Types.ObjectId, ref: 'Organiser',required:true},
-        administratorId:{type: Schema.Types.ObjectId, ref: 'Administrator',required:true},
         creationDate:{type: Date,default:Date.now,required:true},
         revisionDate:{type:Date},
         approvalStatus:{type:Number,default:0,required:true},
@@ -21,7 +19,6 @@ const FileSchema = new Schema(
         version:{type:Number,required:true},
         workflowFileTypeId:{type: Schema.Types.ObjectId, ref: 'WorkflowFileType',required:true},
         creatorId:{type: Schema.Types.ObjectId, ref: 'Administrator',required:true},
-        workUnitId:{type: Schema.Types.ObjectId, ref: 'WorkUnit',required:true}
     }
 );
 

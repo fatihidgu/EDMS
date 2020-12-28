@@ -5,16 +5,16 @@
 <!--==========================
     ABOUTUS Section Bizim mekan
 ============================-->
-	<section id="contact"  style="background-color: #283792;;">
+<section id="contact" style="background-color: #283792;;">
 	<div class="container">
 
 		<div class="row text-center" style="background-color: #283792;;">
 			<div class="col-md-12 ">
-			{{> site-alt-nav}}
+				{{> site-alt-nav}}
 			</div>
 		</div>
 	</div>
-	</section>
+</section>
 <section id="aboutus" class="md-padding">
 	<div class="container">
 
@@ -57,7 +57,7 @@
 										</thead>
 										{{#each workflows}}
 										<tr>
-											<td> {{workprocess}} </td>
+											<td> {{workprocessName}} </td>
 											{{#if acad}}
 											<td>Academic</td>
 											{{/if}}
@@ -70,17 +70,17 @@
 
 
 											{{#if (or
-											(eq creatorid ../userid )
+											(stringeq creatorId ../adminId)
 											)}}
 											<td style="text-align:center">
 												<form action="/onchangefiles/{{_id}}" method="POST">
-													<button type="submit" class="btn" 
+													<button type="submit" class="btn"
 														style="background:none; none;color:#283792">
-														<i class="fas fa-hand-paper" aria-hidden="true"
-															value="1"></i></button>			
+														<i class="fas fa-hand-paper"
+															></i></button>
 												</form>
 											</td>
-												{{else}}
+											{{else}}
 
 											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
 													<i class="fas fa-eye">
@@ -96,16 +96,28 @@
 								aria-labelledby="nav-profile-tab">
 								<div class="table-responsive">
 									{{#if admin}}
-									<form action="/onchangefiles/addworkflow" method="POST">
+									<form action="/onchangefiles/addworkflow2" method="POST">
 
 										<div class="form-group">
-											<input class="form-control" name="create" type="text" value="1"
-												required="required" hidden>
+											<input class="form-control" name="create" type="text" value="1" 
+												required="required" >
+
+												{{#if acada}}
+												<input class="form-control" name="acadadm" type="text" value="1"
+												required="required"  readonly>
+												{{/if}}
+
+												{{#unless acada}}
+												<input class="form-control" name="acadadm" type="text" value="0"
+												required="required"  >
+												{{/unless}}
+												
+												
 										</div>
 										<button type="submit" class="btn" style="background:none">Create New Work Flow
 											Process</button>
 									</form>
-{{/if}}
+									{{/if}}
 									<table class="table table-hover" cellspacing="0">
 										<thead>
 											<tr>
@@ -130,12 +142,12 @@
 											<td> </td>
 											<td style="text-align:center">
 												<form action="/onchangefiles/{{_id}}" method="POST">
-													<button type="submit" class="btn" 
+													<button type="submit" class="btn"
 														style="background:none; none;color:#283792">
 														<i class="fas fa-hand-paper" aria-hidden="true"
 															value="1"></i></button>
 												</form>
-													 </td>
+											</td>
 										</tr>
 										{{/each}}
 									</table>

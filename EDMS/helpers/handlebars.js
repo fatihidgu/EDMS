@@ -6,6 +6,7 @@ var register = function(Handlebars) {
     foo: function(var1, var2) {
 return true;
     },
+    stringeq:(v1,v2)=> JSON.stringify(v1) === JSON.stringify(v2),
     eq: (v1, v2) => v1 === v2,
     ne: (v1, v2) => v1 !== v2,
     lt: (v1, v2) => v1 < v2,

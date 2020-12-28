@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Administrator = require('./Administrator')
 const MainProcess = require('./MainProcess')
-
+const Organiser = require('./Organiser')
 
 const Schema = mongoose.Schema;
 const WorkflowSchema = new Schema({
@@ -12,7 +12,8 @@ const WorkflowSchema = new Schema({
     workflowNo:{type: Number,required:true},
     creatorId:{type: Schema.Types.ObjectId, ref: 'Administrator',required:true},
     creationDate:{type:Date, default:Date.now, required:true},
-    deleteDate:{type:Date,default:null}
+    deleteDate:{type:Date,default:null},
+    organiserId:{type: Schema.Types.ObjectId, ref: 'Organiser'},
 })
 
 module.exports = mongoose.model('Workflow',WorkflowSchema) //önce model ismi,sonra kullanacığım schema ismi
