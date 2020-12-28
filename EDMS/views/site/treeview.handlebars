@@ -18,17 +18,17 @@
           {{#each workUnits}}
             <hr>
             <h2 onclick="getElementById('{{name}}').classList.toggle('d-block');">-{{name}}</h2>
-            <div class="col-md-10 float-right d-none" id="{{name}}">
+            <div class="col-md-11 float-right d-none" id="{{name}}">
 
               {{#each mainProcesses}}
               <hr>
               <h3 onclick="getElementById('{{../name}}{{name}}').classList.toggle('d-block');">-{{name}}</h3>
-              <div class="col-md-10 float-right d-none" id="{{../name}}{{name}}">
+              <div class="col-md-11 float-right d-none" id="{{../name}}{{name}}">
 
                 {{#each workflows}}
                 <hr>
                   <h4 onclick="getElementById('{{../../name}}{{../name}}{{name}}').classList.toggle('d-block');">-{{name}}</h4>
-                  <div class="col-md-10 float-right d-none" id="{{../../name}}{{../name}}{{name}}">
+                  <div class="col-md-11 float-right d-none" id="{{../../name}}{{../name}}{{name}}">
                     <hr>
                     {{#each files}}
                       <h5>File:{{name}}-{{id}}</h5>
