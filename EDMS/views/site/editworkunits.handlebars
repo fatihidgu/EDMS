@@ -33,14 +33,14 @@
 
           </div>
           <div class="col-md-6">
-            <form>
+            <form action="/workunits/editworkunit" method="POST">
               <input type="text" id="" name="work_unit_code" placeholder="Code"><br><br>
               <input type="text" id="" name="work_unit_name" placeholder="Name"><br><br>
-              <select size="1px" name="" id="acad" disabled>
-                <option value="">Administrative</option>
+              <select size="1px" name="acad" id="acad">
+                <option value="0">Administrative</option>
               </select><br><br>
               <select size="1px" name="manager" id="">
-                <option value="ercan">Ercan Solak</option>
+                <option value="5fe4ee5485a38e081a3388f3">Ercan Solak</option>
               </select><br><br>
               <button type="submit" class="main-btn" type="submit">Create</button>
             </form>
@@ -64,33 +64,14 @@
 
           </div>
           <div class="col-md-6">
-            <form form action="/workunits/editworkunit/{{work_unit_id}}" method="POST">
+            <form form action="#" method="POST">
 
-              {{#if (eq edit "1")}}
-              <input type="text" id="" name="work_unit_code" class="col-md-8 hello" placeholder="Code" value="{{work_unit_code}}"><br><br>
-              <input type="text" id="" name="work_unit_name" class="col-md-8 hello" placeholder="Name" value="{{work_unit_name}}"><br><br>
 
-              {{#if (eq acad 1)}}
-                <label for="">Academic</label>
-              {{/if}}
-              {{#if (eq acad 0)}}
-                <label for="">Administrative</label>
-              {{/if}}
-              <br><br>
-              <select size="1px" name="manager" id="">
-                <option value="ercan" selected>Ercan Solak</option>
-              </select><br><br><br>
 
-              <input type="hidden" name="edit" value="0">
-              <button class="btn btn-primary " type="submit" name="save" value="1">Save</button>
-              <button class="btn btn-primary " type="submit" name="save" value="0">Cancel</button>
-              {{/if}}
-
-              {{#unless (eq edit "1")}}
               <input type="text" id="" name="work_unit_code" class="col-md-8 hello" disabled placeholder="Code" value="{{work_unit_code}}"><br><br>
               <input type="text" id="" name="work_unit_name" class="col-md-8 hello" disabled placeholder="Name" value="{{work_unit_name}}"><br><br>
 
-              {{#if (eq acad 1)}}
+              {{#if (eq acad "1")}}
                 <label for="">Academic</label>
               {{/if}}
               {{#if (eq acad 0)}}
@@ -101,9 +82,11 @@
                 <option value="ercan" selected>Ercan Solak</option>
               </select><br><br><br>
 
-              <button class="btn btn-primary " type="submit" name="edit" value="1">Edit</button>
-              {{/unless}}
+              <button class="btn btn-primary " type="submit" onclick="SwitchButtons()" name="save" id="button1" style="display:none;">Edit</button>
+              <button class="btn btn-primary " type="submit" onclick="SwitchButtons()" id="button2">Save</button>
+
               <br><br>
+
 
             </form>
 

@@ -56,8 +56,7 @@
 												<td> {{workUnitName}} </td>
 												<td> {{managerEmail}}</td>
 												<td>
-													<form action="/workunits/editworkunit/{{workUnitId}}" method="POST">
-														<input class="form-control" name="create" type="hidden" value="0">
+													<form action="/workunits/editworkunit/{{workUnitId}}" method="GET">
 														<button type="submit" class="btn"
 															style="background:none; none;color:#283792">
 															<i class="fas fa-hand-paper" aria-hidden="true"></i></button>
@@ -71,8 +70,7 @@
 							<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
 								<div class="table-responsive">
 									{{#if admin}}
-										<form action="/workunits/editworkunit" method="POST">
-											<input class="form-control" name="create" type="hidden" value="1">
+										<form action="/workunits/editworkunit" method="GET">
 											<button type="submit" class="btn" style="background:none">Create New Work Unit</button>
 										</form>
 									{{/if}}
@@ -89,7 +87,7 @@
 												<td> {{workUnitCode}} </td>
 												<td> {{workUnitName}}</td>
 												<td style="text-align:center">
-													<form action="/workunits/editworkunit/{{workUnitId}}" method="POST">
+													<form action="/workunits/editworkunit/{{workUnitId}}" method="GET">
 														<input class="form-control" name="create" type="hidden" value="0">
 														<button type="submit" class="btn" style="background:none; none;color:#283792">
 															<i class="fas fa-hand-paper" aria-hidden="true" value="1"></i></button>
