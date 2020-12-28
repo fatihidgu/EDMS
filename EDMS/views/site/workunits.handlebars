@@ -46,6 +46,7 @@
 												<th>Unit Code</th>
 												<th>Unit Name</th>
 												<th>Manager</th>
+												<th>Options</th>
 
 											</tr>
 										</thead>
@@ -54,6 +55,14 @@
 												<td> {{workUnitCode}} </td>
 												<td> {{workUnitName}} </td>
 												<td> {{managerEmail}}</td>
+												<td>
+													<form action="/workunits/editworkunit/{{workUnitId}}" method="POST">
+														<input class="form-control" name="create" type="hidden" value="0">
+														<button type="submit" class="btn"
+															style="background:none; none;color:#283792">
+															<i class="fas fa-hand-paper" aria-hidden="true"></i></button>
+													</form>
+												</td>
 											</tr>
 										{{/each}}
 									</table>
@@ -62,13 +71,9 @@
 							<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
 								<div class="table-responsive">
 									{{#if admin}}
-										<form action="/onchangefiles/addworkflow" method="POST">
-
-											<div class="form-group">
-												<input class="form-control" name="create" type="text" value="1" required="required" hidden>
-											</div>
-											<button type="submit" class="btn" style="background:none">Create New Work Flow
-												Process</button>
+										<form action="/workunits/editworkunit" method="POST">
+											<input class="form-control" name="create" type="hidden" value="1">
+											<button type="submit" class="btn" style="background:none">Create New Work Unit</button>
 										</form>
 									{{/if}}
 									<table class="table table-hover" cellspacing="0">
@@ -76,15 +81,16 @@
 											<tr>
 												<th>Unit Code</th>
 												<th>Unit Name</th>
+												<th>Options</th>
 											</tr>
 										</thead>
 										{{#each myworkunits}}
 											<tr>
 												<td> {{workUnitCode}} </td>
-
 												<td> {{workUnitName}}</td>
 												<td style="text-align:center">
-													<form action="/onchangefiles/{{_id}}" method="POST">
+													<form action="/workunits/editworkunit/{{workUnitId}}" method="POST">
+														<input class="form-control" name="create" type="hidden" value="0">
 														<button type="submit" class="btn" style="background:none; none;color:#283792">
 															<i class="fas fa-hand-paper" aria-hidden="true" value="1"></i></button>
 													</form>
@@ -107,9 +113,6 @@
 											<tr>
 												<td> {{workUnitCode}} </td>
 												<td> {{workUnitName}}</td>
-												<td> </td>
-												<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
-														<i class="fas fa-eye"></a></td>
 											</tr>
 										{{/each}}
 									</table>
