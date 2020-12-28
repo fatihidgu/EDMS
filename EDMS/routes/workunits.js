@@ -164,7 +164,7 @@ router.post('/editworkunit/:id?', async (req, res) => {
         if(req.body.edit){
            edit = req.body.edit
            if(req.body.save){
-
+             
            }
         }
         const workUnit = await WorkUnit.findById(req.params.id).exec();
@@ -199,8 +199,8 @@ router.post('/editworkunit/:id?', async (req, res) => {
           surname: organiser.registeredUserId.surname,
           email: organiser.registeredUserId.email
         }))
-        var address = '/editworkunits/' + workUnit._id;
-        return res.redirect(address, {
+
+        res.render('site/editworkunits', {
           create: "0",
           edit:edit,
           work_unit_id: workUnit._id,
@@ -208,10 +208,9 @@ router.post('/editworkunit/:id?', async (req, res) => {
           work_unit_name: workUnit.workUnitName,
           acad: workUnit.acad,
           organisers: a
-        });
+        })
       } else {
-        var address = '/editworkunits';
-        return res.redirect(address, {
+        res.render('site/editworkunits', {
           create: "1",
           edit:"1"
         })
