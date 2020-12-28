@@ -51,7 +51,7 @@
 												<th>Work Process</th>
 												<th>Academic/Administrative</th>
 												<th>Related Work Units</th>
-												<th>Category</th>
+												<th>Main Process</th>
 												<th>Options</th>
 											</tr>
 										</thead>
@@ -100,7 +100,7 @@
 
 										<div class="form-group">
 											<input class="form-control" name="create" type="text" value="1" 
-												required="required" >
+												required="required" readonly>
 
 												{{#if acada}}
 												<input class="form-control" name="acadadm" type="text" value="1"
@@ -109,7 +109,7 @@
 
 												{{#unless acada}}
 												<input class="form-control" name="acadadm" type="text" value="0"
-												required="required"  >
+												required="required"  readonly>
 												{{/unless}}
 												
 												
@@ -124,13 +124,13 @@
 												<th>Work Process</th>
 												<th>Academic/Administrative</th>
 												<th>Related Work Units</th>
-												<th>Category</th>
+												<th>Main Process</th>
 												<th>Options</th>
 											</tr>
 										</thead>
 										{{#each myworkflows}}
 										<tr>
-											<td> {{workprocess}} </td>
+											<td> {{workprocessName}} </td>
 											{{#if acad}}
 											<td>Academic</td>
 											{{/if}}
@@ -162,13 +162,13 @@
 												<th>Work Process</th>
 												<th>Academic/Administrative</th>
 												<th>Related Work Units</th>
-												<th>Category</th>
+												<th>Main Process</th>
 												<th>Options</th>
 											</tr>
 										</thead>
 										{{#each oldworkflows}}
 										<tr>
-											<td> {{workprocess}} </td>
+											<td> {{workprocessName}} </td>
 											{{#if acad}}
 											<td>Academic</td>
 											{{/if}}

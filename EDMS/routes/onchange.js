@@ -100,7 +100,7 @@ router.post('/:id', (req, res) => {
       deleteDate: null
     }).lean().then(wff => {
       Workflow.findById(req.params.id).lean().then(workf => {
-        console.log("buraya girmmeis olmasi lazim")
+       // console.log("buraya girmmeis olmasi lazim")
         return res.render('site/onchange', {
           wff: wff,
           workf: workf,

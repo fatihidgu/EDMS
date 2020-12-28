@@ -76,7 +76,7 @@ router.get('/ornek', (req, res) => {
 
 router.post('/roles', (req, res) => {
     User.findOneAndUpdate({ email: req.body.email }, { ...req.body }).then(us => {
-        //console.log("Denedik bakak",us)
+        
     })
 
 

@@ -111,11 +111,6 @@
 	}
 </script>
 
-<script>
-	function mydeneme() {
-		alert("oluyoo")
-	}
-</script>
 
 <script>
 	function deneme(response) {
@@ -129,8 +124,9 @@
 				//console.log(json.user)
 				for (i = 0; i < json.user.length; i++) {
 					let usermap = json.user[i];
+					
 					if (response.value == usermap['email']) {
-						if (usermap['iscommission']) {
+						if (usermap['isCommittee']) {
 							document.getElementById('inlineCheckbox5').checked = true
 							document.getElementById('inlineCheckbox6').checked = false
 						}
@@ -138,7 +134,7 @@
 							document.getElementById('inlineCheckbox6').checked = true
 							document.getElementById('inlineCheckbox5').checked = false
 						}
-						if (usermap['ismanager']) {
+						if (usermap['isManager']) {
 							document.getElementById('inlineCheckbox3').checked = true
 							document.getElementById('inlineCheckbox4').checked = false
 						}
@@ -146,7 +142,7 @@
 							document.getElementById('inlineCheckbox4').checked = true
 							document.getElementById('inlineCheckbox3').checked = false
 						}
-						if (usermap['isorganiser']) {
+						if (usermap['isOrganiser']) {
 							document.getElementById('inlineCheckbox1').checked = true
 							document.getElementById('inlineCheckbox2').checked = false
 						}
@@ -154,7 +150,7 @@
 							document.getElementById('inlineCheckbox2').checked = true
 							document.getElementById('inlineCheckbox1').checked = false
 						}
-						if (usermap['isblocked']) {
+						if (usermap['isBlocked']) {
 							document.getElementById('inlineCheckbox7').checked = true
 							document.getElementById('inlineCheckbox8').checked = false
 						}
