@@ -34,13 +34,15 @@
           </div>
           <div class="col-md-6">
             <form action="/workunits/editworkunit" method="POST">
-              <input type="text" id="" name="work_unit_code" placeholder="Code"><br><br>
-              <input type="text" id="" name="work_unit_name" placeholder="Name"><br><br>
+              <input type="text" id="" name="work_unit_code" placeholder="Code" required><br><br>
+              <input type="text" id="" name="work_unit_name" placeholder="Name" required><br><br>
               <select size="1px" name="acad" id="acad">
                 <option value="0">Administrative</option>
               </select><br><br>
               <select size="1px" name="manager" id="">
-                <option value="5fe4ee5485a38e081a3388f3">Ercan Solak</option>
+                {{#each managerOptions}}
+                  <option value="{{_id}}">{{email}}</option>
+                {{/each}}
               </select><br><br>
               <button type="submit" class="main-btn" type="submit">Create</button>
             </form>
@@ -87,8 +89,8 @@
 
               </select><br><br><br>
 
-              <button class="btn btn-primary " type="submit" onclick="SwitchButtons()" name="save" id="button1" style="display:none;">Edit</button>
-              <button class="btn btn-primary " type="button" onclick="SwitchButtons()" id="button2">Save</button>
+              <button class="btn btn-primary " type="submit" onclick="SwitchButtons()" name="save" id="button1" style="display:none;">Save</button>
+              <button class="btn btn-primary " type="button" onclick="SwitchButtons()" id="button2">Edit</button>
 
               <br><br>
 

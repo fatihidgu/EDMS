@@ -227,40 +227,55 @@ router.post('/editworkunit/:id?', async (req, res) => {
 
 
       } else {
-        const ru = req.params.manager
-        console.log(req.body.manager)
+        const ru = req.body.manager
+
         RegisteredUser.findOneAndUpdate({
           _id: ru
         }, {
           isManager: true
         }).exec()
-        const workUnit = new WorkUnit({
-          workUnitCode: req.body.work_unit_code,
-          workUnitName: req.body.work_unit_name,
-          acad: req.body.acad
-        });
-        workUnit.save();
-        const managerExist = await Manager.findOne({
-          registeredUserId: ru,
-          workUnitId: workUnit._id,
-          endDate: null
+
+        const workUnitExist = await WorkUnit.findOne({
+          workUnitCode: req.body.work_unit_code
         }).exec();
-        if (!(managerExist)) {
-          const manager = new Manager({
-            workUnitId: workUnit._id,
-            registeredUserId: ru
+        if(workUnitExist == null){
+
+          const workUnit = new WorkUnit({
+            workUnitCode: req.body.work_unit_code,
+            workUnitName: req.body.work_unit_name,
+            acad: req.body.acad
           });
-          manager.save()
-        }
+          workUnit.save();
+          const managerExist = await Manager.findOne({
+            registeredUserId: ru,
+            workUnitId: workUnit._id,
+            endDate: null
+          }).exec();
+          if (!(managerExist)) {
+            const manager = new Manager({
+              workUnitId: workUnit._id,
+              registeredUserId: ru
+            });
+            manager.save()
+          }
+
+          req.session.sessionFlash = {
+            type: 'alert alert-success',
+            message: 'Work Unit created.'
+          }
+
+          const address = 'editworkunit/'+workUnit._id
+          return res.redirect(address)
+        }else{
 
         req.session.sessionFlash = {
-          type: 'alert alert-success',
-          message: 'Your Work Unit created Successfully.'
+          type: 'alert alert-warning',
+          message: 'Your Work Unit Code already exist.'
         }
 
-        const address = 'editworkunit/' + workUnit._id
+        const address = 'editworkunit'
         return res.redirect(address)
-      }
+      }}
 
     } else {
       res.redirect('/registeredusers/login')
@@ -331,8 +346,13 @@ router.get('/editworkunit/:id?', async (req, res) => {
           organisers: a,
         })
       } else {
+        const registeredUsers = await RegisteredUser.find({
+          endDate: null,
+          isBlocked:false
+        },null,{sort: {email: 1}}).lean().exec()
         res.render('site/editworkunits', {
-          create: "1"
+          create: "1",
+          managerOptions:registeredUsers
         })
       }
     } else {
