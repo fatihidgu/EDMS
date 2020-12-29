@@ -120,4 +120,35 @@ router.get('/logout', (req, res) => {
 
 })
 
+router.post('/roles', (req, res) => {
+    User.findOneAndUpdate({ email: req.body.email }, { ...req.body }).then(us => {
+        
+    })
+
+
+
+    res.redirect('/roles')
+})
+
+router.get('/roles', (req, res) => {
+    if (res.locals.userid && res.locals.admin) {
+        User.find().lean().then(us => {
+            // console.log(us)
+
+            res.render('site/roles', { user: us })
+        })
+
+    }
+    else {
+        res.redirect('/registeredusers/login')
+    }
+})
+
+router.get('/secureUsers', (req, res) => {
+    User.find().lean().then(us => {
+        res.send(({ user: us }))
+    })
+})
+
+
 module.exports = router

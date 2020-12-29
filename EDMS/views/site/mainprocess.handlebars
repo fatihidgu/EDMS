@@ -5,16 +5,16 @@
 <!--==========================
     ABOUTUS Section Bizim mekan
 ============================-->
-	<section id="contact"  style="background-color: #283792;;">
-	<div class="container">
+<section id="contact" style="background-color: #283792;;">
+    <div class="container">
 
-		<div class="row text-center" style="background-color: #283792;;">
-			<div class="col-md-12 ">
-			{{> site-alt-nav}}
-			</div>
-		</div>
-	</div>
-	</section>
+        <div class="row text-center" style="background-color: #283792;;">
+            <div class="col-md-12 ">
+                {{> site-alt-nav}}
+            </div>
+        </div>
+    </div>
+</section>
 
 <section id="aboutus" class="md-padding">
     <div class="container">
@@ -28,32 +28,33 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-2 text-left"></div>
-                <button class="main-btn" onclick="addTable()">Add</button>
-                <div class="col-md-8 bg-light py-3">
 
-                    <p id="GFG_DOWN"></p>
+                <div class="col-md-8 bg-light py-3">
 
                     <form action="" method="POST" id="workform">
 
-                        <label class="col-5 col-sm-5">Main Process:</label>
+                        <label class="col-5 col-sm-5 float-left">Main Process:</label>
 
-                        <input type="text" id="workprocessid"><br><br>
-
-                        <label class="col-5 col-sm-5">No:</label>
-
-                        <input type="number" min="0" id="workprocessnoid"><br><br>
-
+                        <input class="form-control form-control-sm"  id="workprocessid"
+                            type="text" style="width: fit-content;"><br><br>
+                        <label class="col-5 col-sm-5 float-left">No:</label>
+                        <input class="form-control form-control-sm" id="workprocessnoid"
+                            type="number" min="0" style="width: fit-content;"><br><br>
+                       
                         <label class="col-5 col-sm-5 float-left">Related Work Unit:</label>
 
-                        <select class="form-control" data-role="select-dropdown" style="width: fit-content;" id="workunitid">
+                        <select class="form-control" data-role="select-dropdown" style="width: fit-content;"
+                            id="workunitid">
                             <option value="">Select a Work Unit</option>
-                            {{#each workunits}} <option value="{{_id}}">{{workUnitName}}-{{workUnitCode}}</option> {{/each}}
+                            {{#each workunits}} <option value="{{_id}}">{{workUnitName}}-{{workUnitCode}}</option>
+                            {{/each}}
                         </select>
-
+                        <div class="text-center"> <button type="button" class="main-btn" onclick="addTableMainProcess()"
+                               >Add</button></div>
                         <br><br>
 
                         <div class="table-responsive">
-                            <table class="table table-hover" cellspacing="0" id="demo1">
+                            <table class="table table-hover" cellspacing="0" id="workprocesstable">
                                 <thead>
                                     <tr>
                                         <th>Main Process</th>
@@ -66,7 +67,6 @@
                                     <td>{{mainProcessName}}</td>
                                     <td>{{mainProcessNo}}</td>
                                     <td></td>
-
                                 </tr>
                                 {{/each}}
                             </table>

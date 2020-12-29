@@ -351,7 +351,7 @@ router.get('/create/:workflowId', (req, res) => {
             workUnits.forEach(workUnit => {
               work_unit.push({
                 work_unit_id: workUnit._id,
-                work_unit_name: workUnit.WorkUnitName
+                work_unit_name: workUnit.workUnitName
               });
             })
 

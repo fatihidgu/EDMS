@@ -162,7 +162,12 @@ router.get('/treeview', async (req, res) => {
 })
 
 router.post('/editworkunit/:id?', async (req, res) => {
+<<<<<<< HEAD
   try {
+=======
+  console.log(req.body)
+  try{
+>>>>>>> b49a054497a39e7c885295610287b39bfcca5fac
     if (req.session.userId) {
       if (req.params.id) {
 

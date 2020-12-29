@@ -5,27 +5,29 @@
       <li class="nav-item active">
         <a class="nav-link" href="/workflows/allworkflows" style="font-size: 25px;">Workflows</a>
       </li>
-      {{#if admin}}
+      {{!-- {{#if admin}}
       <li class="nav-item active">
-        <a class="nav-link" href="/roles" style="font-size: 25px;">Roles</a>
+        <a class="nav-link" href="/registeredusers/roles" style="font-size: 25px;">Roles</a>
       </li>
-       <li class="nav-item active">
-        <a class="nav-link" href="/mainprocess" style="font-size: 25px;">Main Process</a>
+      <li class="nav-item active">
+        <a class="nav-link" href="/mainprocess/addmainprocess" style="font-size: 25px;">Main Process</a>
       </li>
-      {{/if}}
-      {{!-- <li class="nav-item dropdown">
+      {{/if}} --}}
+      {{#if admin}}
+      <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          aria-haspopup="true" aria-expanded="false" style="font-size: 25px;">
+          System Changes
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
+          <a class="dropdown-item" href="/registeredusers/roles">Roles</a>
+          <a class="dropdown-item" href="/mainprocess/addmainprocess">Main Process</a>
+           <a class="dropdown-item" href="/workflowfiletype/addworkflowfiletype">Workflow File Type</a>
+          {{!-- <div class="dropdown-divider"></div> --}}
+          {{!-- <a class="dropdown-item" href="#">Something else here</a> --}}
         </div>
-      </li> --}}
-
+      </li>
+      {{/if}}
     </ul>
 
   </div>

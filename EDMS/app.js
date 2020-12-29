@@ -92,6 +92,8 @@ const createfile = require('./routes/createfile')
 const workflows = require('./routes/workflows')
 const onchange = require('./routes/onchange')
 const workunits = require('./routes/workunits')
+const mainprocess = require('./routes/mainprocesses')
+const workflowfiletype = require('./routes/workflowfiletype')
 
 app.use('/', main)
 app.use('/registeredusers', users)
@@ -99,6 +101,13 @@ app.use('/createfile', createfile)
 app.use('/workflows', workflows)
 app.use('/onchangefiles', onchange)
 app.use('/workunits', workunits)
+app.use('/mainprocess', mainprocess)
+app.use('/workflowfiletype', workflowfiletype)
+
+app.use((req, res, next) => {
+  res.send('<h1> Page not found </h1>')
+  next()
+});
 
 app.listen(port, hostname, () => {
   console.log('Server Çalışıyor, http://' + hostname + ":" + port + "/")

@@ -1,0 +1,71 @@
+<section class="page-image page-image-about md-padding">
+
+</section>
+
+<!--==========================
+    ABOUTUS Section Bizim mekan
+============================-->
+<section id="contact" style="background-color: #283792;;">
+    <div class="container">
+
+        <div class="row text-center" style="background-color: #283792;;">
+            <div class="col-md-12 ">
+                {{> site-alt-nav}}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="aboutus" class="md-padding">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 offset-md-4">
+                <div class="section-header">
+                    <h2 class="title">Workflow File Type</h2>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 text-left"></div>
+
+                <div class="col-md-8 bg-light py-3">
+
+                    <form action="" method="POST" id="workflowfileform">
+
+                        <label class="col-5 col-sm-5 float-left">Workflow File Type:</label>
+
+                        <input class="form-control form-control-sm"  id="workflowfilenameid"
+                            type="text" style="width: fit-content;"><br><br>
+                        <label class="col-5 col-sm-5 float-left">Code:</label>
+                        <input class="form-control form-control-sm" id="workflowfilecodeid"
+                            type="text" min="0" style="width: fit-content;">
+                        <div class="text-center"> <button type="button" class="main-btn" onclick="addTableWorkflowFileType()"
+                                >Add</button></div>
+                        <br><br>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover" cellspacing="0" id="workflowfiletable">
+                                <thead>
+                                    <tr>
+                                        <th>Workflow File Type</th>
+                                        <th>Code</th>
+                                        <th>Options</th>
+                                    </tr>
+                                </thead>
+                                {{#each filetypes}}
+                                <tr>
+                                    <td>{{workflowFileTypeName}}</td>
+                                    <td>{{workflowFileTypeCode}}</td>
+                                    <td>disable</td>
+                                </tr>
+                                {{/each}}
+                            </table>
+                        </div>
+                        <button type="submit" class="main-btn float-right" type="submit">Create</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+</section>

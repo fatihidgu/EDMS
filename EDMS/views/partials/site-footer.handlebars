@@ -115,16 +115,15 @@
 <script>
 	function deneme(response) {
 		$.ajax({
-			url: "/ornek", // the endpoint
+			url: "/registeredusers/secureUsers", // the endpoint
 			type: "GET", // http method
 			//console.log(json.user[i]['iscommission'])
 			success: function (json) {
 				//response.value
-
 				//console.log(json.user)
 				for (i = 0; i < json.user.length; i++) {
 					let usermap = json.user[i];
-					
+
 					if (response.value == usermap['email']) {
 						if (usermap['isCommittee']) {
 							document.getElementById('inlineCheckbox5').checked = true
@@ -236,7 +235,7 @@
 					let form = document.getElementById("rolgonderme")
 					$.ajax({
 						type: "POST",
-						url: "/roles",
+						url: "/registeredusers/roles",
 						data: $(form).serialize(),
 						success: function () {
 							Swal.fire('Saved!', '', 'success')
@@ -252,21 +251,16 @@
 </script>
 
 <script>
-
-
-
-	function addTable() {
-
+	function addTableMainProcess() {
 		let str = JSON.stringify(document.getElementById('workprocessid').value)
-
 
 		if (document.getElementById('workprocessid').value === "" || document.getElementById('workprocessnoid').value === "" ||
 			document.getElementById('workunitid').value === "" || str.charAt(1) == " ") {
-
+			Swal.fire('Check the Main Process Name. You cant start with space. Main Process Name, Main Process No and Related Work Unit cant be null!', '', 'error')
 
 		}
 		else {
-			var table = document.getElementById('demo1');
+			var table = document.getElementById('workprocesstable');
 			var tableBody = document.createElement('tbody');
 			table.appendChild(tableBody);
 			var tr = document.createElement('tr');
@@ -288,23 +282,26 @@
 			//id="workform"
 
 
-			// Create an input element for emailID 
+			// Create an input element for workprocess 
 			var work = document.createElement("input");
 			work.setAttribute("type", "text");
+			work.setAttribute("readonly", true);
 			work.setAttribute("name", "workprocess");
 			work.setAttribute("value", document.getElementById('workprocessid').value);
 			//work.style.display = 'none';
 
-			// Create an input element for password 
+			// Create an input element for workprocessno 
 			var workno = document.createElement("input");
 			workno.setAttribute("type", "text");
 			workno.setAttribute("name", "workprocessno");
+			workno.setAttribute("readonly", true);
 			//workno.style.display = 'none';
 			workno.setAttribute("value", document.getElementById('workprocessnoid').value);
 
 			//workunitid
 			var workid = document.createElement("input");
 			workid.setAttribute("type", "text");
+			workid.setAttribute("readonly", true);
 			workid.setAttribute("name", "workunitid");
 			workid.setAttribute("value", document.getElementById('workunitid').value);
 			//work.style.display = 'none';
@@ -317,15 +314,73 @@
 			document.getElementById('workprocessnoid').value = ""
 			document.getElementById('workunitid').selectedIndex = 0
 		}
+	}
+</script>
+
+<script>
+	function addTableWorkflowFileType() {
+		//id="workflowfilecodeid"
+		//id="workflowfilenameid"
+
+		let code = JSON.stringify(document.getElementById('workflowfilecodeid').value)
+		let file = JSON.stringify(document.getElementById('workflowfilenameid').value)
+		if (document.getElementById('workflowfilenameid').value === ""  || file.charAt(1) == " " ||
+			document.getElementById('workflowfilecodeid').value === ""  || code.charAt(1) == " ") {
+			Swal.fire('Check the Main Process Name. You cant start with space. Main Process Name, Main Process No and Related Work Unit cant be null!', '', 'error')
+
+		}
+		else {
+			var table = document.getElementById('workflowfiletable');
+			var tableBody = document.createElement('tbody');
+			table.appendChild(tableBody);
+			var tr = document.createElement('tr');
+			tableBody.appendChild(tr);
+			var td = document.createElement('td');
+			var td1 = document.createElement('td');
+			var td2 = document.createElement('td');
+			td.appendChild(document.createTextNode(document.getElementById('workflowfilenameid').value));
+			td1.appendChild(document.createTextNode(document.getElementById('workflowfilecodeid').value));
+			td2.appendChild(document.createTextNode(""));
+			tr.appendChild(td);
+			tr.appendChild(td1);
+			tr.appendChild(td2);
+
+			//inputs
 
 
+			var form = document.getElementById('workflowfileform');
+			//id="workflowfilecodeid"
+			//id="workflowfilenameid"
 
 
+			// Create an input element for workflowfilename 
+			var filename = document.createElement("input");
+			filename.setAttribute("type", "text");
+			filename.setAttribute("readonly", true);
+			filename.setAttribute("name", "workflowfilename");
+			filename.setAttribute("value", document.getElementById('workflowfilenameid').value);
+			//filename.style.display = 'none';
 
+			// Create an input element for workflowfilecode 
+			var filecode = document.createElement("input");
+			filecode.setAttribute("type", "text");
+			filecode.setAttribute("readonly", true);
+			filecode.setAttribute("name", "workflowfilecode");
+			//filecode.style.display = 'none';
+			filecode.setAttribute("value", document.getElementById('workflowfilecodeid').value);
+
+			form.append(filecode);
+			// Append the filecode input to the form 
+			form.append(filename);
+			// Append the filename to the form 
+
+			//clear inputs
+			document.getElementById('workflowfilenameid').value = ""
+			document.getElementById('workflowfilecodeid').value = ""
+		}
 	}
 
 </script>
-
 </body>
 
 </html>
