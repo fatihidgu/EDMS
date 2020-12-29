@@ -74,10 +74,11 @@
 											)}}
 											<td style="text-align:center">
 												<form action="/onchangefiles/{{_id}}" method="POST">
+													<input class="form-control" name="addNewFile" type="text" value="1"
+														required="required" readonly>
 													<button type="submit" class="btn"
 														style="background:none; none;color:#283792">
-														<i class="fas fa-hand-paper"
-															></i></button>
+														<i class="fas fa-hand-paper"></i></button>
 												</form>
 											</td>
 											{{else}}
@@ -99,20 +100,20 @@
 									<form action="/onchangefiles/addworkflow2" method="POST">
 
 										<div class="form-group">
-											<input class="form-control" name="create" type="text" value="1" 
+											<input class="form-control" name="create" type="text" value="1"
 												required="required" readonly>
 
-												{{#if acada}}
-												<input class="form-control" name="acadadm" type="text" value="1"
-												required="required"  readonly>
-												{{/if}}
+											{{#if acada}}
+											<input class="form-control" name="acadadm" type="text" value="1"
+												required="required" readonly>
+											{{/if}}
 
-												{{#unless acada}}
-												<input class="form-control" name="acadadm" type="text" value="0"
-												required="required"  readonly>
-												{{/unless}}
-												
-												
+											{{#unless acada}}
+											<input class="form-control" name="acadadm" type="text" value="0"
+												required="required" readonly>
+											{{/unless}}
+
+
 										</div>
 										<button type="submit" class="btn" style="background:none">Create New Work Flow
 											Process</button>
@@ -128,7 +129,7 @@
 												<th>Options</th>
 											</tr>
 										</thead>
-										{{#each myworkflows}}
+										{{#each adminworkflows}}
 										<tr>
 											<td> {{workprocessName}} </td>
 											{{#if acad}}

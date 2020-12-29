@@ -30,10 +30,10 @@ router.post('/addworkflow2', (req, res) => {
 
   WorkUnit.find({ endDate: null }).lean().then(workunits => {
     MainProcess.find({ deletedate: null }).lean().then(mainprocesses => {
-      MainProcess.find({ deletedate: null, workUnitId: workunits[0]._id }).lean().then(maprocess => {
+    //  MainProcess.find({ deletedate: null, workUnitId: workunits[0]._id }).lean().then(maprocess => {
         //console.log(maprocess)
         return res.render('site/onchange', { create: create, acadadm: acadadm, mainprocesses: mainprocesses })
-      })
+     // })
 
       // return res.render('site/workflows', { workflows: workflows, myworkflows: myworkflows, oldworkflows: oldworkflows, acada: admin.acad })
 
@@ -50,7 +50,7 @@ router.post('/addworkflow2', (req, res) => {
 router.get('/:id', async (req, res) => {
   if (req.session.userId) {
     //file olmayacak boş bakınma
-
+    
     const onChangeFiles = await File.find({ workflowId: req.params.id, approvalStatus: { $gte: 0, $lt: 4 }, deleteDate: null }).exec();
     //console.log("ONCHANGE")
     //console.log(onChangeFiles)
@@ -86,7 +86,6 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', (req, res) => {
   if (req.session.userId) {
-    console.log(req.body)
     //ilgili filelar ve düzenleme yerleri olacak
     const edit = true
     if (req.body.workprocessName) {
@@ -100,11 +99,12 @@ router.post('/:id', (req, res) => {
       deleteDate: null
     }).lean().then(wff => {
       Workflow.findById(req.params.id).lean().then(workf => {
-       // console.log("buraya girmmeis olmasi lazim")
+        console.log("buraya girmmeis olmasi lazim")
         return res.render('site/onchange', {
           wff: wff,
           workf: workf,
-          edit: edit
+          edit: edit,
+          addNewFile:req.body.addNewFile
         })
       })
     })

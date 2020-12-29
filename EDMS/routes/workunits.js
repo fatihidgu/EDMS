@@ -155,6 +155,7 @@ router.get('/treeview', async (req, res) => {
 
 
 router.post('/editworkunit/:id?', async (req, res) => {
+  console.log(req.body)
   try{
     if (req.session.userId) {
       console.log("hello")

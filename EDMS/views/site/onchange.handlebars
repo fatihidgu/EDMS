@@ -6,6 +6,16 @@
     ABOUTUS Section Bizim mekan
 ============================-->
 
+<section id="contact" style="background-color: #283792;;">
+  <div class="container">
+
+    <div class="row text-center" style="background-color: #283792;;">
+      <div class="col-md-12 ">
+        {{> site-alt-nav}}
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="aboutus" class="md-padding">
   <div class="container">
@@ -16,212 +26,209 @@
     {{/if}}
 
     {{#unless create}}
+    <div class="row">
+      <div class="col-md-2 text-left"></div>
+      <div class="col-md-8 bg-light py-3">
+        {{!-- looking workflows and editing--}}
+        <form action="" method="POST">
+          <label class="col-5 col-sm-5  float-left">Work Process:</label>
+          <input class="form-control form-control-sm" name="workprocessName" id="workproc" type="text"
+            value="{{workf.workprocessName}}" style="width: fit-content;" disabled>
+          <br><br>
+          <label class="col-5 col-sm-5 float-left">Academic/Administrative:</label>
+          {{#if workf.acad}}
+          <input class="form-control form-control-sm" type="text" value="Academic" style="width: fit-content;"
+            disabled><br><br>
+          {{/if}} {{#unless workf.acad}}
+          <input class="form-control form-control-sm" type="text" value="Administrative" style="width: fit-content;"
+            disabled><br><br>
+          {{/unless}}
+          <label class="col-5 col-sm-5 float-left">Main Process:</label>
+          <br><br>
+          <div class="text-center">
+            <button id="button1" type="submit" class="main-btn" type="submit" style="display: none;"
+              onclick="SwitchButtons()">Save</button>
+          </div>
+
+        </form>
+        {{#if edit}}
+        <div class="text-center">
+          <button id="button2" class="main-btn" type="submit" onclick="SwitchButtons()">Edit</button>
+        </div>
+
+        {{/if}}
+      </div>
+    </div>
+    {{/unless}}
+    {{!-- creating workflows --}}
+    {{#if (or
+    (eq create "1")
+    )}}
     <div class="container">
       <div class="row">
         <div class="col-md-2 text-left"></div>
-        <div class="col-md-4 text-left">
-          <label id="" for="">Work Process:</label>
-          <br><br>
-          <label for="">Academic/Administrative:</label>
-          <br><br>
-          <label for="">Related Work Units:</label>
-          <br>
-          <label for="">Category:</label>
-          <br>
-        </div>
-        <div class="col-md-6">
-          <form action="" method="POST">
-            <input type="text" id="workproc" name="workprocessName" value="{{workf.workprocessName}}" disabled><br><br>
-            {{#if workf.acad}}
-            <select size="1px" disabled>
-              <option>Academic </option>
-            </select>
-            {{/if}}
-            {{#unless workf.acad}}
-            <select size="1px" disabled>
-              <option>Administrative </option>
-            </select>
-            {{/unless}}<br><br>
-            <select disabled>
-              <option value="">Human Resources</option>
-            </select><br><br>
-            <select disabled>
-              <option value="">Permit Processes</option>
-            </select><br><br>
+        <div class="col-md-8 bg-light py-3">
+          <form action="/onchangefiles/addworkflow" method="POST">
 
-            <button id="button1" type="submit" class="main-btn" type="submit" style="display: none;"
-              onclick="SwitchButtons()">Save</button>
+            <label class="col-5 col-sm-5  float-left">Work Process:</label>
+
+            <input class="form-control form-control-sm" type="text" name="workprocessName" style="width: fit-content;"
+              required>
+            <br><br>
+            <label class="col-5 col-sm-5 float-left">Academic/Administrative:</label>
+            {{#if (or
+            (eq acadadm "1")
+            )}}
+            <input class="form-control form-control-sm" type="text" value="Administrative" style="width: fit-content;"
+              disabled><br><br>
+            <input class="form-control form-control-sm" type="text" value="Administrative" style="width: fit-content;"
+              disabled><br><br>
+            <select class="form-control  form-control-sm" style="width: fit-content;" name="acad" required>
+              <option value="1">Academic</option>
+            </select><br><br>
+            {{/if }}
+            {{#if (or
+            (eq acadadm "0")
+            )}}
+            <input class="form-control form-control-sm" type="text" value="Administrative" style="width: fit-content;"
+              disabled><br><br>
+            <input class="form-control form-control-sm" type="text" name="acad" value="0" style="width: fit-content;"
+              readonly required hidden>
+
+            {{/if }}
+
+            <label class="col-5 col-sm-5 float-left">Main Process:</label>
+
+            <select class="form-control  form-control-sm" style="width: fit-content;" name="mainProcessId" required>
+              <option value="">Select One</option>
+              {{#each mainprocesses}} <option value="{{_id}}">{{mainProcessName}}</option> {{/each}}
+            </select>
+
+            <br><br>
+            <div class="text-center"> <button type="submit" class="main-btn" type="submit">Create</button></div>
+
           </form>
-          {{#if edit}}
-          <button id="button2" class="main-btn" type="submit" onclick="SwitchButtons()">Edit</button>
-          {{/if}}
         </div>
       </div>
-      {{/unless}}
+    </div>
 
-      {{#if (or
-      (eq create "1")
-      )}}
+    {{/if}}
+
+    {{!-- showing files --}}
+    <section id="tabs" class="project-tab">
       <div class="container">
         <div class="row">
-          <div class="col-md-2 text-left"></div>
-          <div class="col-md-8 bg-light py-3">
-            <form action="/onchangefiles/addworkflow" method="POST">
-
-              <label class="col-5 col-sm-5  float-left">Work Process:</label>
-
-              <input class="form-control form-control-sm" type="text" name="workprocessName" style="width: fit-content;"
-                required>
-              <br><br>
-              <label class="col-5 col-sm-5 float-left">Academic/Administrative:</label>
-              {{#if (or
-              (eq acadadm "1")
-              )}}
-              <select class="form-control  form-control-sm" style="width: fit-content;" name="acad" required>
-                <option value="1">Academic</option>
-              </select><br><br>
-              {{/if }}
-              {{#if (or
-              (eq acadadm "0")
-              )}}
-              <select class="form-control  form-control-sm" style="width: fit-content;" name="acad" required>
-                <option value="0">Administrative</option>
-              </select><br><br>
-              {{/if }}
-
-              <label class="col-5 col-sm-5 float-left">Main Process:</label>
-
-              <select class="form-control  form-control-sm" style="width: fit-content;" name="mainProcessId" required>
-                <option value="">Select One</option>
-                {{#each mainprocesses}} <option value="{{_id}}">{{mainProcessName}}</option> {{/each}}
-              </select>
-
-              <br><br>
-              <div class="text-center"> <button type="submit" class="main-btn" type="submit">Create</button></div>
-
-            </form>
-          </div>
-        </div>
-      </div>
-
-      {{/if}}
-
-
-      <section id="tabs" class="project-tab">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-              <nav>
-                <div class="nav nav-tabs nav-fill" role="tablist" style="border:2px solid #ccc; font-weight: bolder;">
-                  <a class="nav-item nav-link active" data-toggle="tab" href="#nav-home" role="tab"
-                    aria-controls="nav-home" aria-selected="true">On Change Files</a>
-                  <a class="nav-item nav-link" data-toggle="tab" href="#nav-profile" role="tab"
-                    aria-controls="nav-profile" aria-selected="false">Approved Files</a>
-                </div>
-              </nav>
-              <div class="tab-content" id="nav-tabContent " style="border:1px solid #ccc;">
-                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                  <div class="table-responsive">
-                    <div>
-                      {{#unless create}}
-
-                      <form action="/createfile/create/{{workf._id}}" method="get">
-                        <button type="submit" class="btn" style="background:none">Add New
-                          File</button>
-                      </form>
-                      {{/unless}}
-                    </div>
-                    <table class="table table-hover" cellspacing="0">
-                      <thead>
-                        <tr>
-                          <th>File No</th>
-                          <th>Approved Status</th>
-                          <th>Change Reason</th>
-                          <th>Rejection Statu</th>
-                          <th>Rejection Reason</th>
-                          <th>Options</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {{#each onChangeFiles}}
-                        <tr>
-                          <td>{{fileNo}}</td>
-                          <td>{{approvalStatus}}</td>
-                          <td>{{changeReason}}</td>
-                          <td>{{rejectStatus}}</td>
-                          <td>{{rejectReason}}</td>
-                          <td style="text-align:center">
-                            <div class="w-100">
-                              <form action="/createfile/download" class="float-left" method="post">
-                                <input type="hidden" name="file_id" value="{{_id}}">
-                                <button type="submit" class="btn" style="background:none"><i class="fa fa-download"
-                                    value="1"></i></button>
-                              </form>
-                              <form action="/createfile/delete" class="float-left" method="post">
-                                <input type="hidden" name="file_id" value="{{_id}}">
-
-                                <button type="submit" class="btn" class="float-left" style="background:none"><i
-                                    class="fa fa-trash" value="1"></i></button>
-                              </form>
-                              <form action="/createfile/upload/{{_id}}" method="get">
-                                <button type="submit" class="btn" style="background:none; color:pink"><i
-                                    class="fa fa-upload" value="1"></i></button>
-                              </form>
-                            </div>
-
-                          </td>
-                        </tr>
-
-                        {{/each}}
-
-                      </tbody>
-                    </table>
+          <div class="col-md-12">
+            <nav>
+              <div class="nav nav-tabs nav-fill" role="tablist" style="border:2px solid #ccc; font-weight: bolder;">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#nav-home" role="tab"
+                  aria-controls="nav-home" aria-selected="true">On Change Files</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-profile" role="tab"
+                  aria-controls="nav-profile" aria-selected="false">Approved Files</a>
+              </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent " style="border:1px solid #ccc;">
+              <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="table-responsive">
+                  <div>
+                    {{#if addNewFile}}
+                    <form action="/createfile/create/{{workf._id}}" method="get">
+                      <button type="submit" class="btn" style="background:none">Add New
+                        File</button>
+                    </form>
+                    {{/if}}
                   </div>
-                </div>
-                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                  <div class="table-responsive">
-                    <table class="table table-hover" cellspacing="0">
-                      <thead>
-                        <tr>
-                          <th>File No</th>
-                          <th>Approval Date</th>
-                          <th>Options</th>
-                        </tr>
-                      </thead>
-
-                      {{#each wff}}
+                  <table class="table table-hover" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>File No</th>
+                        <th>Approved Status</th>
+                        <th>Change Reason</th>
+                        <th>Rejection Statu</th>
+                        <th>Rejection Reason</th>
+                        <th>Options</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each onChangeFiles}}
                       <tr>
                         <td>{{fileNo}}</td>
-                        <td>{{approvalDate}}</td>
+                        <td>{{approvalStatus}}</td>
+                        <td>{{changeReason}}</td>
+                        <td>{{rejectStatus}}</td>
+                        <td>{{rejectReason}}</td>
                         <td style="text-align:center">
                           <div class="w-100">
                             <form action="/createfile/download" class="float-left" method="post">
                               <input type="hidden" name="file_id" value="{{_id}}">
-                              <button type="submit" class="btn" style="background:none"><i class="fa fa-download"
-                                  value="1"></i></button>
+                              <button type="submit" class="btn" style="background:none"><i
+                                  class="fa fa-download"></i></button>
                             </form>
-                            <!-- <form action="/createfile/delete" class="float-left" method="post">
+                            <form action="/createfile/delete" class="float-left" method="post">
                               <input type="hidden" name="file_id" value="{{_id}}">
 
-                              <button type="submit" class="btn" class="float-left" style="background:none"><i class="fa fa-trash" value="1"></i></button>
-                            </form> -->
+                              <button type="submit" class="btn" class="float-left" style="background:none"><i
+                                  class="fa fa-trash"></i></button>
+                            </form>
                             <form action="/createfile/upload/{{_id}}" method="get">
                               <button type="submit" class="btn" style="background:none; color:pink"><i
-                                  class="fa fa-upload" value="1"></i></button>
+                                  class="fa fa-upload"></i></button>
                             </form>
                           </div>
 
                         </td>
                       </tr>
+
                       {{/each}}
 
-                    </table>
-                  </div>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div class="table-responsive">
+                  <table class="table table-hover" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>File No</th>
+                        <th>Approval Date</th>
+                        <th>Options</th>
+                      </tr>
+                    </thead>
+
+                    {{#each wff}}
+                    <tr>
+                      <td>{{fileNo}}</td>
+                      <td>{{approvalDate}}</td>
+                      <td style="text-align:center">
+                        <div class="w-100">
+                          <form action="/createfile/download" class="float-left" method="post">
+                            <input type="hidden" name="file_id" value="{{_id}}">
+                            <button type="submit" class="btn" style="background:none"><i class="fa fa-download"
+                                value="1"></i></button>
+                          </form>
+                          <!-- <form action="/createfile/delete" class="float-left" method="post">
+                              <input type="hidden" name="file_id" value="{{_id}}">
+
+                              <button type="submit" class="btn" class="float-left" style="background:none"><i class="fa fa-trash" value="1"></i></button>
+                            </form> -->
+                          <form action="/createfile/upload/{{_id}}" method="get">
+                            <button type="submit" class="btn" style="background:none; color:pink"><i
+                                class="fa fa-upload" value="1"></i></button>
+                          </form>
+                        </div>
+
+                      </td>
+                    </tr>
+                    {{/each}}
+
+                  </table>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
+  </div>
 </section>
