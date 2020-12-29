@@ -35,13 +35,13 @@
 
                         <label class="col-5 col-sm-5 float-left">Workflow File Type:</label>
 
-                        <input class="form-control form-control-sm"  id="workflowfilenameid"
-                            type="text" style="width: fit-content;"><br><br>
+                        <input class="form-control form-control-sm" id="workflowfilenameid" type="text"
+                            style="width: fit-content;"><br><br>
                         <label class="col-5 col-sm-5 float-left">Code:</label>
-                        <input class="form-control form-control-sm" id="workflowfilecodeid"
-                            type="text" min="0" style="width: fit-content;">
-                        <div class="text-center"> <button type="button" class="main-btn" onclick="addTableWorkflowFileType()"
-                                >Add</button></div>
+                        <input class="form-control form-control-sm" id="workflowfilecodeid" type="text" min="0"
+                            style="width: fit-content;">
+                        <div class="text-center"> <button type="button" class="main-btn"
+                                onclick="addTableWorkflowFileType()">Add</button></div>
                         <br><br>
 
                         <div class="table-responsive">
@@ -50,6 +50,7 @@
                                     <tr>
                                         <th>Workflow File Type</th>
                                         <th>Code</th>
+                                        <th>Available/Disabled</th>
                                         <th>Options</th>
                                     </tr>
                                 </thead>
@@ -57,7 +58,33 @@
                                 <tr>
                                     <td>{{workflowFileTypeName}}</td>
                                     <td>{{workflowFileTypeCode}}</td>
-                                    <td>disable</td>
+                                    {{#if (or (eq deleteDate null))}}
+                                    <td>Available</td>
+                                    <td>
+                                        <div>
+                                            <form></form>
+                                            <form action="/workflowfiletype/disable" method="POST" id="{{_id}}"> </form>
+                                            <input class="form-control form-control-sm" value="{{_id}}" type="text"
+                                                name="id" style="width: fit-content;" form="{{_id}}" readonly hidden>
+                                            <button type="submit" class="btn btn-danger" form="{{_id}}">Disable</button>
+                                        </div>
+
+                                    </td>
+                                    {{/if}}
+
+                                    {{#unless (or (eq deleteDate null))}}
+                                    <td>Disabled</td>
+                                    <td>
+
+                                        <div>
+                                            <form action="/workflowfiletype/disable" method="POST" id="{{_id}}"> </form>
+                                            <input class="form-control form-control-sm" value="{{_id}}" type="text"
+                                                name="id" style="width: fit-content;" form="{{_id}}" readonly hidden>
+                                            <button type="submit" class="btn btn-primary" form="{{_id}}">
+                                               Enable</button>
+                                        </div>
+                                    </td>
+                                    {{/unless}}
                                 </tr>
                                 {{/each}}
                             </table>

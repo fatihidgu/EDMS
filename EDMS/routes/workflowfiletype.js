@@ -5,7 +5,7 @@ const Filetype = require('../models/WorkflowFileType')
 
 router.get('/addworkflowfiletype', (req, res) => {
     if (req.session.userId) {
-        Filetype.find({ deleteDate: null }).lean().then(filetypes => {
+        Filetype.find().lean().then(filetypes => {
             return res.render('site/workflowfiletype', { filetypes: filetypes })
 
         })
@@ -16,8 +16,8 @@ router.get('/addworkflowfiletype', (req, res) => {
 })
 
 router.post('/addworkflowfiletype', (req, res) => {
-
     const { workflowfilename, workflowfilecode } = req.body
+    console.log(req.body)
     if (typeof workflowfilename === 'object') {
         for (let index = 0; index < workflowfilename.length; index++) {
             const filetypestr = JSON.stringify(workflowfilename[index]);
@@ -51,6 +51,22 @@ router.post('/addworkflowfiletype', (req, res) => {
         }
         return res.redirect('/workflowfiletype/addworkflowfiletype')
     }
+})
+
+
+
+router.post('/disable', (req, res) => {
+    Filetype.findOne({_id:req.body.id}).then(file=>{
+        if(file.deleteDate){
+            //console.log("silinmis")
+            file.updateOne({deleteDate:null}).exec()
+        }
+        else{
+            //console.log("silinmemis")
+            file.updateOne({deleteDate:Date.now()}).exec()
+        }
+    })
+return res.redirect("/workflowfiletype/addworkflowfiletype")
 })
 
 module.exports = router

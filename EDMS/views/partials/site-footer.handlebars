@@ -111,6 +111,21 @@
 	}
 </script>
 
+<script>
+	function switchChck5() {
+
+		if (document.getElementById('inlineCheckbox10').checked) {
+			document.getElementById('inlineCheckbox10').checked = false
+		}
+		else if (!document.getElementById('inlineCheckbox9').checked) {
+			document.getElementById('inlineCheckbox10').checked = true
+
+		}
+
+	}
+</script>
+
+
 
 <script>
 	function deneme(response) {
@@ -321,7 +336,7 @@
 	function addTableWorkflowFileType() {
 		//id="workflowfilecodeid"
 		//id="workflowfilenameid"
-
+		
 		let code = JSON.stringify(document.getElementById('workflowfilecodeid').value)
 		let file = JSON.stringify(document.getElementById('workflowfilenameid').value)
 		if (document.getElementById('workflowfilenameid').value === ""  || file.charAt(1) == " " ||
@@ -340,7 +355,7 @@
 			var td2 = document.createElement('td');
 			td.appendChild(document.createTextNode(document.getElementById('workflowfilenameid').value));
 			td1.appendChild(document.createTextNode(document.getElementById('workflowfilecodeid').value));
-			td2.appendChild(document.createTextNode(""));
+			td2.appendChild(document.createTextNode("Onchange"));
 			tr.appendChild(td);
 			tr.appendChild(td1);
 			tr.appendChild(td2);
