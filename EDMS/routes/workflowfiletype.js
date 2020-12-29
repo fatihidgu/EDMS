@@ -56,7 +56,7 @@ router.post('/addworkflowfiletype', (req, res) => {
 
 
 router.post('/disable', (req, res) => {
-    Filetype.findOne({_id:req.body.id}).then(file=>{
+    Filetype.findOne({_id:req.body.filtypeid}).then(file=>{
         if(file.deleteDate){
             //console.log("silinmis")
             file.updateOne({deleteDate:null}).exec()

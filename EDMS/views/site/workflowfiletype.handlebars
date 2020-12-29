@@ -61,11 +61,12 @@
                                     {{#if (or (eq deleteDate null))}}
                                     <td>Available</td>
                                     <td>
+                                        
                                         <div>
                                             <form></form>
                                             <form action="/workflowfiletype/disable" method="POST" id="{{_id}}"> </form>
                                             <input class="form-control form-control-sm" value="{{_id}}" type="text"
-                                                name="id" style="width: fit-content;" form="{{_id}}" readonly hidden>
+                                                name="filtypeid" style="width: fit-content;" form="{{_id}}" readonly hidden>
                                             <button type="submit" class="btn btn-danger" form="{{_id}}">Disable</button>
                                         </div>
 
@@ -77,9 +78,10 @@
                                     <td>
 
                                         <div>
+                                             <form></form>
                                             <form action="/workflowfiletype/disable" method="POST" id="{{_id}}"> </form>
                                             <input class="form-control form-control-sm" value="{{_id}}" type="text"
-                                                name="id" style="width: fit-content;" form="{{_id}}" readonly hidden>
+                                                name="filtypeid" style="width: fit-content;" form="{{_id}}" readonly hidden>
                                             <button type="submit" class="btn btn-primary" form="{{_id}}">
                                                Enable</button>
                                         </div>

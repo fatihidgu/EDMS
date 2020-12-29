@@ -5,7 +5,7 @@ const Workunit = require('../models/WorkUnit')
 
 router.get('/addmainprocess', (req, res) => {
     Workunit.find({ endDate: null }).lean().then(workunits => {
-        Mainprocess.find({ deleteDate: null }).lean().then(mainprocesses => {
+        Mainprocess.find({}).lean().then(mainprocesses => {
             return res.render('site/mainprocess', { mainprocesses: mainprocesses, workunits: workunits })
         })
     })
@@ -48,5 +48,20 @@ router.post('/addmainprocess', (req, res) => {
     }
 
 })
+
+router.post('/disable', (req, res) => {
+    Mainprocess.findOne({_id:req.body.mainprocid}).then(mainproc=>{
+        if(mainproc.deleteDate){
+            //console.log("silinmis")
+            mainproc.updateOne({deleteDate:null}).exec()
+        }
+        else{
+            //console.log("silinmemis")
+            mainproc.updateOne({deleteDate:Date.now()}).exec()
+        }
+    })
+return res.redirect("/mainprocess/addmainprocess")
+})
+
 
 module.exports = router

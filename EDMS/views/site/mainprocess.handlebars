@@ -35,12 +35,12 @@
 
                         <label class="col-5 col-sm-5 float-left">Main Process:</label>
 
-                        <input class="form-control form-control-sm"  id="workprocessid"
-                            type="text" style="width: fit-content;"><br><br>
+                        <input class="form-control form-control-sm" id="workprocessid" type="text"
+                            style="width: fit-content;"><br><br>
                         <label class="col-5 col-sm-5 float-left">No:</label>
-                        <input class="form-control form-control-sm" id="workprocessnoid"
-                            type="number" min="0" style="width: fit-content;"><br><br>
-                       
+                        <input class="form-control form-control-sm" id="workprocessnoid" type="number" min="0"
+                            style="width: fit-content;"><br><br>
+
                         <label class="col-5 col-sm-5 float-left">Related Work Unit:</label>
 
                         <select class="form-control" data-role="select-dropdown" style="width: fit-content;"
@@ -49,8 +49,8 @@
                             {{#each workunits}} <option value="{{_id}}">{{workUnitName}}-{{workUnitCode}}</option>
                             {{/each}}
                         </select>
-                        <div class="text-center"> <button type="button" class="main-btn" onclick="addTableMainProcess()"
-                               >Add</button></div>
+                        <div class="text-center"> <button type="button" class="main-btn"
+                                onclick="addTableMainProcess()">Add</button></div>
                         <br><br>
 
                         <div class="table-responsive">
@@ -59,6 +59,7 @@
                                     <tr>
                                         <th>Main Process</th>
                                         <th>No</th>
+                                        <th>Available/Disabled</th>
                                         <th>Options</th>
                                     </tr>
                                 </thead>
@@ -66,7 +67,34 @@
                                 <tr>
                                     <td>{{mainProcessName}}</td>
                                     <td>{{mainProcessNo}}</td>
-                                    <td></td>
+                                    {{#if (or (eq deleteDate null))}}
+                                    <td>Available</td>
+                                    <td>
+                                        <div>
+                                            <form></form>
+                                            <form action="/mainprocess/disable" method="POST" id="{{_id}}"> </form>
+                                            <input class="form-control form-control-sm" value="{{_id}}" type="text"
+                                                name="mainprocid" style="width: fit-content;" form="{{_id}}" readonly hidden>
+                                            <button type="submit" class="btn btn-danger" form="{{_id}}">Disable</button>
+                                        </div>
+
+                                    </td>
+                                    {{/if}}
+
+                                    {{#unless (or (eq deleteDate null))}}
+                                    <td>Disabled</td>
+                                    <td>
+
+                                        <div>
+                                             <form></form>
+                                            <form action="/mainprocess/disable" method="POST" id="{{_id}}"> </form>
+                                            <input class="form-control form-control-sm" value="{{_id}}" type="text"
+                                                name="mainprocid" style="width: fit-content;" form="{{_id}}" readonly hidden>
+                                            <button type="submit" class="btn btn-primary" form="{{_id}}">
+                                                Enable</button>
+                                        </div>
+                                    </td>
+                                    {{/unless}}
                                 </tr>
                                 {{/each}}
                             </table>
