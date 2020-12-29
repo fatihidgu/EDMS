@@ -153,21 +153,60 @@ router.get('/treeview', async (req, res) => {
   }
 })
 
-
 router.post('/editworkunit/:id?', async (req, res) => {
   console.log(req.body)
   try{
     if (req.session.userId) {
       console.log("hello")
+      console.log("burada")
+      console.log(req.params)
       if (req.params.id) {
-        console.log("body",req.body)
-        var edit = 0
-        if(req.body.edit){
-           edit = req.body.edit
-           if(req.body.save){
-             
-           }
+        console.log("tr")
+
+        var address = 'site/editworkunit' + req.params.id
+        return res.redirect(address,{create:"1"})
+      } else {
+        const ru = req.params.manager
+        RegisteredUser.findOneAndUpdate({_id:ru},{isManager:true}).exec()
+        const workUnit = new WorkUnit({
+          workUnitCode:req.body.work_unit_code,
+          workUnitName:req.body.work_unit_name,
+          acad:req.body.acad
+        });
+        workUnit.save();
+        const managerExist = await Manager.findOne({registeredUserId:ru,workUnitId:workUnit._id,endDate:null}).exec();
+        if(!(managerExist)){
+          const manager = new Manager({
+            workUnitId:workUnit._id,
+            registeredUserId:ru
+          });
+          manager.save()
         }
+        req.session.sessionFlash = {
+          type: 'alert alert-success',
+          message: 'Your Work Unit created Successfully.'
+        }
+
+        const address = 'editworkunit/'+workUnit._id
+        return res.redirect(address)
+      }
+
+    } else {
+      res.redirect('/registeredusers/login')
+    }
+  }catch(err){
+    console.log("error",err);
+  }
+
+})
+
+
+router.get('/editworkunit/:id?', async (req, res) => {
+  try{
+    if (req.session.userId) {
+      console.log("hello")
+      if (req.params.id) {
+        var edit = 0
         const workUnit = await WorkUnit.findById(req.params.id).exec();
 
         const workUnitManager = await Manager.find({
@@ -201,6 +240,8 @@ router.post('/editworkunit/:id?', async (req, res) => {
           email: organiser.registeredUserId.email
         }))
 
+        console.log(a)
+
         res.render('site/editworkunits', {
           create: "0",
           edit:edit,
@@ -212,8 +253,7 @@ router.post('/editworkunit/:id?', async (req, res) => {
         })
       } else {
         res.render('site/editworkunits', {
-          create: "1",
-          edit:"1"
+          create: "1"
         })
       }
 
