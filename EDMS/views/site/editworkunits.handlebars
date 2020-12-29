@@ -66,24 +66,29 @@
           <div class="col-md-6">
             <form form action="#" method="POST">
 
-
-
-              <input type="text" id="" name="work_unit_code" class="col-md-8 hello" disabled placeholder="Code" value="{{work_unit_code}}"><br><br>
-              <input type="text" id="" name="work_unit_name" class="col-md-8 hello" disabled placeholder="Name" value="{{work_unit_name}}"><br><br>
+              <input type="text" id="" name="work_unit_code" class="col-md-8 hello" placeholder="Code" value="{{work_unit_code}}"><br><br>
+              <input type="text" id="" name="work_unit_name" class="col-md-8 hello" placeholder="Name" value="{{work_unit_name}}"><br><br>
 
               {{#if (eq acad "1")}}
                 <label for="">Academic</label>
+                <input type="hidden" name="acad" value="1">
               {{/if}}
-              {{#if (eq acad 0)}}
+              {{#if (eq acad "0")}}
                 <label for="">Administrative</label>
+                <input type="hidden" name="acad" value="0">
               {{/if}}
               <br><br>
-              <select size="1px" name="manager" disabled id="">
-                <option value="ercan" selected>Ercan Solak</option>
+              <select size="1px" name="manager" id="">
+
+                <option value="{{currentManager._id}}" selected="true">{{currentManager.email}}</option>
+                {{#each managerOptions}}
+                  <option value="{{_id}}">{{email}}</option>
+                {{/each}}
+
               </select><br><br><br>
 
               <button class="btn btn-primary " type="submit" onclick="SwitchButtons()" name="save" id="button1" style="display:none;">Edit</button>
-              <button class="btn btn-primary " type="submit" onclick="SwitchButtons()" id="button2">Save</button>
+              <button class="btn btn-primary " type="button" onclick="SwitchButtons()" id="button2">Save</button>
 
               <br><br>
 

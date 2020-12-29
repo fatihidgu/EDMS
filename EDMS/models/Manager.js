@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const ManagerSchema = new Schema({
     workUnitId:{type: Schema.Types.ObjectId, ref: 'WorkUnit',required:true},
     startDate:{type: Date, default:Date.now, required:true},
-    endDate:{type:Date, default:null, required:true},
+    endDate:{type:Date, default:null},
     registeredUserId:{type: Schema.Types.ObjectId, ref: 'RegisteredUser',required:true}
 })
 
