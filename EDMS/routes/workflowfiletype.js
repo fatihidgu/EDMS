@@ -44,9 +44,10 @@ router.post('/addworkflowfiletype', (req, res) => {
                         }
                     }
                     )
-                    return res.res.render('site/workflowfiletype')
+
                 }
             }
+            return res.redirect('/workflowfiletype/addworkflowfiletype')
         } else {
             if (workflowfilename == null || workflowfilename.charAt(0) == ' ' || workflowfilename == '' ||
                 workflowfilecode == null || workflowfilecode.charAt(0) == ' ' || workflowfilecode == '') {

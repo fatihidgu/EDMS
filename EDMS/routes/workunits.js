@@ -23,11 +23,11 @@ router.get('/allworkunits', async (req, res) => {
     var oldworkunits = await WorkUnit.find({endDate:{$ne:null}}).lean().exec();
 
     var myworkunits = []
-    console.log("a",workUnitManager)
+    //console.log("a",workUnitManager)
 
 
     workUnitManager.forEach(b => {
-      console.log("b",b)
+      //console.log("b",b)
       if (b.endDate != null) {
         // oldworkunits.push({
         //   workUnitId: b.workUnitId._id,
@@ -35,7 +35,9 @@ router.get('/allworkunits', async (req, res) => {
         //   workUnitCode: b.workUnitId.workUnitCode
         // })
       } else {
+
         const workUnitExist = WorkUnit.findOne({_id:b.workUnitId._id}).lean().exec();
+
         if(workUnitExist.endDate == null){
           workunits.push({
             workUnitId: b.workUnitId._id,
@@ -43,6 +45,7 @@ router.get('/allworkunits', async (req, res) => {
             workUnitCode: b.workUnitId.workUnitCode,
             managerEmail: b.registeredUserId.email
           })
+
 
           if (b.registeredUserId._id == req.session.userId) {
             myworkunits.push({
@@ -53,12 +56,8 @@ router.get('/allworkunits', async (req, res) => {
             })
           }
         }
-
       }
-
     });
-
-
 
     return res.render('site/workunits', {
       workunits: workunits,
@@ -164,7 +163,7 @@ router.get('/treeview', async (req, res) => {
 })
 
 router.post('/editworkunit/:id?', async (req, res) => {
-
+console.log("post")
   console.log(req.body)
   try{
 
@@ -288,6 +287,61 @@ router.post('/editworkunit/:id?', async (req, res) => {
 
 })
 
+router.post('/addPersonel', async (req,res) => {
+  console.log(req.body)
+  try{
+
+    if (req.session.userId) {
+      const ruExist = await RegisteredUser.findOne({
+        _id: req.body.organiserId,
+        isOrganiser: true,
+        isBlocked: false
+      }).lean().exec();
+      console.log(ruExist)
+      if(ruExist == null){
+        return res.redirect('/registeredusers/login')
+      }
+
+
+      const workUnit = await WorkUnit.findById(req.body.workUnitId).exec()
+
+      const organiserExist = await Organiser.findOne({
+        registeredUserId: req.body.organiserId,
+        workUnitId: req.body.workUnitId,
+        endDate: null
+      }).exec();
+      console.log("wu",workUnit)
+      console.log("re",organiserExist)
+
+      if(organiserExist == null && !(workUnit ==null)){
+        const organiser = new Organiser({
+          workUnitId: workUnit._id,
+          registeredUserId: ruExist._id,
+          endDate:null
+        });
+        organiser.save();
+        console.log(organiser)
+      }
+      req.session.sessionFlash = {
+        type: 'alert alert-success',
+        message: 'Personel added.'
+      }
+
+      const address = 'editworkunit/'+workUnit._id
+      console.log("add",address)
+      return res.redirect(address)
+
+    } else {
+      console.log("else")
+      res.redirect('/registeredusers/login')
+    }
+  } catch (err) {
+    console.log("error", err);
+  }
+
+
+})
+
 
 router.get('/editworkunit/:id?', async (req, res) => {
   try {
@@ -318,23 +372,31 @@ router.get('/editworkunit/:id?', async (req, res) => {
           endDate: null
         }, 'registeredUserId').lean().populate({
           path: 'registeredUserId',
-          select: 'name surname email'
+          select: '_id name surname email'
         }).lean().exec()
         a = []
         organisers.forEach(organiser => a.push({
           organiserId: organiser._id,
+          registeredUserId: organiser.registeredUserId._id,
           name: organiser.registeredUserId.name,
           surname: organiser.registeredUserId.surname,
           email: organiser.registeredUserId.email
         }))
 
-        const registeredUsers = await RegisteredUser.find({
+        const managerOptions = await RegisteredUser.find({
           _id:{$ne : manager.registeredUserId._id},
           endDate: null,
           isBlocked:false,
           isManager:true
         },null,{sort: {email: 1}}).lean().exec()
-
+        var organisersIds = a.map(function (element) { return element.registeredUserId; });
+        organisersIds.push(manager.registeredUserId._id)
+        const organiserOptions = await RegisteredUser.find({
+          _id:{$nin : organisersIds},
+          endDate: null,
+          isBlocked:false,
+          isOrganiser:true
+        },null,{sort: {email: 1}}).lean().exec()
 
         acad = ""+workUnit.acad
 
@@ -342,15 +404,16 @@ router.get('/editworkunit/:id?', async (req, res) => {
           create: "0",
           edit: edit,
           currentManager:manager.registeredUserId,
-          managerOptions:registeredUsers,
+          managerOptions:managerOptions,
           work_unit_id: workUnit._id,
           work_unit_code: workUnit.workUnitCode,
           work_unit_name: workUnit.workUnitName,
           acad: acad,
           organisers: a,
+          organiserOptions:organiserOptions
         })
       } else {
-        const registeredUsers = await RegisteredUser.find({
+        const managerOptions = await RegisteredUser.find({
           endDate: null,
           isBlocked:false,
           isManager:true
@@ -362,7 +425,7 @@ router.get('/editworkunit/:id?', async (req, res) => {
         res.render('site/editworkunits', {
           create: "1",
           acad: acad,
-          managerOptions:registeredUsers
+          managerOptions:managerOptions
         })
       }
     } else {

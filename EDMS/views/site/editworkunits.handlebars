@@ -72,7 +72,7 @@
 
           </div>
           <div class="col-md-6">
-            <form form action="#" method="POST">
+            <form  id="wu-edit-form" action="/workunits/editworkunit/{{work_unit_id}}" method="POST">
 
               <input type="text" id="" name="work_unit_code" class="col-md-8 wu-edit" placeholder="Code" disabled value="{{work_unit_code}}"><br><br>
               <input type="text" id="" name="work_unit_name" class="col-md-8 wu-edit" placeholder="Name" disabled value="{{work_unit_name}}"><br><br>
@@ -86,7 +86,7 @@
                 <input type="hidden" name="acad" value="0">
               {{/if}}
               <br><br>
-              <select size="1px" name="manager" readonly class="wu-edit" id="">
+              <select size="1px" name="manager" disabled class="wu-edit" id="">
 
                 <option value="{{currentManager._id}}" selected="true">{{currentManager.email}}</option>
                 {{#each managerOptions}}
@@ -95,8 +95,8 @@
 
               </select><br><br><br>
 
-              <button class="btn btn-primary " type="button" onclick="disablear();" name="save" id="btn1" style="display:none;">Save</button>
-              <button class="btn btn-primary " type="button" onclick="disablear();" id="btn2">Edit</button>
+              <button class="btn btn-primary" type="button" onclick="wuEditBtn1f();" name="save" id="wuEditBtn1" style="display:none;">Save</button>
+              <button class="btn btn-primary" type="button" onclick="wuEditBtn2f()" id="wuEditBtn2">Edit</button>
 
               <br><br>
 
@@ -105,7 +105,7 @@
 
           </div>
         </div>
-
+<br><br>
         <section id="tabs" class="project-tab">
           <div class="container">
             <div class="row">
@@ -117,7 +117,34 @@
                   </div>
                   <div class="tab-pane fade show active" id="nav-home" role="tabpanel">
                     <div class="table-responsive">
-                      <div>
+                      <div class="text-center">
+                        {{#unless (eq organiserOptions.length 0)}}
+                        <form class="col-md-12" action="/workunits/addPersonel" method="POST">
+                          <label for="">Choose Personel</label>
+
+                          <select class="" name="organiserId">
+
+                            {{#each organiserOptions}}
+                              <option value="{{_id}}">{{email}}</option>
+                            {{/each}}
+
+                          </select>
+                          <input type="hidden" name="workUnitId" value="{{work_unit_id}}">
+                          <button type="submit" class="btn-primary main-btn">Add</button>
+                        </form>
+                        {{/unless}}
+                        {{#if (eq organiserOptions.length 0)}}
+
+                        <form class="col-md-12" action="#" method="POST">
+                          <label for="">Choose Personel</label>
+
+                          <select class="" name="organiserId" disabled>
+                            <option value="" selected>No Value</option>
+                          </select>
+                          <button type="button" disabled class="btn-primary main-btn">Add</button>
+                        </form>
+
+                        {{/if}}
 
                       </div>
                       <table class="table table-hover" cellspacing="0">
