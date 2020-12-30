@@ -17,10 +17,7 @@ mongoose.connect("mongodb://127.0.0.1/EDMS", {
 })
 mongoose.set('useFindAndModify', false);
 app.use(express.static('public'))
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-mongoose.set('useUnifiedTopology', true);
+
 
 //app.engine('handlebars',exphbs())
 //app.set('view engine','handlebars')
@@ -30,10 +27,14 @@ var hbsHelpers = exphbs.create({
   //  defaultLayout: '',
 
 });
+
+app.engine('handlebars', hbsHelpers.engine);
+app.set('view engine', '.handlebars');
+
 const mongoStore = connectMongo(expressSession)
 
 app.use(expressSession({
-  secret: 'testotesto',
+  secret: 'securekeysession',
   resave: false,
   saveUninitialized: true,
   store: new mongoStore({ mongooseConnection: mongoose.connection })
@@ -82,9 +83,6 @@ app.use((req, res, next) => {
   delete req.session.sessionFlash
   next()
 })
-
-app.engine('handlebars', hbsHelpers.engine);
-app.set('view engine', '.handlebars');
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
