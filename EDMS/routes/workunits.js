@@ -4,6 +4,8 @@ const WorkUnit = require('../models/WorkUnit')
 const RegisteredUser = require('../models/RegisteredUser')
 const Organiser = require('../models/Organiser')
 const Manager = require('../models/Manager')
+const Administrator = require('../models/Administrator')
+
 
 
 router.get('/allworkunits', async (req, res) => {
@@ -327,12 +329,14 @@ router.get('/editworkunit/:id?', async (req, res) => {
         }))
 
         const registeredUsers = await RegisteredUser.find({
-          _id:{$ne : manager._id},
+          _id:{$ne : manager.registeredUserId._id},
           endDate: null,
-          isBlocked:false
+          isBlocked:false,
+          isManager:true
         },null,{sort: {email: 1}}).lean().exec()
 
-        console.log("m",manager)
+
+        acad = ""+workUnit.acad
 
         res.render('site/editworkunits', {
           create: "0",
@@ -342,16 +346,22 @@ router.get('/editworkunit/:id?', async (req, res) => {
           work_unit_id: workUnit._id,
           work_unit_code: workUnit.workUnitCode,
           work_unit_name: workUnit.workUnitName,
-          acad: workUnit.acad,
+          acad: acad,
           organisers: a,
         })
       } else {
         const registeredUsers = await RegisteredUser.find({
           endDate: null,
-          isBlocked:false
+          isBlocked:false,
+          isManager:true
         },null,{sort: {email: 1}}).lean().exec()
+        const admin = await Administrator.findOne({registeredUserId:req.session.userId}).exec();
+
+        acad =""+admin.acad
+        console.log(acad)
         res.render('site/editworkunits', {
           create: "1",
+          acad: acad,
           managerOptions:registeredUsers
         })
       }

@@ -297,7 +297,7 @@
 			//id="workform"
 
 
-			// Create an input element for workprocess 
+			// Create an input element for workprocess
 			var work = document.createElement("input");
 			work.setAttribute("type", "text");
 			work.setAttribute("readonly", true);
@@ -305,7 +305,7 @@
 			work.setAttribute("value", document.getElementById('workprocessid').value);
 			//work.style.display = 'none';
 
-			// Create an input element for workprocessno 
+			// Create an input element for workprocessno
 			var workno = document.createElement("input");
 			workno.setAttribute("type", "text");
 			workno.setAttribute("name", "workprocessno");
@@ -321,9 +321,9 @@
 			workid.setAttribute("value", document.getElementById('workunitid').value);
 			//work.style.display = 'none';
 			form.append(workid);
-			// Append the email_ID input to the form 
+			// Append the email_ID input to the form
 			form.append(work);
-			// Append the password to the form 
+			// Append the password to the form
 			form.append(workno);
 			document.getElementById('workprocessid').value = ""
 			document.getElementById('workprocessnoid').value = ""
@@ -368,7 +368,7 @@
 			//id="workflowfilenameid"
 
 
-			// Create an input element for workflowfilename 
+			// Create an input element for workflowfilename
 			var filename = document.createElement("input");
 			filename.setAttribute("type", "text");
 			filename.setAttribute("readonly", true);
@@ -376,7 +376,7 @@
 			filename.setAttribute("value", document.getElementById('workflowfilenameid').value);
 			//filename.style.display = 'none';
 
-			// Create an input element for workflowfilecode 
+			// Create an input element for workflowfilecode
 			var filecode = document.createElement("input");
 			filecode.setAttribute("type", "text");
 			filecode.setAttribute("readonly", true);
@@ -385,15 +385,39 @@
 			filecode.setAttribute("value", document.getElementById('workflowfilecodeid').value);
 
 			form.append(filecode);
-			// Append the filecode input to the form 
+			// Append the filecode input to the form
 			form.append(filename);
-			// Append the filename to the form 
+			// Append the filename to the form
 
 			//clear inputs
 			document.getElementById('workflowfilenameid').value = ""
 			document.getElementById('workflowfilecodeid').value = ""
 		}
 	}
+
+</script>
+<script>
+function disablear(){
+	btn1 = document.getElementById("btn1");
+	btn2 = document.getElementById("btn2");
+	if(btn1.style.display == "none"){
+		btn1.style.display = ""
+		btn2.style.display = "none"
+	}else {
+		btn1.style.display = "none"
+		btn2.style.display = " "
+	}
+
+	var elements = document.getElementsByClassName("wu-edit");
+	for(i = 0;i<elements.length;i=i+1){
+		alert(elements[i].value)
+		elements[i].disabled= !(elements[i].disabled);
+	}
+
+}
+document.getElementById("wu-edit-form").submit();
+
+
 
 </script>
 </body>

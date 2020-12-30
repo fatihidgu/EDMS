@@ -36,9 +36,15 @@
             <form action="/workunits/editworkunit" method="POST">
               <input type="text" id="" name="work_unit_code" placeholder="Code" required><br><br>
               <input type="text" id="" name="work_unit_name" placeholder="Name" required><br><br>
-              <select size="1px" name="acad" id="acad">
-                <option value="0">Administrative</option>
-              </select><br><br>
+              {{#if (eq acad "1")}}
+                <label for="">Academic</label>
+                <input type="hidden" name="acad" value="1">
+              {{/if}}
+              {{#if (eq acad "0")}}
+                <label for="">Administrative</label>
+                <input type="hidden" name="acad" value="0">
+              {{/if}}
+              <br><br>
               <select size="1px" name="manager" id="">
                 {{#each managerOptions}}
                   <option value="{{_id}}">{{email}}</option>
@@ -68,8 +74,8 @@
           <div class="col-md-6">
             <form form action="#" method="POST">
 
-              <input type="text" id="" name="work_unit_code" class="col-md-8 hello" placeholder="Code" value="{{work_unit_code}}"><br><br>
-              <input type="text" id="" name="work_unit_name" class="col-md-8 hello" placeholder="Name" value="{{work_unit_name}}"><br><br>
+              <input type="text" id="" name="work_unit_code" class="col-md-8 wu-edit" placeholder="Code" disabled value="{{work_unit_code}}"><br><br>
+              <input type="text" id="" name="work_unit_name" class="col-md-8 wu-edit" placeholder="Name" disabled value="{{work_unit_name}}"><br><br>
 
               {{#if (eq acad "1")}}
                 <label for="">Academic</label>
@@ -80,7 +86,7 @@
                 <input type="hidden" name="acad" value="0">
               {{/if}}
               <br><br>
-              <select size="1px" name="manager" id="">
+              <select size="1px" name="manager" readonly class="wu-edit" id="">
 
                 <option value="{{currentManager._id}}" selected="true">{{currentManager.email}}</option>
                 {{#each managerOptions}}
@@ -89,8 +95,8 @@
 
               </select><br><br><br>
 
-              <button class="btn btn-primary " type="submit" onclick="SwitchButtons()" name="save" id="button1" style="display:none;">Save</button>
-              <button class="btn btn-primary " type="button" onclick="SwitchButtons()" id="button2">Edit</button>
+              <button class="btn btn-primary " type="button" onclick="disablear();" name="save" id="btn1" style="display:none;">Save</button>
+              <button class="btn btn-primary " type="button" onclick="disablear();" id="btn2">Edit</button>
 
               <br><br>
 
