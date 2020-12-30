@@ -26,7 +26,18 @@
             </div>
         </div>
         <div class="container">
+
+            {{#if sessionFlash.message}}
             <div class="row">
+                <div class="col-lg-12">
+                    <div class="{{sessionFlash.type}}">
+                        {{sessionFlash.message}}
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+            <div class="row">
+
                 <div class="col-md-2 text-left"></div>
 
                 <div class="col-md-8 bg-light py-3">
@@ -74,7 +85,8 @@
                                             <form></form>
                                             <form action="/mainprocess/disable" method="POST" id="{{_id}}"> </form>
                                             <input class="form-control form-control-sm" value="{{_id}}" type="text"
-                                                name="mainprocid" style="width: fit-content;" form="{{_id}}" readonly hidden>
+                                                name="mainprocid" style="width: fit-content;" form="{{_id}}" readonly
+                                                hidden>
                                             <button type="submit" class="btn btn-danger" form="{{_id}}">Disable</button>
                                         </div>
 
@@ -86,11 +98,12 @@
                                     <td>
 
                                         <div>
-                                             <form></form>
+                                            <form></form>
                                             <form action="/mainprocess/disable" method="POST" id="{{_id}}"> </form>
                                             <input class="form-control form-control-sm" value="{{_id}}" type="text"
-                                                name="mainprocid" style="width: fit-content;" form="{{_id}}" readonly hidden>
-                                            <button type="submit" class="btn btn-primary" form="{{_id}}">
+                                                name="mainprocid" style="width: fit-content;" form="{{_id}}" readonly
+                                                hidden>
+                                            <button type="submit" class="btn btn-success" form="{{_id}}">
                                                 Enable</button>
                                         </div>
                                     </td>
