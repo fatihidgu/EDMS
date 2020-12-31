@@ -16,9 +16,11 @@ router.get('/addworkflowfiletype', (req, res) => {
     }
 })
 
-router.post('/addworkflowfiletype', (req, res) => {
+router.post('/addworkflowfiletype', async (req, res) => {
 
     try {
+        const errvalues = []
+        const succvalues = []
         const { workflowfilename, workflowfilecode } = req.body
         if (typeof workflowfilename === 'object') {
             for (let index = 0; index < workflowfilename.length; index++) {
@@ -29,22 +31,63 @@ router.post('/addworkflowfiletype', (req, res) => {
                     //console.log('olusturulamaz', codetypestr)
                 }
                 else {
-                    Filetype.create({
-                        workflowFileTypeName: workflowfilename[index],
-                        workflowFileTypeCode: workflowfilecode[index],
-
-                    }, (err, result) => {
-                        if (err) {
-                            req.session.sessionFlash = {
-                                type: 'alert alert-warning',
-                                message: 'Workflow File Type is not unique.'
-                            }
-                        }
-                        else {
+                    const notunique = await Filetype.findOne({ $or: [{ workflowFileTypeName: workflowfilename[index] }, { workflowFileTypeCode: workflowfilecode[index] }] }).exec();
+                    if (notunique) {
+                        errvalues.push(workflowfilename[index])
+                    }
+                    else {
+                        const ekle = await Filetype.findOne({ $or: [{ workflowFileTypeName: workflowfilename[index] }, { workflowFileTypeCode: workflowfilecode[index] }] }).exec()
+                        if (ekle === null) {
+                            Filetype.create({
+                                workflowFileTypeName: workflowfilename[index],
+                                workflowFileTypeCode: workflowfilecode[index],
+                            })
+                            succvalues.push(workflowfilename[index])
+                        } else {
+                            errvalues.push(workflowfilename[index])
                         }
                     }
-                    )
+                }
 
+            }
+            // console.log(errvalues.length > 0)
+            // console.log(succvalues.length > 0)
+            // console.log(errvalues)
+            // console.log(succvalues)
+            if (errvalues.length > 0 || succvalues.length > 0) {
+                var str = ""
+                if (succvalues.length == 0) {
+                    errvalues.forEach(element => {
+                        str += element + " ,"
+                    })
+
+                    req.session.sessionFlash = {
+                        type: 'alert alert-warning',
+                        message: 'Workflow File Type ' + str + 'are not unique. Check their Workflow File Type and Code both of them have to be unique.'
+                    }
+                }
+                if (errvalues.length == 0) {
+                    succvalues.forEach(element => {
+                        str += element + " "
+                    })
+                    req.session.sessionFlash = {
+                        type: 'alert alert-success',
+                        message: 'Workflow File Type ' + str + 'are successfully added.'
+                    }
+                }
+                if (errvalues.length > 0 && succvalues.length > 0) {
+                    var str1=""
+                    var str2=""
+                    errvalues.forEach(element => {
+                        str1 += element + " ,"
+                    })
+                    succvalues.forEach(element => {
+                        str2 += element + " "
+                    })
+                    req.session.sessionFlash = {
+                        type: 'alert alert-warning',
+                        message: 'Workflow File Type ' + str1 + 'are not unique. Check their Workflow File Type and Code both of them have to be unique. '+str2+" are addedd successfully."
+                    }
                 }
             }
             return res.redirect('/workflowfiletype/addworkflowfiletype')
