@@ -342,6 +342,42 @@ router.post('/addPersonel', async (req,res) => {
 
 })
 
+router.post('/removePersonel', async (req, res) => {
+
+  try{
+
+    if (req.session.userId) {
+      const organiserExist = await Organiser.findOne({
+        _id: req.body.organiserId,
+        endDate: null
+      }).exec();
+
+      console.log("re",organiserExist)
+
+      if(!(organiserExist == null)){
+        Organiser.findOneAndUpdate({_id:organiserExist._id},{endDate: (new Date())}).exec();
+      }
+
+      req.session.sessionFlash = {
+        type: 'alert alert-success',
+        message: 'Personel removed.'
+      }
+
+      //return res.redirect(req.headers.referer)
+      //
+      const address = 'editworkunit/'+organiserExist.workUnitId
+      // console.log("add",address)
+      return res.redirect(address)
+
+    } else {
+      console.log("else")
+      res.redirect('/registeredusers/login')
+    }
+  } catch (err) {
+    console.log("error", err);
+  }
+
+})
 
 router.get('/editworkunit/:id?', async (req, res) => {
   try {
@@ -399,6 +435,7 @@ router.get('/editworkunit/:id?', async (req, res) => {
         },null,{sort: {email: 1}}).lean().exec()
 
         acad = ""+workUnit.acad
+
 
         res.render('site/editworkunits', {
           create: "0",
