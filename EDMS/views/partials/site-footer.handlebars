@@ -341,7 +341,7 @@
 		let file = JSON.stringify(document.getElementById('workflowfilenameid').value)
 		if (document.getElementById('workflowfilenameid').value === ""  || file.charAt(1) == " " ||
 			document.getElementById('workflowfilecodeid').value === ""  || code.charAt(1) == " ") {
-			Swal.fire('Check the Main Process Name. You cant start with space. Main Process Name, Main Process No and Related Work Unit cant be null!', '', 'error')
+			Swal.fire('Check the Workflow File Type. You cant start with space. Workflow File Type and File Type Code cant be null!', '', 'error')
 
 		}
 		else {
