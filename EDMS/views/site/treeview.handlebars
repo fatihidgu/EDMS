@@ -50,6 +50,52 @@
           {{/each}}
           <hr>
         </div>
+
+
+<!-- -->
+<div class="">
+  <h1>hello</h1>
+</div>
+<div class="col-md-12 bg-light py-3">
+
+  {{#each workUnits}}
+    <hr>
+    <h2 onclick="getElementById('{{workUnit}}').classList.toggle('d-block');">-{{workUnit}}</h2>
+    <div class="col-md-11 float-right d-none" id="{{workUnit}}">
+      {{#unless (eq mainProcesses.length 0)}}
+      {{#each mainProcesses}}
+      <hr>
+      <h3 onclick="getElementById('{{../workUnit}}{{mainProcess}}').classList.toggle('d-block');">-{{mainProcess}}</h3>
+      <div class="col-md-11 float-right d-none" id="{{../workUnit}}{{mainProcess}}">
+        {{#unless (eq workflows.length 0)}}
+        {{#each workflows}}
+        <hr>
+          <h4 onclick="getElementById('{{../../workUnit}}{{../mainProcess}}{{workprocessName}}').classList.toggle('d-block');">-{{workprocessName}}</h4>
+          <div class="col-md-11 float-right d-none" id="{{../../workUnit}}{{../mainProcess}}{{workprocessName}}">
+            <hr>
+            {{#each files}}
+              <h5>File:{{name}}-{{id}}</h5>
+              <hr>
+            {{/each}}
+          </div>
+          <div style="clear:both"></div>
+
+        {{/each}}
+        <hr>
+        {{/unless}}
+        </div>
+        <div style="clear:both"></div>
+        {{/each}}
+        <hr>
+        {{/unless}}
+
+    </div>
+    <div style="clear:both"></div>
+
+
+  {{/each}}
+  <hr>
+</div>
       </div>
 
 

@@ -5,6 +5,9 @@ const RegisteredUser = require('../models/RegisteredUser')
 const Organiser = require('../models/Organiser')
 const Manager = require('../models/Manager')
 const Administrator = require('../models/Administrator')
+const MainProcess = require('../models/MainProcess')
+const Workflow = require('../models/Workflow')
+const File = require('../models/File')
 
 
 
@@ -20,7 +23,11 @@ router.get('/allworkunits', async (req, res) => {
     }).exec();
 
     var workunits = []
-    var oldworkunits = await WorkUnit.find({endDate:{$ne:null}}).lean().exec();
+    var oldworkunits = await WorkUnit.find({
+      endDate: {
+        $ne: null
+      }
+    }).lean().exec();
 
     var myworkunits = []
     //console.log("a",workUnitManager)
@@ -36,9 +43,11 @@ router.get('/allworkunits', async (req, res) => {
         // })
       } else {
 
-        const workUnitExist = WorkUnit.findOne({_id:b.workUnitId._id}).lean().exec();
+        const workUnitExist = WorkUnit.findOne({
+          _id: b.workUnitId._id
+        }).lean().exec();
 
-        if(workUnitExist.endDate == null){
+        if (workUnitExist.endDate == null) {
           workunits.push({
             workUnitId: b.workUnitId._id,
             workUnitName: b.workUnitId.workUnitName,
@@ -73,6 +82,55 @@ router.get('/allworkunits', async (req, res) => {
 
 router.get('/treeview', async (req, res) => {
   if (res.locals.userid) {
+
+    var workUnits = await WorkUnit.find({
+      endDate: null
+    }).lean().exec()
+    var mainProcesses = await MainProcess.find({
+      endDate: null
+    }).lean().exec()
+    var workflows = await Workflow.find({
+      endDate: null
+    }).lean().exec()
+    //var files = await File.find({endDate:null}).exec()
+    console.log(mainProcesses)
+    var result = []
+    var k = []
+    var m = []
+    console.log("*********")
+    workUnits.forEach(workUnit => {
+      m = []
+      var mainProc = mainProcesses.filter(x => x.workUnitId.toString() === workUnit._id.toString());
+      if(mainProc == null){
+        m = [{mainProcess:null,workflows:[]}]
+      }else{
+      mainProc.forEach(mp => {
+          var workf = workflows.filter(x => x.mainProcessId.toString() === mp._id.toString());
+          // console.log(workf)
+          // console.log(mp.mainProcessName)
+          // console.log(workUnit.workUnitName)
+          // console.log("^^^^^")
+          if(workf == null){
+            m.push({mainProcess:mp,workflows:[]})
+          }else{
+          m.push({mainProcess:mp.mainProcessName,workflows:workf})
+        }
+      })}
+      console.log(m)
+      k.push({workUnit:workUnit.workUnitName,mainProcesses:m})
+      //workUnit.endDate = t;
+      //console.log("*",workUnit)
+      //console.log(t);
+    })
+
+    console.log("-----k0-----")
+    console.log(k[0])
+    console.log("------m0----")
+    console.log(k[0].mainProcesses[0])
+    console.log("------w----")
+    //console.log(k[0].mainProcesses[0].workflows)
+    //console.log(workUnits)
+
 
     workflows1 = {
       name: "wf1",
@@ -150,12 +208,13 @@ router.get('/treeview', async (req, res) => {
       name: "MF",
       mainProcesses: [mainProcesses3]
     }
-    workUnits = [workUnit1, workUnit2, workUnit3]
+    workUnitss = [workUnit1, workUnit2, workUnit3]
 
 
 
     return res.render('site/treeview', {
-      workUnits: workUnits
+      workUnits: workUnitss,
+      workUnits:k
     });
   } else {
     res.redirect('/registeredusers/register')
@@ -163,9 +222,9 @@ router.get('/treeview', async (req, res) => {
 })
 
 router.post('/editworkunit/:id?', async (req, res) => {
-console.log("post")
+  console.log("post")
   console.log(req.body)
-  try{
+  try {
 
     if (req.session.userId) {
       if (req.params.id) {
@@ -213,7 +272,7 @@ console.log("post")
           const manager = new Manager({
             workUnitId: workUnit._id,
             registeredUserId: req.body.manager,
-            endDate:null
+            endDate: null
           });
           manager.save();
         }
@@ -239,7 +298,7 @@ console.log("post")
         const workUnitExist = await WorkUnit.findOne({
           workUnitCode: req.body.work_unit_code
         }).exec();
-        if(workUnitExist == null){
+        if (workUnitExist == null) {
 
           const workUnit = new WorkUnit({
             workUnitCode: req.body.work_unit_code,
@@ -265,18 +324,19 @@ console.log("post")
             message: 'Work Unit created.'
           }
 
-          const address = 'editworkunit/'+workUnit._id
+          const address = 'editworkunit/' + workUnit._id
           return res.redirect(address)
-        }else{
+        } else {
 
-        req.session.sessionFlash = {
-          type: 'alert alert-warning',
-          message: 'Your Work Unit Code already exist.'
+          req.session.sessionFlash = {
+            type: 'alert alert-warning',
+            message: 'Your Work Unit Code already exist.'
+          }
+
+          const address = 'editworkunit'
+          return res.redirect(address)
         }
-
-        const address = 'editworkunit'
-        return res.redirect(address)
-      }}
+      }
 
     } else {
       res.redirect('/registeredusers/login')
@@ -287,9 +347,9 @@ console.log("post")
 
 })
 
-router.post('/addPersonel', async (req,res) => {
+router.post('/addPersonel', async (req, res) => {
   console.log(req.body)
-  try{
+  try {
 
     if (req.session.userId) {
       const ruExist = await RegisteredUser.findOne({
@@ -298,7 +358,7 @@ router.post('/addPersonel', async (req,res) => {
         isBlocked: false
       }).lean().exec();
       console.log(ruExist)
-      if(ruExist == null){
+      if (ruExist == null) {
         return res.redirect('/registeredusers/login')
       }
 
@@ -310,14 +370,14 @@ router.post('/addPersonel', async (req,res) => {
         workUnitId: req.body.workUnitId,
         endDate: null
       }).exec();
-      console.log("wu",workUnit)
-      console.log("re",organiserExist)
+      console.log("wu", workUnit)
+      console.log("re", organiserExist)
 
-      if(organiserExist == null && !(workUnit ==null)){
+      if (organiserExist == null && !(workUnit == null)) {
         const organiser = new Organiser({
           workUnitId: workUnit._id,
           registeredUserId: ruExist._id,
-          endDate:null
+          endDate: null
         });
         organiser.save();
         console.log(organiser)
@@ -327,8 +387,8 @@ router.post('/addPersonel', async (req,res) => {
         message: 'Personel added.'
       }
 
-      const address = 'editworkunit/'+workUnit._id
-      console.log("add",address)
+      const address = 'editworkunit/' + workUnit._id
+      console.log("add", address)
       return res.redirect(address)
 
     } else {
@@ -344,7 +404,7 @@ router.post('/addPersonel', async (req,res) => {
 
 router.post('/removePersonel', async (req, res) => {
 
-  try{
+  try {
 
     if (req.session.userId) {
       const organiserExist = await Organiser.findOne({
@@ -352,20 +412,29 @@ router.post('/removePersonel', async (req, res) => {
         endDate: null
       }).exec();
 
-      console.log("re",organiserExist)
+      console.log("re", organiserExist)
 
-      if(!(organiserExist == null)){
-        Organiser.findOneAndUpdate({_id:organiserExist._id},{endDate: (new Date())}).exec();
+      if (!(organiserExist == null)) {
+        Organiser.findOneAndUpdate({
+          _id: organiserExist._id
+        }, {
+          endDate: (new Date())
+        }).exec();
       }
 
-      req.session.sessionFlash = {
-        type: 'alert alert-success',
-        message: 'Personel removed.'
-      }
+      req.session.sessionFlash = [{
+          type: 'alert alert-success',
+          message: 'Personel removed.'
+        },
+        {
+          type: 'alert alert-warning',
+          message: 'Personel removed!.'
+        }
+      ]
 
       //return res.redirect(req.headers.referer)
       //
-      const address = 'editworkunit/'+organiserExist.workUnitId
+      const address = 'editworkunit/' + organiserExist.workUnitId
       // console.log("add",address)
       return res.redirect(address)
 
@@ -420,49 +489,69 @@ router.get('/editworkunit/:id?', async (req, res) => {
         }))
 
         const managerOptions = await RegisteredUser.find({
-          _id:{$ne : manager.registeredUserId._id},
+          _id: {
+            $ne: manager.registeredUserId._id
+          },
           endDate: null,
-          isBlocked:false,
-          isManager:true
-        },null,{sort: {email: 1}}).lean().exec()
-        var organisersIds = a.map(function (element) { return element.registeredUserId; });
+          isBlocked: false,
+          isManager: true
+        }, null, {
+          sort: {
+            email: 1
+          }
+        }).lean().exec()
+        var organisersIds = a.map(function(element) {
+          return element.registeredUserId;
+        });
         organisersIds.push(manager.registeredUserId._id)
         const organiserOptions = await RegisteredUser.find({
-          _id:{$nin : organisersIds},
+          _id: {
+            $nin: organisersIds
+          },
           endDate: null,
-          isBlocked:false,
-          isOrganiser:true
-        },null,{sort: {email: 1}}).lean().exec()
+          isBlocked: false,
+          isOrganiser: true
+        }, null, {
+          sort: {
+            email: 1
+          }
+        }).lean().exec()
 
-        acad = ""+workUnit.acad
+        acad = "" + workUnit.acad
 
 
         res.render('site/editworkunits', {
           create: "0",
           edit: edit,
-          currentManager:manager.registeredUserId,
-          managerOptions:managerOptions,
+          currentManager: manager.registeredUserId,
+          managerOptions: managerOptions,
           work_unit_id: workUnit._id,
           work_unit_code: workUnit.workUnitCode,
           work_unit_name: workUnit.workUnitName,
           acad: acad,
           organisers: a,
-          organiserOptions:organiserOptions
+          organiserOptions: organiserOptions
         })
       } else {
         const managerOptions = await RegisteredUser.find({
           endDate: null,
-          isBlocked:false,
-          isManager:true
-        },null,{sort: {email: 1}}).lean().exec()
-        const admin = await Administrator.findOne({registeredUserId:req.session.userId}).exec();
+          isBlocked: false,
+          isManager: true
+        }, null, {
+          sort: {
+            email: 1
+          }
+        }).lean().exec()
+        const admin = await Administrator.findOne({
+          registeredUserId: req.session.userId
+        }).exec();
 
-        acad =""+admin.acad
+        acad = "" + admin.acad
         console.log(acad)
         res.render('site/editworkunits', {
           create: "1",
           acad: acad,
-          managerOptions:managerOptions
+          managerOptions: managerOptions
         })
       }
     } else {
