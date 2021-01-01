@@ -17,74 +17,60 @@
         <div class="col-md-8 bg-light py-3">
           <!--file create-->
           {{#if fileId}}
-          <h3 class="d-flex justify-content-center">File</h3>
-          <h4 class="d-flex justify-content-center">{{fileNo}}</h4>
-          <br><br>
+            <h3 class="d-flex justify-content-center">File</h3>
+            <h4 class="d-flex justify-content-center">{{fileNo}}</h4>
+            <br><br>
 
             <form action="/createfile/update" method="POST" enctype="multipart/form-data">
-              <input type="hidden" name="fileId" value="{{fileId}}">
-              <label class="col-5 col-sm-5" id="" for="">File Type:</label>
-              <select class="col-5 col-sm-5" size="1px" name="file_type" id="" disabled>
-                <option value="{{file_type_id}}" selected>{{file_type_name}}</option>
-              </select><br><br>
-              <!-- <label class="col-5 col-sm-5" for="">Related Work Units:</label>
-              <select class="col-5 col-sm-5" size="1px" name="work_unit" id="" disabled>
-                <option value="{{work_unit_id}}" selected>{{work_unit_name}}</option>
-              </select><br><br> -->
-              <label class="col-5 col-sm-5" for="">Main Process:</label>
-              <select class="col-5 col-sm-5" name="main_process" id="" disabled>
-                <option value="{{main_process_id}}" selected>{{main_process_name}}</option>
-              </select><br><br>
-              <label class="col-5 col-sm-5" for="">Work Process:</label>
-              <select class="col-5 col-sm-5" name="workflow" id="" disabled>
-                <option value="{{workflow_id}}" selected>{{workflow_name}}</option>
-              </select><br><br>
-              <label class="col-5 col-sm-5" for="">Work Unit:</label>
-              <select class="col-5 col-sm-5" name="workUnit" id="" disabled>
-                <option value="{{work_unit_id}}" selected>{{work_unit_name}}</option>
-              </select><br><br>
 
-              <label class="col-5 col-sm-5" for="">File:</label>
+                <label class="col-5 col-sm-5" for="">Work Unit:</label>
+                <input type="hidden" name="work_unit_id" value="{{work_unit_id}}">
+                <label class="col-5 col-sm-5" for="">{{work_unit_name}}</label><br><br>
 
-              <input class="col-5 col-sm-5" type="file" accept="application/pdf" name="file" required />
-              <br><br><br><br><br>
-              <button class="btn btn-primary float-right" type="submit" value="Submit">Submit</button>
-            </form>
+                <label class="col-5 col-sm-5" for="">Main Process:</label>
+                <input type="hidden" name="main_process_id" value="{{main_process_id}}">
+                <label class="col-5 col-sm-5" for="">{{main_process_name}}</label><br><br>
+
+                <label class="col-5 col-sm-5" for="">Work Process:</label>
+                <input type="hidden" name="workflow_id" value="{{workflow_id}}">
+                <label class="col-5 col-sm-5" for="">{{workflow_name}}</label><br><br>
+
+
+
+                <label class="col-5 col-sm-5" id="" for="" required>File Type:</label>
+                <input type="hidden" name="file_type_id" value="{{file_type_id}}">
+                <label class="col-5 col-sm-5" for="">{{file_type_name}}</label><br><br>
+
+                <label class="col-5 col-sm-5" for="">File:</label>
+                <input class="col-5 col-sm-5" type="file" accept="application/pdf" name="file" required />
+                <br><br><br><br><br>
+                <input type="hidden" name="fileId" value="{{fileId}}">
+                <button class="btn btn-primary float-right" type="submit" value="Submit">Submit</button>
           {{/if}}
 
-<!--file upload-->
+          <!--file upload-->
 
           {{#unless fileId}}
             <form action="/createfile/upload" method="POST" enctype="multipart/form-data">
-              <label class="col-5 col-sm-5" id="" for="" required>File Type:</label>
-              <select class="col-5 col-sm-5" size="1px" name="file_type_id" id="">
-                {{#each file_type}}
-                <option value="{{file_type_id}}" >{{file_type_name}}</option>
-                {{/each}}
-              </select><br><br>
-              <!-- <label class="col-5 col-sm-5" for="">Related Work Units:</label>
-              <select class="col-5 col-sm-5" size="1px" name="work_unit" id="">
-                <option value="mf">MF</option>
-                <option value="ik">İK</option>
-              </select><br><br> -->
-              <label class="col-5 col-sm-5" for="">Main Process:</label>
-              <select class="col-5 col-sm-5" name="main_process" id="" disabled>
-                <option value="{{main_process_id}}" selected>{{main_process_name}}</option>
-              </select><br><br>
-              <input type="hidden" name="main_process_id" value="{{main_process_id}}" >
-              <label class="col-5 col-sm-5" for="">Work Process:</label>
-              <select class="col-5 col-sm-5" name="workflow" id="" disabled>
-                <option value="{{workflow_id}}" selected>{{workflow_name}}</option>
 
-              </select><br><br>
-              <input type="hidden" name="workflow_id" value="{{workflow_id}}">
               <label class="col-5 col-sm-5" for="">Work Unit:</label>
-              <select class="col-5 col-sm-5" name="work_unit_id" id="" required>
-                {{#each work_unit}}
-                <option value="{{work_unit_id}}" >{{work_unit_name}}</option>
+              <input type="hidden" name="work_unit_id" value="{{work_unit_id}}">
+              <label class="col-5 col-sm-5" for="">{{work_unit_name}}</label><br><br>
+
+              <label class="col-5 col-sm-5" for="">Main Process:</label>
+              <input type="hidden" name="main_process_id" value="{{main_process_id}}">
+              <label class="col-5 col-sm-5" for="">{{main_process_name}}</label><br><br>
+
+              <label class="col-5 col-sm-5" for="">Work Process:</label>
+              <input type="hidden" name="workflow_id" value="{{workflow_id}}">
+              <label class="col-5 col-sm-5" for="">{{workflow_name}}</label><br><br>
+
+              <label class="col-5 col-sm-5" id="" for="" required>File Type:</label>
+              <select class="col-5 col-sm-5 ml-2" size="1px" name="file_type_id" id="">
+                {{#each file_type}}
+                  <option value="{{file_type_id}}">{{file_type_name}}</option>
                 {{/each}}
               </select><br><br>
-
 
               <label class="col-5 col-sm-5" for="">File:</label>
 

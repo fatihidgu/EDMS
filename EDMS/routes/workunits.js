@@ -92,32 +92,58 @@ router.get('/treeview', async (req, res) => {
     var workflows = await Workflow.find({
       endDate: null
     }).lean().exec()
+    var files = await File.find({
+      endDate: null
+    }).lean().exec()
     //var files = await File.find({endDate:null}).exec()
     console.log(mainProcesses)
     var result = []
     var k = []
     var m = []
+    var n = []
     console.log("*********")
     workUnits.forEach(workUnit => {
       m = []
       var mainProc = mainProcesses.filter(x => x.workUnitId.toString() === workUnit._id.toString());
-      if(mainProc == null){
-        m = [{mainProcess:null,workflows:[]}]
-      }else{
-      mainProc.forEach(mp => {
+      if (mainProc == null) {
+        m = [{
+          mainProcess: null,
+          workflows: []
+        }]
+      } else {
+        mainProc.forEach(mp => {
           var workf = workflows.filter(x => x.mainProcessId.toString() === mp._id.toString());
           // console.log(workf)
           // console.log(mp.mainProcessName)
           // console.log(workUnit.workUnitName)
           // console.log("^^^^^")
-          if(workf == null){
-            m.push({mainProcess:mp,workflows:[]})
-          }else{
-          m.push({mainProcess:mp.mainProcessName,workflows:workf})
-        }
-      })}
+          if (workf == null) {
+            m.push({
+              mainProcess: mp,
+              workflows: []
+            })
+          } else {
+            workf.forEach(wf => {
+              var fileFiltered =  files.filter(x => x.workflowId.toString() === wf._id.toString());
+              if(fileFiltered == null){
+                n.push({workflow:wf.workprocessName,files:[]})
+              }else{
+                n.push({workflow:wf.workprocessName,files:fileFiltered})
+              }
+            })
+
+            m.push({
+              mainProcess: mp.mainProcessName,
+              workflows: n
+            })
+          }
+        })
+      }
       console.log(m)
-      k.push({workUnit:workUnit.workUnitName,mainProcesses:m})
+      k.push({
+        workUnit: workUnit.workUnitName,
+        mainProcesses: m
+      })
       //workUnit.endDate = t;
       //console.log("*",workUnit)
       //console.log(t);
@@ -214,7 +240,7 @@ router.get('/treeview', async (req, res) => {
 
     return res.render('site/treeview', {
       workUnits: workUnitss,
-      workUnits:k
+      workUnits: k
     });
   } else {
     res.redirect('/registeredusers/register')
