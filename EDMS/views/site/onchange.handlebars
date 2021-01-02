@@ -44,8 +44,8 @@
             disabled><br><br>
           {{/unless}}
           <label class="col-5 col-sm-5 float-left">Main Process:</label>
-          <input class="form-control form-control-sm" n type="text" value="{{workf.mainProcessId.mainProcessName}}"
-            style="width: fit-content;" disabled><br><br>
+          <input class="form-control form-control-sm" n type="text"
+            value="{{workf.mainProcessId.mainProcessName}}" style="width: fit-content;" disabled><br><br>
           <div class="text-center">
             <button id="button1" type="submit" class="main-btn" type="submit" style="display: none;"
               onclick="SwitchButtons()">Save</button>
@@ -82,33 +82,28 @@
             )}}
             <input class="form-control form-control-sm" type="text" value="Academic" style="width: fit-content;"
               disabled><br><br>
-            <input class="form-control form-control-sm" type="text" name="acad" value="{{acadadm}}"
-              style="width: fit-content;" readonly required hidden>
+            <input class="form-control form-control-sm" type="text" name="acad" value="{{acadadm}}" style="width: fit-content;"
+              readonly required hidden>
             {{/if }}
             {{#if (or
             (eq acadadm 0)
             )}}
-
+            
             <input class="form-control form-control-sm" type="text" value="Administrative" style="width: fit-content;"
               disabled><br><br>
-            <input class="form-control form-control-sm" type="text" name="acad" value="{{acadadm}}"
-              style="width: fit-content;" readonly required hidden><br><br>
+            <input class="form-control form-control-sm" type="text" name="acad" value="{{acadadm}}" style="width: fit-content;"
+              readonly required hidden><br><br>
 
             {{/if }}
 
             <label class="col-5 col-sm-5 float-left">Main Process:</label>
 
-            <select class="form-control  form-control-sm" style="width: fit-content;" name="mainProcessId"
-              onchange="findOrganiser(this)" required>
+            <select class="form-control  form-control-sm" style="width: fit-content;" name="mainProcessId"  onchange="findOrganiser(this)"required>
               <option value="">Select One</option>
-              {{#each mainprocesses}} <option value="{{_id}}">{{mainProcessName}}-{{workUnitId.workUnitCode}}</option>
-              {{/each}}
+              {{#each mainprocesses}} <option value="{{_id}}">{{mainProcessName}}-{{workUnitId.workUnitCode}}</option> {{/each}}
             </select><br><br>
-            <label class="col-5 col-sm-5 float-left">Organiser:</label>
-
-            <select class="form-control  form-control-sm" style="width: fit-content;" name="organiserId" required
-              id="organiserOptions">
-              <option value="">Select One Mainprocess</option>
+             <label class="col-5 col-sm-5 float-left">Organiser:</label>
+           <select class="form-control  form-control-sm" style="width: fit-content;" name="organiserId" id="organiserOptions"> 
             </select>
 
 
