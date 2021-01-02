@@ -26,36 +26,30 @@
       {{#unless (eq create "0")}}
         <div class="row">
           <div class="col-md-2 text-left"></div>
-          <div class="col-md-4 text-left">
-            <label id="" for="">Work Unit Code:</label>
-            <br><br>
-            <label for="">Work Unit Name:</label>
-            <br><br>
-            <label for="">Academic/Administrative:</label>
-            <br><br>
-            <label for="">Manager</label>
-            <br><br>
-
-          </div>
-          <div class="col-md-6">
+          <div class="col-md-8 bg-light py-3">
+            <h2 class="text-center" style="color:#283792">Work Unit</h2><br><br>
             <form action="/workunits/editworkunit" method="POST">
-              <input type="text" id="" name="work_unit_code" placeholder="Code" required><br><br>
-              <input type="text" id="" name="work_unit_name" placeholder="Name" required><br><br>
+              <label class="col-5 col-sm-5" id="" for="">Work Unit Code:</label>
+              <input class="col-5 col-sm-5" type="text" id="" name="work_unit_code" placeholder="Code" required><br><br>
+              <label class="col-5 col-sm-5" for="">Work Unit Name:</label>
+              <input class="col-5 col-sm-5" type="text" id="" name="work_unit_name" placeholder="Name" required><br><br>
+              <label class="col-5 col-sm-5" for="">Academic/Administrative:</label>
               {{#if (eq acad "1")}}
-                <label for="">Academic</label>
+                <label class="col-5 col-sm-5" for="">Academic</label>
                 <input type="hidden" name="acad" value="1">
               {{/if}}
               {{#if (eq acad "0")}}
-                <label for="">Administrative</label>
+                <label class="col-5 col-sm-5" for="">Administrative</label>
                 <input type="hidden" name="acad" value="0">
               {{/if}}
               <br><br>
-              <select size="1px" name="manager" id="">
+              <label class="col-5 col-sm-5" for="">Manager</label>
+              <select class="col-5 col-sm-5" size="1px" name="manager" id="">
                 {{#each managerOptions}}
                   <option value="{{_id}}">{{email}}</option>
                 {{/each}}
-              </select><br><br>
-              <button type="submit" class="main-btn" type="submit">Create</button>
+              </select><br><br><br><br>
+              <button type="submit" class="btn btn-primary float-right" type="submit">Create</button>
             </form>
           </div>
         </div>
@@ -65,33 +59,26 @@
 
         <div class="row">
           <div class="col-md-2 text-left"></div>
-          <div class="col-md-4 text-left">
-            <label id="" for="">Work Unit Code:</label>
-            <br><br>
-            <label for="">Work Unit Name:</label>
-            <br><br>
-            <label for="">Academic/Administrative:</label>
-            <br><br>
-            <label for="">Manager</label>
-            <br><br>
 
-          </div>
-          <div class="col-md-6">
+          <div class="col-md-8 bg-light py-3">
+            <h2 class="text-center" style="color:#283792">Work Unit</h2><br><br>
             <form id="wu-edit-form" action="/workunits/editworkunit/{{work_unit_id}}" method="POST">
-
-              <input type="text" id="" name="work_unit_code" class="col-md-8 wu-edit" placeholder="Code" disabled value="{{work_unit_code}}"><br><br>
-              <input type="text" id="" name="work_unit_name" class="col-md-8 wu-edit" placeholder="Name" disabled value="{{work_unit_name}}"><br><br>
-
+              <label class="col-5 col-sm-5" id="" for="">Work Unit Code:</label>
+              <input type="text" id="" name="work_unit_code" class="col-5 col-sm-5 wu-edit" placeholder="Code" disabled value="{{work_unit_code}}"><br><br>
+              <label class="col-5 col-sm-5" for="">Work Unit Name:</label>
+              <input type="text" id="" name="work_unit_name" class="col-5 col-sm-5 wu-edit" placeholder="Name" disabled value="{{work_unit_name}}"><br><br>
+              <label class="col-5 col-sm-5" for="">Academic/Administrative:</label>
               {{#if (eq acad "1")}}
-                <label for="">Academic</label>
+                <label class="col-5 col-sm-5" for="">Academic</label>
                 <input type="hidden" name="acad" value="1">
               {{/if}}
               {{#if (eq acad "0")}}
-                <label for="">Administrative</label>
+                <label class="col-5 col-sm-5" for="">Administrative</label>
                 <input type="hidden" name="acad" value="0">
               {{/if}}
               <br><br>
-              <select size="1px" name="manager" disabled class="wu-edit" id="">
+              <label class="col-5 col-sm-5" for="">Manager</label>
+              <select size="1px" name="manager" disabled class="col-5 col-sm-5 wu-edit" id="">
 
                 <option value="{{currentManager._id}}" selected="true">{{currentManager.email}}</option>
                 {{#each managerOptions}}
@@ -100,8 +87,8 @@
 
               </select><br><br><br>
 
-              <button class="btn btn-primary" type="button" onclick="wuEditBtn1f();" name="save" id="wuEditBtn1" style="display:none;">Save</button>
-              <button class="btn btn-primary" type="button" onclick="wuEditBtn2f()" id="wuEditBtn2">Edit</button>
+              <button class="btn btn-primary float-right" type="button" onclick="wuEditBtn1f();" name="save" id="wuEditBtn1" style="display:none;">Save</button>
+              <button class="btn btn-primary float-right" type="button" onclick="wuEditBtn2f()" id="wuEditBtn2">Edit</button>
 
               <br><br>
 
@@ -116,17 +103,18 @@
             <div class="row">
               <div class="col-md-12">
 
-                <div class="tab-content" id="nav-tabContent " style="border:1px solid #ccc;">
+                <div class="tab-content bg-light" id="nav-tabContent " style="border:1px solid #ccc;">
                   <div class="text-center">
-                    <h2 style="color:#283792">Personnel</h2>
+                    <br>
+                    <h2 class="text-center" style="color:#283792">Personel</h2><br>
                   </div>
-                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel">
+
+                  <div>
                     <div class="table-responsive">
                       <div class="text-center">
                         {{#unless (eq organiserOptions.length 0)}}
                           <form class="col-md-12" action="/workunits/addPersonel" method="POST">
                             <label for="" class="mx-3">Choose Personel</label>
-
                             <select class="mx-3" name="organiserId">
 
                               {{#each organiserOptions}}
@@ -135,7 +123,7 @@
 
                             </select>
                             <input type="hidden" name="workUnitId" value="{{work_unit_id}}">
-                            <button type="submit" class="btn-primary main-btn mx-3">Add</button>
+                            <button type="submit" class="btn btn-primary mx-3">Add</button>
                           </form>
                         {{/unless}}
                         {{#if (eq organiserOptions.length 0)}}
@@ -146,11 +134,11 @@
                             <select class="mx-3" name="organiserId" disabled>
                               <option value="" selected>No Value</option>
                             </select>
-                            <button type="button" disabled class="btn-primary main-btn mx-3">Add</button>
+                            <button type="button" disabled class="btn btn-primary mx-3">Add</button>
                           </form>
 
                         {{/if}}
-
+                        <br><br>
                       </div>
                       <table class="table table-hover" cellspacing="0">
                         <thead>

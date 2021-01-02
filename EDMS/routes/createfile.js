@@ -27,7 +27,7 @@ function oneFileUpdate(filter, update) {
     new: true
   }, (err, doc) => {
     if (err) {
-      console.log("Something wrong when updating data!");
+      //console.log("Something wrong when updating data!");
     }
   });
 }
@@ -36,7 +36,7 @@ function oneFileUpdate(filter, update) {
 function changeFilePath(currentPath, newPath) {
   fs.rename(currentPath, newPath, function(err) {
     if (err) {
-      console.log(err);
+      //console.log(err);
     }
   });
 }
@@ -70,12 +70,14 @@ const upload = multer({
 // UPLOAD FILE
 router.post('/upload', upload.single('file'), async (req, res) => {
   console.log("upload");
-  console.log(req.body);
+  //console.log(req.body);
   const file_type = await WorkflowFileType.findById(req.body.file_type_id).exec();
   const work_unit = await WorkUnit.findById(req.body.work_unit_id).exec();
   const work_process = await Workflow.findById(req.body.workflow_id).exec();
   const main_process = await MainProcess.findById(req.body.main_process_id).exec();
   const userAdmin = await RegisteredUser.findById(req.session.userId).exec();
+
+
   const admin = await Administrator.findOne({
     registeredUserId: userAdmin._id
   }).exec();
@@ -87,13 +89,18 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   const ext = path.extname(req.file.path);
   const oldFilePath = req.file.path;
 
-  var fileNo = file_type.WorkflowFileTypeCode + "-" + main_process.mainProcessNo + "-" + work_unit.WorkUnitCode +
-    "-" + work_process._id + "-" + "0";
+  var fileNo = file_type.workflowFileTypeCode + "-" + main_process.mainProcessNo + "-" + work_unit.workUnitCode +
+    "-" + work_process.workflowNo + "-" + "0";
 
   var filen = fileNo + ext
+  var directory =path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode);
+
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
+  }
 
 
-  const newFilePath = path.join(__dirname, '..', 'uploads', 'files', filen);
+  const newFilePath = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode, filen);
   fs.rename(oldFilePath, newFilePath, function(err) {
     if (err) {
       //console.log(err);
@@ -102,12 +109,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   const fileObject = new File({
     workflowId: work_process._id,
     fileNo: fileNo,
-    organiserId: null,
     filePath: newFilePath,
-    administratorId: userAdmin._id,
     workflowFileTypeId: file_type._id,
-    workUnitId: work_unit._id,
-    creatorId: userAdmin._id
+    creatorId: userAdmin._id,
+    version:0
   });
   fileObject.save();
 
@@ -123,8 +128,9 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 // DELETE FILE
 router.post('/delete', (req, res) => {
+  console.log("delete")
   file_id = req.body.file_id;
-  console.log("delete",file_id)
+  //console.log("delete",file_id)
 
   const filterId = {
     _id: file_id
@@ -158,8 +164,7 @@ router.post('/delete', (req, res) => {
         fileAttributes.approvalStatus = 5;
         const oldFilePath = choosenFile.filePath;
 
-
-        const fileName = choosenFile.fileNo + "(" + todayStrDate + ")" + ext;
+        const fileName = choosenFile.fileNo + "(" + fileAttributes.deleteDate + ")" + ext;
         const newFilePath = path.join(__dirname, '..', 'uploads', 'oldFiles', fileName);
         //fileAttributes.approvalStatus = choosenFile.approvalStatus;
         fileAttributes.filePath = newFilePath
@@ -174,14 +179,14 @@ router.post('/delete', (req, res) => {
         return res.redirect(address);
       } else {
         const oldFilePath = choosenFile.filePath;
-        const fileName = choosenFile.fileNo + fileAttributes.deleteDate + ext;
+        const fileName = choosenFile.fileNo + "(" + fileAttributes.deleteDate + ")" + ext;
         const newFilePath = path.join(__dirname, '..', 'uploads', 'oldFiles', fileName);
         fileAttributes.approvalStatus = choosenFile.approvalStatus;
         fileAttributes.filePath = newFilePath
         oneFileUpdate(filterId, fileAttributes);
         fs.rename(oldFilePath, newFilePath, function(err) {
           if (err) {
-            console.log(err);
+            //console.log(err);
           }
         });
         const address = '/onchangefiles/' + choosenFile.workflowId;
@@ -194,7 +199,6 @@ router.post('/delete', (req, res) => {
     type: 'alert alert-success',
     message: 'Your file deleted successfully.'
   }
-  console.log("a",a);
   //const address = '/onchangefiles/' + a._id;
   //return res.redirect(address);
 });
@@ -202,7 +206,7 @@ router.post('/delete', (req, res) => {
 // DOWNLOAD FILE
 router.post('/download', (req, res) => {
   file_id = req.body.file_id;
-  console.log("download",file_id)
+  console.log("download")
   filter = {
     fileId: file_id
   }
@@ -222,23 +226,35 @@ router.post('/download', (req, res) => {
 
 //UPDATE File
 router.post('/update', upload.single('file'), (req, res) => {
-  console.log("update")
+  //console.log("update")
   //const ext = path.extname(req.file.path);
   //const oldFilePath = req.file.path;
-  console.log("update",req.body);
+  console.log("update");
   //
   id = req.body.fileId;
   filterId = {
     _id: id
   }
-  File.findOne(filterId, function(err, choosenFile) {
+  File.findOne(filterId, async function(err, choosenFile) {
     if (err) {
       //console.log("File Approval Status Can Not Be Accessed", err);
       res.render('site/onchange');
     } else {
-      console.log("choosenfile",choosenFile);
+
       const filen = path.basename(choosenFile.filePath);
-      console.log(filen,"filen")
+      const work_unit = await WorkUnit.findOne({_id:req.body.work_unit_id}).exec();
+
+
+      var oldDirectory = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode);
+      var newDirectory = path.join(__dirname, '..', 'uploads', 'oldFiles',work_unit.workUnitCode);
+      if (!fs.existsSync(oldDirectory)) {
+        fs.mkdirSync(oldDirectory);
+      }
+      if (!fs.existsSync(newDirectory)) {
+        fs.mkdirSync(newDirectory);
+      }
+
+
 
       if (choosenFile.approvalStatus == 4) {
         var todayDate = new Date();
@@ -248,8 +264,12 @@ router.post('/update', upload.single('file'), (req, res) => {
         var todayStrDate = day + "-" + month + "-" + year;
 
         fileOldN = filen + "(" + todayStrDate + ")";
-        const oldFileCurrentPath = path.join(__dirname, '..', 'uploads', 'files', filen);
-        const oldFileGoesTo = path.join(__dirname, '..', 'uploads', 'oldFiles', fileOldN);
+
+
+
+
+        const oldFileCurrentPath = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode, filen);
+        const oldFileGoesTo = path.join(__dirname, '..', 'uploads', 'oldFiles',work_unit.workUnitCode, fileOldN);
         changeFilePath(oldFileCurrentPath, oldFileGoesTo);
         var fileAttributes = {
           approvalStatus: 5,
@@ -259,30 +279,30 @@ router.post('/update', upload.single('file'), (req, res) => {
         oneFileUpdate(filterId, fileAttributes);
 
         const newFileCurrentPath = req.file.path;
-        const newFileGoesTo = path.join(__dirname, '..', 'uploads', 'files', filen);
+        const newFileGoesTo = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode, filen);
         changeFilePath(newFileCurrentPath, newFileGoesTo);
-        console.log("fileNo",choosenFile.fileNo);
+
 
         const fileObject = new File({
           workflowId: choosenFile.workflowId,
           fileNo: choosenFile.fileNo,
-          organiserId: choosenFile.organiserId,
           creatorId: req.session.userId,
-          creatDate: new Date(),
           revisionDate: null,
           approvalStatus: 0,
           approvalDate: null,
           filePath: newFileGoesTo,
-          deleteDate: null
+          deleteDate: null,
+          version:(choosenFile.version+1),
+          workflowFileTypeId:choosenFile.workflowFileTypeId
         });
         fileObject.save();
-        console.log("saved");
+
         const address = '/onchangefiles/'+fileObject.workflowId;
         return res.redirect(address);
 
       } else {
         const newFileCurrentPath = req.file.path;
-        const newFileGoesTo = path.join(__dirname, '..', 'uploads', 'files', filen);
+        const newFileGoesTo = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode, filen);
         changeFilePath(newFileCurrentPath, newFileGoesTo);
 
 
@@ -290,13 +310,11 @@ router.post('/update', upload.single('file'), (req, res) => {
           workflowId: choosenFile.workflowId,
           fileNo: choosenFile.fileNo,
           workflowFileTypeId:choosenFile.workflowFileTypeId,
-          organiserId: choosenFile.organiserId,
           creatorId: choosenFile.creatorId,
           revisionDate: new Date(),
           filePath: newFileGoesTo
         });
         File.findByIdAndUpdate({_id:id},update).exec()
-        console.log("*-*-");
 
 
         req.session.sessionFlash = {
@@ -326,6 +344,7 @@ router.post('/update', upload.single('file'), (req, res) => {
 // });
 
 router.get('/create/:workflowId', (req, res) => {
+  console.log('/create/:workflowId')
   filterIdWF = {
     _id: req.params.workflowId
   };
@@ -336,16 +355,17 @@ router.get('/create/:workflowId', (req, res) => {
         res.render('site/onchange');
       } else {
 
-        filterMP = {
+        var filterMP = {
           _id: choosenWF.mainProcessId
         }
         MainProcess.findOne(filterMP, function(err, mainProcess) {
           main_process_id = mainProcess._id;
           main_process_name = mainProcess.mainProcessName;
 
-          filterWU = {
-            endDate: null
-          }
+          var filterWU = {
+            endDate: null,
+            _id:mainProcess.workUnitId
+          };
           WorkUnit.find(filterWU, function(err, workUnits) {
             var work_unit = [];
             workUnits.forEach(workUnit => {
@@ -364,14 +384,15 @@ router.get('/create/:workflowId', (req, res) => {
               fileTypes.forEach(fileType => {
                 file_type.push({
                   file_type_id: fileType._id,
-                  file_type_name: fileType.WorkflowFileTypeName
+                  file_type_name: fileType.workflowFileTypeName
                 });
               });
 
               return res.render('site/createfile', {
                 main_process_id: main_process_id,
                 main_process_name: main_process_name,
-                work_unit: work_unit,
+                work_unit_name: work_unit[0].work_unit_name,
+                work_unit_id:work_unit[0].work_unit_id,
                 file_type: file_type,
                 workflow_id: choosenWF._id,
                 workflow_name: choosenWF.workprocessName
@@ -388,12 +409,13 @@ router.get('/create/:workflowId', (req, res) => {
 });
 
 router.get('/upload/:fileId', async (req, res) => {
+  console.log('/upload/:fileId')
   var fileId = req.params.fileId;
   if (req.session.userId) {
     const file = await File.findById(fileId).exec();
     const workflow = await Workflow.findById(file.workflowId).exec();
     const mainProcess = await MainProcess.findById(workflow.mainProcessId).exec();
-    const workUnit = await WorkUnit.findById(file.workUnitId).exec();
+    const workUnit = await WorkUnit.findById(mainProcess.workUnitId).exec();
     const file_type = await WorkflowFileType.findById(file.workflowFileTypeId).exec();
 
     return res.render('site/createfile', {
@@ -404,9 +426,9 @@ router.get('/upload/:fileId', async (req, res) => {
       main_process_id: mainProcess._id,
       main_process_name: mainProcess.mainProcessName,
       work_unit_id: workUnit._id,
-      work_unit_name: workUnit.WorkUnitName,
+      work_unit_name: workUnit.workUnitName,
       file_type_id: file_type._id,
-      file_type_name: file_type.WorkflowFileTypeName,
+      file_type_name: file_type.workflowFileTypeName,
     });
   } else {
     res.redirect('/registeredusers/login')
