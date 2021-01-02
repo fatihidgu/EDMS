@@ -69,7 +69,7 @@ const upload = multer({
 
 // UPLOAD FILE
 router.post('/upload', upload.single('file'), async (req, res) => {
-  console.log("upload");
+  //console.log("upload");
   //console.log(req.body);
   const file_type = await WorkflowFileType.findById(req.body.file_type_id).exec();
   const work_unit = await WorkUnit.findById(req.body.work_unit_id).exec();
@@ -128,7 +128,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 // DELETE FILE
 router.post('/delete', (req, res) => {
-  console.log("delete")
+  //console.log("delete")
   file_id = req.body.file_id;
   //console.log("delete",file_id)
 
@@ -206,7 +206,7 @@ router.post('/delete', (req, res) => {
 // DOWNLOAD FILE
 router.post('/download', (req, res) => {
   file_id = req.body.file_id;
-  console.log("download")
+  //console.log("download")
   filter = {
     fileId: file_id
   }
@@ -229,7 +229,7 @@ router.post('/update', upload.single('file'), (req, res) => {
   //console.log("update")
   //const ext = path.extname(req.file.path);
   //const oldFilePath = req.file.path;
-  console.log("update");
+  //console.log("update");
   //
   id = req.body.fileId;
   filterId = {
@@ -344,7 +344,7 @@ router.post('/update', upload.single('file'), (req, res) => {
 // });
 
 router.get('/create/:workflowId', (req, res) => {
-  console.log('/create/:workflowId')
+  //console.log('/create/:workflowId')
   filterIdWF = {
     _id: req.params.workflowId
   };
@@ -409,7 +409,7 @@ router.get('/create/:workflowId', (req, res) => {
 });
 
 router.get('/upload/:fileId', async (req, res) => {
-  console.log('/upload/:fileId')
+  //console.log('/upload/:fileId')
   var fileId = req.params.fileId;
   if (req.session.userId) {
     const file = await File.findById(fileId).exec();

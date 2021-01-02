@@ -96,12 +96,12 @@ router.get('/treeview', async (req, res) => {
       endDate: null
     }).lean().exec()
     //var files = await File.find({endDate:null}).exec()
-    console.log(mainProcesses)
+    //console.log(mainProcesses)
     var result = []
     var k = []
     var m = []
     var n = []
-    console.log("*********")
+    //console.log("*********")
     workUnits.forEach(workUnit => {
       m = []
       var mainProc = mainProcesses.filter(x => x.workUnitId.toString() === workUnit._id.toString());
@@ -139,7 +139,7 @@ router.get('/treeview', async (req, res) => {
           }
         })
       }
-      console.log(m)
+      //console.log(m)
       k.push({
         workUnit: workUnit.workUnitName,
         mainProcesses: m
@@ -149,11 +149,11 @@ router.get('/treeview', async (req, res) => {
       //console.log(t);
     })
 
-    console.log("-----k0-----")
-    console.log(k[0])
-    console.log("------m0----")
-    console.log(k[0].mainProcesses[0])
-    console.log("------w----")
+    //console.log("-----k0-----")
+   // console.log(k[0])
+    //console.log("------m0----")
+   // console.log(k[0].mainProcesses[0])
+    //console.log("------w----")
     //console.log(k[0].mainProcesses[0].workflows)
     //console.log(workUnits)
 
@@ -248,14 +248,14 @@ router.get('/treeview', async (req, res) => {
 })
 
 router.post('/editworkunit/:id?', async (req, res) => {
-  console.log("post")
-  console.log(req.body)
+ // console.log("post")
+  //console.log(req.body)
   try {
 
     if (req.session.userId) {
       if (req.params.id) {
 
-        console.log("body", req.body)
+        //console.log("body", req.body)
         const ru = req.session.userId
         RegisteredUser.findOneAndUpdate({
           _id: req.body.manager
@@ -282,7 +282,7 @@ router.post('/editworkunit/:id?', async (req, res) => {
           endDate: null
         }).exec();
         if (managerExist == null) {
-          console.log("if de")
+         // console.log("if de")
           Manager.updateMany({
             workUnitId: workUnit._id,
             endDate: null,
@@ -368,13 +368,13 @@ router.post('/editworkunit/:id?', async (req, res) => {
       res.redirect('/registeredusers/login')
     }
   } catch (err) {
-    console.log("error", err);
+  //  console.log("error", err);
   }
 
 })
 
 router.post('/addPersonel', async (req, res) => {
-  console.log(req.body)
+ // console.log(req.body)
   try {
 
     if (req.session.userId) {
@@ -383,7 +383,7 @@ router.post('/addPersonel', async (req, res) => {
         isOrganiser: true,
         isBlocked: false
       }).lean().exec();
-      console.log(ruExist)
+     // console.log(ruExist)
       if (ruExist == null) {
         return res.redirect('/registeredusers/login')
       }
@@ -396,8 +396,8 @@ router.post('/addPersonel', async (req, res) => {
         workUnitId: req.body.workUnitId,
         endDate: null
       }).exec();
-      console.log("wu", workUnit)
-      console.log("re", organiserExist)
+     // console.log("wu", workUnit)
+      //console.log("re", organiserExist)
 
       if (organiserExist == null && !(workUnit == null)) {
         const organiser = new Organiser({
@@ -406,7 +406,7 @@ router.post('/addPersonel', async (req, res) => {
           endDate: null
         });
         organiser.save();
-        console.log(organiser)
+       // console.log(organiser)
       }
       req.session.sessionFlash = {
         type: 'alert alert-success',
@@ -414,15 +414,15 @@ router.post('/addPersonel', async (req, res) => {
       }
 
       const address = 'editworkunit/' + workUnit._id
-      console.log("add", address)
+     // console.log("add", address)
       return res.redirect(address)
 
     } else {
-      console.log("else")
+      //console.log("else")
       res.redirect('/registeredusers/login')
     }
   } catch (err) {
-    console.log("error", err);
+   // console.log("error", err);
   }
 
 
@@ -438,7 +438,7 @@ router.post('/removePersonel', async (req, res) => {
         endDate: null
       }).exec();
 
-      console.log("re", organiserExist)
+     // console.log("re", organiserExist)
 
       if (!(organiserExist == null)) {
         Organiser.findOneAndUpdate({
@@ -465,11 +465,11 @@ router.post('/removePersonel', async (req, res) => {
       return res.redirect(address)
 
     } else {
-      console.log("else")
+      //console.log("else")
       res.redirect('/registeredusers/login')
     }
   } catch (err) {
-    console.log("error", err);
+    //console.log("error", err);
   }
 
 })
@@ -477,7 +477,7 @@ router.post('/removePersonel', async (req, res) => {
 router.get('/editworkunit/:id?', async (req, res) => {
   try {
     if (req.session.userId) {
-      console.log("hello")
+      //console.log("hello")
       if (req.params.id) {
         var edit = 0
         const workUnit = await WorkUnit.findById(req.params.id).exec();
@@ -573,7 +573,7 @@ router.get('/editworkunit/:id?', async (req, res) => {
         }).exec();
 
         acad = "" + admin.acad
-        console.log(acad)
+        //console.log(acad)
         res.render('site/editworkunits', {
           create: "1",
           acad: acad,
@@ -584,7 +584,7 @@ router.get('/editworkunit/:id?', async (req, res) => {
       res.redirect('/registeredusers/login')
     }
   } catch (err) {
-    console.log("error", err);
+    //console.log("error", err);
   }
 })
 

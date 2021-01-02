@@ -10,12 +10,11 @@ mongoose.connect("mongodb://127.0.0.1/EDMS", {
 })
 
 
-// adm.create({
-//   acad:1,
-//   registeredUserId:"5fefa3a49f69553010132ff2"
-// }, (error, user) => {
-
-// })
+adm.create({
+  acad:1,
+  registeredUserId:"5feff32d31ec6f357ca97e93"
+}, (error, user) => {
+})
 
 // var user_id = '5fef67cfe5478f1668bf4caf'; 
 // Workflow.findByIdAndUpdate(user_id, { organiserId: '5fef65fbe5478f1668bf4caa' }, 
