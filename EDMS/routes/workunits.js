@@ -87,13 +87,13 @@ router.get('/treeview', async (req, res) => {
       endDate: null
     }).lean().exec()
     var mainProcesses = await MainProcess.find({
-      endDate: null
+      deleteDate: null
     }).lean().exec()
     var workflows = await Workflow.find({
-      endDate: null
+      deleteDate: null
     }).lean().exec()
     var files = await File.find({
-      endDate: null
+      deleteDate: null
     }).lean().exec()
     //var files = await File.find({endDate:null}).exec()
     //console.log(mainProcesses)
@@ -123,6 +123,7 @@ router.get('/treeview', async (req, res) => {
               workflows: []
             })
           } else {
+            n = []
             workf.forEach(wf => {
               var fileFiltered =  files.filter(x => x.workflowId.toString() === wf._id.toString());
               if(fileFiltered == null){
