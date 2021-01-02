@@ -75,7 +75,7 @@
 											<td style="text-align:center">
 												<form action="/onchangefiles/{{_id}}" method="POST">
 													<input class="form-control" name="addNewFile" type="text" value="1"
-														required="required" readonly>
+														required="required" readonly hidden>
 													<button type="submit" class="btn"
 														style="background:none; none;color:#283792">
 														<i class="fas fa-hand-paper"></i></button>
@@ -97,27 +97,7 @@
 								aria-labelledby="nav-profile-tab">
 								<div class="table-responsive">
 									{{#if admin}}
-									<form action="/onchangefiles/addworkflow2" method="POST">
-
-										<div class="form-group">
-											<input class="form-control" name="create" type="text" value="1"
-												required="required" readonly>
-
-											{{#if acada}}
-											<input class="form-control" name="acadadm" type="text" value="1"
-												required="required" readonly>
-											{{/if}}
-
-											{{#unless acada}}
-											<input class="form-control" name="acadadm" type="text" value="0"
-												required="required" readonly>
-											{{/unless}}
-
-
-										</div>
-										<button type="submit" class="btn" style="background:none">Create New Work Flow
-											Process</button>
-									</form>
+									<a href="/onchangefiles/addworkflow"><input type="button" class="btn" style="background:none"value="Create New Workflow"></a>
 									{{/if}}
 									<table class="table table-hover" cellspacing="0">
 										<thead>

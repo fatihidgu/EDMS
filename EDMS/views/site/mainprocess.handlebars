@@ -76,8 +76,9 @@
                                 </thead>
                                 {{#each mainprocesses}}
                                 <tr>
-                                    <td>{{mainProcessName}}</td>
+                                    <td>{{mainProcessName}}-{{workUnitId.workUnitCode}}</td>
                                     <td>{{mainProcessNo}}</td>
+                                   
                                     {{#if (or (eq deleteDate null))}}
                                     <td>Available</td>
                                     <td>

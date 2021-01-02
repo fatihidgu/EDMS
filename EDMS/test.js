@@ -9,48 +9,21 @@ mongoose.connect("mongodb://127.0.0.1/EDMS", {
   useCreateIndex: true
 })
 
-// unint.create({
-//   workUnitCode:"IK",
-//   workUnitName:"insan kaynaklari",
-//   acad:0,
-// }, (error, user) => {
-// console.log(error)
-// console.log(user)
-// })
 
-// unint.create({
-//   workUnitCode:"prs",
-//   workUnitName:"prs bisi",
-//   acad:0,
-// }, (error, user) => {
-// console.log(error)
-// console.log(user)
-// })
-
-// unint.create({
-//   workUnitCode:"sad",
-//   workUnitName:"insan uzgunler",
-//   acad:0,
-//   endDate:Date.now()
-// }, (error, user) => {
-// console.log(error)
-// console.log(user)
-// })
-
-// unint.create({
-//   workUnitCode:"zenci",
-//   workUnitName:"insan zenci",
+// adm.create({
 //   acad:1,
+//   registeredUserId:"5fefa3a49f69553010132ff2"
 // }, (error, user) => {
-// console.log(error)
-// console.log(user)
+
 // })
 
-
-adm.create({
-  acad:1,
-  registeredUserId:["5fe883d2d3ad932c98a80da6","5fe884bc2e6b4b3b8ca8152f"]
-}, (error, user) => {
-console.log(error)
-console.log(user)
-})
+// var user_id = '5fef67cfe5478f1668bf4caf'; 
+// Workflow.findByIdAndUpdate(user_id, { organiserId: '5fef65fbe5478f1668bf4caa' }, 
+//                             function (err, docs) { 
+//     if (err){ 
+//         console.log(err) 
+//     } 
+//     else{ 
+//         console.log("Updated User : ", docs); 
+//     } 
+// });

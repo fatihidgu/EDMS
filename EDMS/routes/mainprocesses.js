@@ -5,7 +5,8 @@ const Workunit = require('../models/WorkUnit')
 
 router.get('/addmainprocess', (req, res) => {
     Workunit.find({ endDate: null }).lean().then(workunits => {
-        Mainprocess.find({}).lean().then(mainprocesses => {
+        Mainprocess.find({}).populate({path:'workUnitId', model:Workunit}).lean().then(mainprocesses => {
+            //console.log(mainprocesses)
             return res.render('site/mainprocess', { mainprocesses: mainprocesses, workunits: workunits })
         })
     })

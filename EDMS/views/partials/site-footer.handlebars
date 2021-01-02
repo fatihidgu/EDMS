@@ -189,6 +189,55 @@
 
 	}
 </script>
+
+<script>
+	function findOrganiser(response) {
+
+			var sel1 = document.getElementById('organiserOptions');
+			var i, L = sel1.options.length - 1;
+			for (i = L; i >= 0; i--) {
+				sel1.remove(i);
+			}
+		
+		$.ajax({
+			url: "/onchangefiles/secureOrganiser", // the endpoint
+			type: "GET", // http method
+			//console.log(json.user[i]['iscommission'])
+			success: function (json) {
+
+				//console.log(json.organiser)
+				//
+				//
+				//console.log(json.mainprocesses)
+				for (let i = 0; i < json.mainprocesses.length; i++) {
+					let mainmap = json.mainprocesses[i];
+					for (let j = 0; j < json.organiser.length; j++) {
+						let organisermap = json.organiser[j];
+
+						if (JSON.stringify(response.value) == JSON.stringify(mainmap._id) && JSON.stringify(organisermap.workUnitId._id) == JSON.stringify(mainmap.workUnitId._id)) {
+							
+							var sel = document.getElementById('organiserOptions');
+							// create new option element
+							var opt = document.createElement('option');
+							// create text node to add to option element (opt)
+							opt.appendChild(document.createTextNode(organisermap.registeredUserId.email));
+							
+							// set value property of opt
+							opt.setAttribute("value", organisermap._id);
+							// add opt to end of select box (sel)
+							sel.appendChild(opt);
+						}
+					}
+
+				}
+
+			}
+		})
+	}
+
+
+
+</script>
 {{!--
 <script>
 	Swal.fire({
@@ -240,7 +289,6 @@
 			Swal.fire({
 				title: 'Do you want to save the changes?',
 				showDenyButton: true,
-				showCancelButton: true,
 				confirmButtonText: `Save`,
 				denyButtonText: `Don't save`,
 			}).then((result) => {
@@ -339,8 +387,8 @@
 
 		let code = JSON.stringify(document.getElementById('workflowfilecodeid').value)
 		let file = JSON.stringify(document.getElementById('workflowfilenameid').value)
-		if (document.getElementById('workflowfilenameid').value === ""  || file.charAt(1) == " " ||
-			document.getElementById('workflowfilecodeid').value === ""  || code.charAt(1) == " ") {
+		if (document.getElementById('workflowfilenameid').value === "" || file.charAt(1) == " " ||
+			document.getElementById('workflowfilecodeid').value === "" || code.charAt(1) == " ") {
 			Swal.fire('Check the Workflow File Type. You cant start with space. Workflow File Type and File Type Code cant be null!', '', 'error')
 
 		}
@@ -397,37 +445,37 @@
 
 </script>
 <script>
-function wuEditBtn1f(){
-	var btn1 = document.getElementById("wuEditBtn1");
-	var btn2 = document.getElementById("wuEditBtn2");
+	function wuEditBtn1f() {
+		var btn1 = document.getElementById("wuEditBtn1");
+		var btn2 = document.getElementById("wuEditBtn2");
 
-	btn1.style.display = "none";
-	btn2.style.display = "block";
-	
-	document.getElementById("wu-edit-form").submit();
+		btn1.style.display = "none";
+		btn2.style.display = "block";
 
-	var elements = document.getElementsByClassName("wu-edit");
-	var i =0;
-	for(i = 0;i<elements.length;i=i+1){
-		elements[i].disabled= true;
+		document.getElementById("wu-edit-form").submit();
+
+		var elements = document.getElementsByClassName("wu-edit");
+		var i = 0;
+		for (i = 0; i < elements.length; i = i + 1) {
+			elements[i].disabled = true;
+		}
+
 	}
+	function wuEditBtn2f() {
+		var btn1 = document.getElementById("wuEditBtn1");
+		var btn2 = document.getElementById("wuEditBtn2");
 
-}
-function wuEditBtn2f(){
-	var btn1 = document.getElementById("wuEditBtn1");
-	var btn2 = document.getElementById("wuEditBtn2");
+		btn1.style.display = "block";
+		btn2.style.display = "none";
+		//document.getElementById("wu-edit-form").submit();
 
-	btn1.style.display = "block";
-	btn2.style.display = "none";
-	//document.getElementById("wu-edit-form").submit();
+		var elements = document.getElementsByClassName("wu-edit");
+		var i = 0;
+		for (i = 0; i < elements.length; i = i + 1) {
+			elements[i].disabled = false;
+		}
 
-	var elements = document.getElementsByClassName("wu-edit");
-	var i =0;
-	for(i = 0;i<elements.length;i=i+1){
-		elements[i].disabled= false;
 	}
-
-}
 
 
 

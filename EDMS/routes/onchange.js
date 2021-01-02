@@ -7,7 +7,8 @@ const WorkUnit = require('../models/WorkUnit');
 const MainProcess = require('../models/MainProcess');
 const Administrator = require('../models/Administrator');
 const Manager = require('../models/Manager');
-
+const Organiser = require('../models/Organiser');
+const { model } = require('../models/RegisteredUser');
 
 router.post('/addworkflow', (req, res) => {
   const { acadadm, workprocessName } = req.body
@@ -17,40 +18,46 @@ router.post('/addworkflow', (req, res) => {
       ...req.body,
       creatorId: admin._id,
       workflowNo: 1,
-
-    }, (error) => {
+    }, (error, wf) => {
+      //console.log("wfff",wf)
       return res.redirect('/')
     })
   })
 })
 
-router.post('/addworkflow2', (req, res) => {
-  const { create, acadadm } = req.body
-  //console.log(req.body)
-
-  WorkUnit.find({ endDate: null }).lean().then(workunits => {
-    MainProcess.find({ deletedate: null }).lean().then(mainprocesses => {
-    //  MainProcess.find({ deletedate: null, workUnitId: workunits[0]._id }).lean().then(maprocess => {
-        //console.log(maprocess)
-        return res.render('site/onchange', { create: create, acadadm: acadadm, mainprocesses: mainprocesses })
-     // })
-
-      // return res.render('site/workflows', { workflows: workflows, myworkflows: myworkflows, oldworkflows: oldworkflows, acada: admin.acad })
-
-    })
-  })
-
-
+router.get('/addworkflow', async (req, res) => {
   // WorkUnit.find // workUnitCode
   // MainProcess // workUnitId mainProcessName mainProcessNo
   // Administrator // registeredUserId _id
+  //create: create, acadadm: acadadm,
+  const admin = await Administrator.findOne(({ registeredUserId: res.locals.userid })).lean().exec();
+  if (admin) {
+    MainProcess.find({ deleteDate: null }).populate({ path: "workUnitId", model: WorkUnit }).lean().then(mainprocesses => {
+      Organiser.find({ endDate: null }).populate({ path: 'registeredUserId', model: RegisteredUser }).lean().then(organiser => {
+        return res.render('site/onchange', { create: "1", acadadm: admin.acad, mainprocesses: mainprocesses, organiser: organiser })
+      })
+    })
+  }
+  else {
+    res.redirect('/')
+  }
 
 })
 
+router.get('/secureOrganiser', (req, res) => {
+  Organiser.find({ endDate: null }).populate([{ path: 'workUnitId', model: WorkUnit },{path: 'registeredUserId', model: RegisteredUser}]).lean().then(organiser => {
+    MainProcess.find({ deleteDate: null }).populate({ path: "workUnitId", model: WorkUnit }).lean().then(mainprocesses => {
+      res.send(({ organiser: organiser,mainprocesses:mainprocesses }))
+    })
+    
+  })
+})
+
 router.get('/:id', async (req, res) => {
+  //console.log("deneme1")
   if (req.session.userId) {
     //file olmayacak boş bakınma
-    
+
     const onChangeFiles = await File.find({ workflowId: req.params.id, approvalStatus: { $gte: 0, $lt: 4 }, deleteDate: null }).exec();
     //console.log("ONCHANGE")
     //console.log(onChangeFiles)
@@ -59,15 +66,15 @@ router.get('/:id', async (req, res) => {
       approvalStatus: 4,
       workflowId: req.params.id,
     }).lean().then(wff => {
-      Workflow.findById(req.params.id).lean().then(workf => {
-
+      Workflow.findById(req.params.id).populate({ path: 'mainProcessId', model: MainProcess }).lean().then(workf => {
+        
         var a = []
         var i = 0
         onChangeFiles.forEach(onChangeFile => {
           i = i + 1
           a.push({ approvalStatus: onChangeFile.approvalStatus, fileNo: onChangeFile.fileNo, _id: onChangeFile._id, changeReason: "-", rejectReason: "-", rejectStatus: "-" });
         });
-       // console.log("a", a);
+        // console.log("a", a);
 
         return res.render('site/onchange', {
           wff: wff,
@@ -85,11 +92,12 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/:id', (req, res) => {
+  //console.log("deneme2")
   if (req.session.userId) {
     //ilgili filelar ve düzenleme yerleri olacak
     const edit = true
     if (req.body.workprocessName) {
-      console.log(req.body.workprocessName)
+      //console.log(req.body.workprocessName)
       Workflow.findByIdAndUpdate(req.params.id, {
         workprocessName: req.body.workprocessName
       }).then(us => {
@@ -98,13 +106,13 @@ router.post('/:id', (req, res) => {
     File.find({
       deleteDate: null
     }).lean().then(wff => {
-      Workflow.findById(req.params.id).lean().then(workf => {
-        console.log("buraya girmmeis olmasi lazim")
+      Workflow.findById(req.params.id).populate({ path: 'mainProcessId', model: MainProcess }).lean().then(workf => {
+        //console.log("buraya girmmeis olmasi lazim")
         return res.render('site/onchange', {
           wff: wff,
           workf: workf,
           edit: edit,
-          addNewFile:req.body.addNewFile
+          addNewFile: req.body.addNewFile
         })
       })
     })

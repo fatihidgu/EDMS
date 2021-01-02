@@ -20,7 +20,7 @@ router.get('/allworkflows', async (req, res) => {
             return res.render('site/workflows', { workflows: workflows, adminworkflows: adminworkflows, oldworkflows: oldworkflows, acada: admin.acad, adminId: admin._id })
         }
         else {
-            console.log("admin yok")
+            //console.log("admin yok")
         }
         return res.render('site/workflows', { workflows: workflows, oldworkflows: oldworkflows })
 
