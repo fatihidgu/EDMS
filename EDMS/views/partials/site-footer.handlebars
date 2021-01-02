@@ -192,13 +192,20 @@
 
 <script>
 	function findOrganiser(response) {
+		var sel1 = document.getElementById('organiserOptions');
+		var i, L = sel1.options.length - 1;
+		for (i = L; i >= 0; i--) {
+			sel1.remove(i);
+		}
+			if (document.getElementById('organiserOptions').value == "") {
+			var opt1 = document.createElement('option');
+			// create text node to add to option element (opt)
+			opt1.appendChild(document.createTextNode("Select One Mainprocess"));
+			opt1.setAttribute("value", "");
+			sel1.appendChild(opt1);
+		}
+	
 
-			var sel1 = document.getElementById('organiserOptions');
-			var i, L = sel1.options.length - 1;
-			for (i = L; i >= 0; i--) {
-				sel1.remove(i);
-			}
-		
 		$.ajax({
 			url: "/onchangefiles/secureOrganiser", // the endpoint
 			type: "GET", // http method
@@ -209,19 +216,20 @@
 				//
 				//
 				//console.log(json.mainprocesses)
+
 				for (let i = 0; i < json.mainprocesses.length; i++) {
 					let mainmap = json.mainprocesses[i];
 					for (let j = 0; j < json.organiser.length; j++) {
 						let organisermap = json.organiser[j];
 
 						if (JSON.stringify(response.value) == JSON.stringify(mainmap._id) && JSON.stringify(organisermap.workUnitId._id) == JSON.stringify(mainmap.workUnitId._id)) {
-							
+
 							var sel = document.getElementById('organiserOptions');
 							// create new option element
 							var opt = document.createElement('option');
 							// create text node to add to option element (opt)
 							opt.appendChild(document.createTextNode(organisermap.registeredUserId.email));
-							
+
 							// set value property of opt
 							opt.setAttribute("value", organisermap._id);
 							// add opt to end of select box (sel)
@@ -351,14 +359,14 @@
 			work.setAttribute("readonly", true);
 			work.setAttribute("name", "workprocess");
 			work.setAttribute("value", document.getElementById('workprocessid').value);
-			//work.style.display = 'none';
+			work.style.display = 'none';
 
 			// Create an input element for workprocessno
 			var workno = document.createElement("input");
 			workno.setAttribute("type", "text");
 			workno.setAttribute("name", "workprocessno");
 			workno.setAttribute("readonly", true);
-			//workno.style.display = 'none';
+			workno.style.display = 'none';
 			workno.setAttribute("value", document.getElementById('workprocessnoid').value);
 
 			//workunitid
@@ -367,7 +375,7 @@
 			workid.setAttribute("readonly", true);
 			workid.setAttribute("name", "workunitid");
 			workid.setAttribute("value", document.getElementById('workunitid').value);
-			//work.style.display = 'none';
+			workid.style.display = 'none';
 			form.append(workid);
 			// Append the email_ID input to the form
 			form.append(work);
@@ -422,14 +430,14 @@
 			filename.setAttribute("readonly", true);
 			filename.setAttribute("name", "workflowfilename");
 			filename.setAttribute("value", document.getElementById('workflowfilenameid').value);
-			//filename.style.display = 'none';
+			filename.style.display = 'none';
 
 			// Create an input element for workflowfilecode
 			var filecode = document.createElement("input");
 			filecode.setAttribute("type", "text");
 			filecode.setAttribute("readonly", true);
 			filecode.setAttribute("name", "workflowfilecode");
-			//filecode.style.display = 'none';
+			filecode.style.display = 'none';
 			filecode.setAttribute("value", document.getElementById('workflowfilecodeid').value);
 
 			form.append(filecode);

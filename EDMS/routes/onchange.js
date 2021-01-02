@@ -12,7 +12,7 @@ const { model } = require('../models/RegisteredUser');
 
 router.post('/addworkflow', (req, res) => {
   const { acadadm, workprocessName } = req.body
-  console.log(req.body)
+  //console.log(req.body)
   Administrator.findOne(({ endDate: null, registeredUserId: res.locals.userid })).lean().then(admin => {
     Workflow.create({
       ...req.body,
