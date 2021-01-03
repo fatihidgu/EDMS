@@ -9,6 +9,64 @@
 
 <section id="aboutus" class="md-padding">
   <div class="container">
+<!--
+    <div class="">
+
+
+      <div class="modal fade" id="changeReason" tabindex="-1" role="dialog" aria-labelledby="changeReasonTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title" id="changeReasonTitle">Reason Of Change</h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form class="form" action="/createfile/change" method="POST">
+                <textarea rows="4" id="changeReasonId" cols="50" class="col-md-12 form-control" name="reason" placeholder="Enter here...." maxlength="150" minlength="25" required></textarea>
+                <br><br><br>
+                <div class="col-md-12 text-center">
+                  <button type="button" class="btn btn-secondary col-md-5 mx-auto" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary col-md-5 mx-auto">Send</button>
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- -->
+
+      <div class="modal fade" id="rejectReason" tabindex="-1" role="dialog" aria-labelledby="rejectReasonTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title" id="rejectReasonTitle">Reason Of Reject</h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form class="form" action="/createfile/reject" method="POST">
+                <textarea rows="4" id="rejectReasonId" cols="50" class="col-md-12 form-control" name="reason" placeholder="Enter here...." maxlength="150" minlength="25" required></textarea>
+                <br><br><br>
+                <div class="col-md-12 text-center">
+                  <button type="button" class="btn btn-secondary col-md-5 mx-auto" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary col-md-5 mx-auto">Send</button>
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div> -->
 
     {{#if sessionFlash.message}}
       <div class="{{sessionFlash.type}}">
@@ -103,6 +161,7 @@
             <div class="row">
               <div class="col-md-12">
 
+
                 <div class="tab-content bg-light" id="nav-tabContent " style="border:1px solid #ccc;">
                   <div class="text-center">
                     <br>
@@ -156,12 +215,18 @@
                               <th>{{surname}}</th>
                               <th>{{email}}</th>
                               <th>
-                                <form  action="/workunits/removePersonel" method="POST">
+                                <form action="/workunits/removePersonel" method="POST">
                                   <input type="hidden" name="organiserId" style="display:none;" value="{{organiserId}}">
-                                  <button type="submit" class="btn"
-        														style="background:none; none;color:#283792">
-        														<i class="fa fa-minus-circle" aria-hidden="true"></i></button>
+                                  <button type="submit" class="btn" style="background:none; none;color:#283792">
+                                    <i class="fa fa-minus-circle" aria-hidden="true"></i></button>
                                 </form>
+                                <!-- <button type="button" class="btn" onclick="changeReasonBtnClicked('{{surname}}');" data-toggle="modal" data-target="#changeReason" data-whatever="@{{surname}}" style="background:none">
+                                  <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                </button>
+
+                                <button type="button" class="btn" onclick="rejectReasonBtnClicked('{{name}}');" data-toggle="modal" data-whatever="@{{name}}" data-target="#rejectReason" style="background:none">
+                                  <i class="fa fa-times" aria-hidden="true"></i>
+                                </button> -->
                               </th>
 
                             </tr>

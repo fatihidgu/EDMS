@@ -343,6 +343,9 @@ router.post('/update', upload.single('file'), (req, res) => {
 //   res.render('site/createfile');
 // });
 
+router.post("/change", (req,res)=>{
+  console.log(req.body)
+})
 router.get('/create/:workflowId', (req, res) => {
   //console.log('/create/:workflowId')
   filterIdWF = {

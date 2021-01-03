@@ -204,7 +204,7 @@
 			opt1.setAttribute("value", "");
 			sel1.appendChild(opt1);
 		}
-	
+
 
 		$.ajax({
 			url: "/onchangefiles/secureOrganiser", // the endpoint
@@ -488,6 +488,17 @@
 
 
 
+</script>
+
+
+<script>
+
+function changeReasonBtnClicked(changeId) {
+  document.getElementById("changeReasonId").value = changeId;
+};
+function rejectReasonBtnClicked(rejectId) {
+  document.getElementById("rejectReasonId").value = rejectId;
+};
 </script>
 </body>
 
