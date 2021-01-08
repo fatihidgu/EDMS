@@ -14,6 +14,7 @@ const WorkflowSchema = new Schema({
     creationDate:{type:Date, default:Date.now, required:true},
     deleteDate:{type:Date,default:null},
     organiserId:{type: Schema.Types.ObjectId, ref: 'Organiser', required:true},
+    isShared:{type: Boolean, required:true},
 })
 
 module.exports = mongoose.model('Workflow',WorkflowSchema) //önce model ismi,sonra kullanacığım schema ismi
