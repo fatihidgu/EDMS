@@ -13,6 +13,11 @@ const MainProcess = require('../models/MainProcess');
 const WorkflowFileType = require('../models/WorkflowFileType');
 const Administrator = require('../models/Administrator');
 const Manager = require('../models/Manager');
+const Committee = require('../models/Committee');
+const Organiser = require('../models/Organiser');
+const Change = require('../models/Change');
+const Reject = require('../models/Reject');
+
 
 
 //variables
@@ -93,14 +98,14 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     "-" + work_process.workflowNo + "-" + "0";
 
   var filen = fileNo + ext
-  var directory =path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode);
+  var directory = path.join(__dirname, '..', 'uploads', 'files', work_unit.workUnitCode);
 
   if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory);
   }
 
 
-  const newFilePath = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode, filen);
+  const newFilePath = path.join(__dirname, '..', 'uploads', 'files', work_unit.workUnitCode, filen);
   fs.rename(oldFilePath, newFilePath, function(err) {
     if (err) {
       //console.log(err);
@@ -112,7 +117,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     filePath: newFilePath,
     workflowFileTypeId: file_type._id,
     creatorId: userAdmin._id,
-    version:0
+    version: 0
   });
   fileObject.save();
 
@@ -121,7 +126,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     type: 'alert alert-success',
     message: 'Your file created Successfully.'
   }
-  const address = '/onchangefiles/'+work_process._id;
+  const address = '/onchangefiles/' + work_process._id;
   return res.redirect(address);
 
 });
@@ -158,7 +163,9 @@ router.post('/delete', (req, res) => {
       fileAttributes.approvalStatus = choosenFile.approvalStatus;
       fileAttributes.filePath = choosenFile.filePath;
       const ext = path.extname(choosenFile.filePath);
-      a.push({_id:choosenFile._id});
+      a.push({
+        _id: choosenFile._id
+      });
 
       if (fileAttributes.approvalStatus == 4) {
         fileAttributes.approvalStatus = 5;
@@ -242,11 +249,13 @@ router.post('/update', upload.single('file'), (req, res) => {
     } else {
 
       const filen = path.basename(choosenFile.filePath);
-      const work_unit = await WorkUnit.findOne({_id:req.body.work_unit_id}).exec();
+      const work_unit = await WorkUnit.findOne({
+        _id: req.body.work_unit_id
+      }).exec();
 
 
-      var oldDirectory = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode);
-      var newDirectory = path.join(__dirname, '..', 'uploads', 'oldFiles',work_unit.workUnitCode);
+      var oldDirectory = path.join(__dirname, '..', 'uploads', 'files', work_unit.workUnitCode);
+      var newDirectory = path.join(__dirname, '..', 'uploads', 'oldFiles', work_unit.workUnitCode);
       if (!fs.existsSync(oldDirectory)) {
         fs.mkdirSync(oldDirectory);
       }
@@ -268,8 +277,8 @@ router.post('/update', upload.single('file'), (req, res) => {
 
 
 
-        const oldFileCurrentPath = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode, filen);
-        const oldFileGoesTo = path.join(__dirname, '..', 'uploads', 'oldFiles',work_unit.workUnitCode, fileOldN);
+        const oldFileCurrentPath = path.join(__dirname, '..', 'uploads', 'files', work_unit.workUnitCode, filen);
+        const oldFileGoesTo = path.join(__dirname, '..', 'uploads', 'oldFiles', work_unit.workUnitCode, fileOldN);
         changeFilePath(oldFileCurrentPath, oldFileGoesTo);
         var fileAttributes = {
           approvalStatus: 5,
@@ -279,7 +288,7 @@ router.post('/update', upload.single('file'), (req, res) => {
         oneFileUpdate(filterId, fileAttributes);
 
         const newFileCurrentPath = req.file.path;
-        const newFileGoesTo = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode, filen);
+        const newFileGoesTo = path.join(__dirname, '..', 'uploads', 'files', work_unit.workUnitCode, filen);
         changeFilePath(newFileCurrentPath, newFileGoesTo);
 
 
@@ -292,36 +301,38 @@ router.post('/update', upload.single('file'), (req, res) => {
           approvalDate: null,
           filePath: newFileGoesTo,
           deleteDate: null,
-          version:(choosenFile.version+1),
-          workflowFileTypeId:choosenFile.workflowFileTypeId
+          version: (choosenFile.version + 1),
+          workflowFileTypeId: choosenFile.workflowFileTypeId
         });
         fileObject.save();
 
-        const address = '/onchangefiles/'+fileObject.workflowId;
+        const address = '/onchangefiles/' + fileObject.workflowId;
         return res.redirect(address);
 
       } else {
         const newFileCurrentPath = req.file.path;
-        const newFileGoesTo = path.join(__dirname, '..', 'uploads', 'files',work_unit.workUnitCode, filen);
+        const newFileGoesTo = path.join(__dirname, '..', 'uploads', 'files', work_unit.workUnitCode, filen);
         changeFilePath(newFileCurrentPath, newFileGoesTo);
 
 
-        const update =({
+        const update = ({
           workflowId: choosenFile.workflowId,
           fileNo: choosenFile.fileNo,
-          workflowFileTypeId:choosenFile.workflowFileTypeId,
+          workflowFileTypeId: choosenFile.workflowFileTypeId,
           creatorId: choosenFile.creatorId,
           revisionDate: new Date(),
           filePath: newFileGoesTo
         });
-        File.findByIdAndUpdate({_id:id},update).exec()
+        File.findByIdAndUpdate({
+          _id: id
+        }, update).exec()
 
 
         req.session.sessionFlash = {
           type: 'alert alert-success',
           message: 'Your file updated Successfully.'
         }
-        const address = '/onchangefiles/'+update.workflowId;
+        const address = '/onchangefiles/' + update.workflowId;
         return res.redirect(address);
 
 
@@ -343,9 +354,197 @@ router.post('/update', upload.single('file'), (req, res) => {
 //   res.render('site/createfile');
 // });
 
-router.post("/change", (req,res)=>{
-  console.log(req.body)
-})
+router.post("/change", async (req, res) => {
+  if (res.locals.userid) {
+
+    var file = await File.findById(req.body.fileId).exec();
+    var wf = await Workflow.findById(file.workflowId).exec();
+    var mp = await MainProcess.findById(wf.mainProcessId).exec();
+    var wu = await WorkUnit.findById(mp.workUnitId).exec();
+    var manager = await Manager.findOne({
+      workUnitId: wu._id,
+      endDate: null
+    }).exec();
+    var organiser = await Organiser.findById(wf.organiserId).exec();
+    var administrator = await Administrator.findOne({
+      acad: wf.acad,
+      endDate: null
+    })
+    var committee = await Committee.findOne({
+      endDate: null
+    })
+    if (file != null && organiser != null && manager != null && administrator != null && committee != null) {
+
+      if(file.approvalStatus == 0){
+
+              const newChange = new Change({
+                fileNo: file._id,
+                organiserId: organiser._id,
+                changeReason: req.body.reason,
+                managerId: manager._id,
+                administratorId: administrator._id,
+                committeeId: committee._id
+              });
+              newChange.save();
+
+              oneFileUpdate({_id: file._id}, {approvalStatus: 1});
+      }else if(file.approvalStatus == 1){
+        var change = await Change.findOneAndUpdate({fileNo:file._id,endDate:null})
+
+        Change.findOneAndUpdate({fileNo:file._id,endDate:null}, {managerApprovalDate:Date.now()}, {new: true}, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+        oneFileUpdate({_id:file._id},{approvalStatus:2});
+
+      }else if(file.approvalStatus == 2){
+        var change = await Change.findOneAndUpdate({fileNo:file._id,endDate:null})
+
+        Change.findOneAndUpdate({fileNo:file._id,endDate:null}, {administratorApprovalDate:Date.now()}, {new: true}, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+        oneFileUpdate({_id:file._id},{approvalStatus:3});
+      }else{
+        console.log("something wrong");
+      }
+
+
+      req.session.sessionFlash = {
+        type: 'alert alert-success',
+        message: 'Your file sent for approval.'
+      }
+      const address = '/onchangefiles/' + wf._id;
+      return res.redirect(address);
+
+    }
+
+  } else {
+    res.redirect('/registeredusers/register')
+  }
+
+});
+
+router.post("/reject", async (req, res) => {
+  if (res.locals.userid) {
+    console.log(req.body)
+
+    var file = await File.findById(req.body.fileId).exec();
+    var change = await Change.findOne({
+      fileNo: file._id,
+      deleteDate: null
+    });
+
+    if (file != null && change != null) {
+      console.log(1)
+      const newReject = new Reject({
+        changeId: change._id,
+        rejectReason: req.body.reason,
+        rejectRole: file.approvalStatus,
+        rejecterId: res.locals.userid
+      });
+      newReject.save();
+
+      oneFileUpdate({
+        _id: file._id
+      }, {
+        approvalStatus: 0
+      });
+      Change.findOneAndUpdate({
+        _id: change._id
+      }, {
+        $set: {
+          deleteDate: Date.now()
+        }
+      }).exec()
+
+      req.session.sessionFlash = {
+        type: 'alert alert-success',
+        message: 'Your file re-sent back for change.'
+      }
+      const address = '/onchangefiles/' + file.workflowId;
+      return res.redirect(address);
+
+    }
+
+  } else {
+    res.redirect('/registeredusers/register')
+  }
+});
+
+router.post("/approve", async (req, res) => {
+  if (res.locals.userid) {
+
+    var file = await File.findById(req.body.fileId).exec();
+    var wf = await Workflow.findById(file.workflowId).exec();
+    var mp = await MainProcess.findById(wf.mainProcessId).exec();
+    var wu = await WorkUnit.findById(mp.workUnitId).exec();
+    var manager = await Manager.findOne({
+      workUnitId: wu._id,
+      endDate: null
+    }).exec();
+    var organiser = await Organiser.findById(wf.organiserId).exec();
+    var administrator = await Administrator.findOne({
+      acad: wf.acad,
+      endDate: null
+    })
+    var committee = await Committee.findOne({
+      endDate: null
+    })
+
+    if (file != null && change != null && administrator != null && committee != null) {
+      if (req.params.userid == administrator._id || req.params.userid == committee._id) {
+
+        const newReject = new Reject({
+          changeId: change._id,
+          rejectReason: req.body.reason,
+          rejectRole: file.approvalStatus,
+          rejecterId: req.params.userid
+        });
+        newReject.save();
+        oneFileUpdate({
+          _id: file._id
+        }, {
+          approvalStatus: 4
+        });
+        Change.findOneAndUpdate({
+          _id: change._id
+        }, {
+          $set: {
+            deleteDate: Date.now()
+          }
+        }).exec();
+        Reject.findOneAndUpdate({
+          changeId: change._id,
+          deleteDate: null
+        }, {
+          $set: {
+            deleteDate: Date.now()
+          }
+        }).exec();
+
+        req.session.sessionFlash = {
+          type: 'alert alert-success',
+          message: 'Your file approved.'
+        }
+        const address = '/onchangefiles/' + wf._id;
+        return res.redirect(address);
+
+
+      }
+    }
+
+  } else {
+    res.redirect('/registeredusers/register')
+  }
+});
+
+
+
+
+
 router.get('/create/:workflowId', (req, res) => {
   //console.log('/create/:workflowId')
   filterIdWF = {
@@ -367,7 +566,7 @@ router.get('/create/:workflowId', (req, res) => {
 
           var filterWU = {
             endDate: null,
-            _id:mainProcess.workUnitId
+            _id: mainProcess.workUnitId
           };
           WorkUnit.find(filterWU, function(err, workUnits) {
             var work_unit = [];
@@ -395,7 +594,7 @@ router.get('/create/:workflowId', (req, res) => {
                 main_process_id: main_process_id,
                 main_process_name: main_process_name,
                 work_unit_name: work_unit[0].work_unit_name,
-                work_unit_id:work_unit[0].work_unit_id,
+                work_unit_id: work_unit[0].work_unit_id,
                 file_type: file_type,
                 workflow_id: choosenWF._id,
                 workflow_name: choosenWF.workprocessName
@@ -437,6 +636,128 @@ router.get('/upload/:fileId', async (req, res) => {
     res.redirect('/registeredusers/login')
   }
 });
+
+
+router.get('/:id', async (req, res) => {
+  //console.log("deneme1")
+  if (req.session.userId) {
+    //file olmayacak boş bakınma
+
+    const onChangeFiles = await File.find({
+      workflowId: req.params.id,
+      approvalStatus: {
+        $gte: 0,
+        $lt: 4
+      },
+      deleteDate: null
+    }).exec();
+    const wf = await Workflow.findById(req.params.id).exec();
+    const mp = await MainProcess.findById(wf.mainProcessId).exec();
+    const organiser = await Organiser.findById(wf.organiserId).exec();
+    const manager = await Manager.findOne({workUnitId:mp.workUnitId,endDate:null});
+    const administrator = await Administrator.findOne({acad:wf.acad,endDate:null});
+    const committee = await Committee.findOne({endDate:null});
+
+    const userO = await RegisteredUser.findById(organiser.registeredUserId).exec();
+    const userM = await RegisteredUser.findById(manager.registeredUserId).exec();
+    const userA = await RegisteredUser.findById(administrator.registeredUserId).exec();
+    const userC = await RegisteredUser.findById(committee.registeredUserId).exec();
+    //console.log("ONCHANGE")
+    //console.log(onChangeFiles)
+    var a = []
+    var i = 0
+    for (var onChangeFile of onChangeFiles) {
+      i = i + 1
+      var change = await Change.findOne({
+        fileNo: onChangeFile._id,
+        endDate: null
+      })
+      if (change == null) {
+        a.push({
+          approvalStatus: onChangeFile.approvalStatus,
+          fileNo: onChangeFile.fileNo,
+          _id: onChangeFile._id,
+          changeReason: "-",
+          rejectReason: "-",
+          rejectStatus: "-",
+          organiserRUId:userO._id.toString(),
+          managerRUId:userM._id.toString(),
+          administratorRUId:userA._id.toString(),
+          committeeRUId:userC._id.toString(),
+          userId:req.session.userId
+        });
+
+      } else {
+        var reject = await Reject.findOne({
+          changeId: change._id
+        })
+        if (reject == null) {
+          a.push({
+            approvalStatus: onChangeFile.approvalStatus,
+            fileNo: onChangeFile.fileNo,
+            _id: onChangeFile._id,
+            changeReason: change.changeReason,
+            rejectReason: "-",
+            rejectStatus: "-",
+            organiserRUId:userO._id.toString(),
+            managerRUId:userM._id.toString(),
+            administratorRUId:userA._id.toString(),
+            committeeRUId:userC._id.toString(),
+            userId:req.session.userId
+          });
+
+        } else {
+          var role = {
+            1: "Manager",
+            2: "Administrator",
+            3: "Committee"
+          };
+
+          a.push({
+            approvalStatus: onChangeFile.approvalStatus,
+            fileNo: onChangeFile.fileNo,
+            _id: onChangeFile._id,
+            changeReason: change.changeReason,
+            rejectReason: reject.rejectReason,
+            rejectStatus: role[reject.rejectRole],
+            organiserRUId:userO.id.toString(),
+            managerRUId:userM._id.toString(),
+            administratorRUId:userA._id.toString(),
+            committeeRUId:userC.id.toString(),
+            userId:req.session.userId
+          });
+        }
+      }
+    }
+
+    File.find({
+      deleteDate: null,
+      approvalStatus: 4,
+      workflowId: req.params.id,
+    }).lean().then(wff => {
+      Workflow.findById(req.params.id).populate({
+        path: 'mainProcessId',
+        model: MainProcess
+      }).lean().then(workf => {
+        //console.log(onChangeFiles)
+
+
+
+
+        return res.render('site/onchange2', {
+          wff: wff,
+          workf: workf,
+          onChangeFiles: a
+        })
+      })
+
+
+    })
+  } else {
+    res.redirect('/registeredusers/login')
+  }
+
+})
 
 
 
