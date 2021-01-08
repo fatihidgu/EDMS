@@ -192,19 +192,15 @@
 
 <script>
 	function findOrganiser(response) {
-		var sel1 = document.getElementById('organiserOptions');
-		var i, L = sel1.options.length - 1;
-		for (i = L; i >= 0; i--) {
-			sel1.remove(i);
-		}
-			if (document.getElementById('organiserOptions').value == "") {
+		const sel1 = clear('organiserOptions');
+		doSomething2();
+		if (sel1.value == "") {
 			var opt1 = document.createElement('option');
 			// create text node to add to option element (opt)
-			opt1.appendChild(document.createTextNode("Select One Mainprocess"));
+			opt1.appendChild(document.createTextNode("First, Select One Mainprocess"));
 			opt1.setAttribute("value", "");
 			sel1.appendChild(opt1);
 		}
-
 
 		$.ajax({
 			url: "/onchangefiles/secureOrganiser", // the endpoint
@@ -223,13 +219,144 @@
 						let organisermap = json.organiser[j];
 
 						if (JSON.stringify(response.value) == JSON.stringify(mainmap._id) && JSON.stringify(organisermap.workUnitId._id) == JSON.stringify(mainmap.workUnitId._id)) {
-
-							var sel = document.getElementById('organiserOptions');
+							//console.log("what happened")
 							// create new option element
 							var opt = document.createElement('option');
 							// create text node to add to option element (opt)
 							opt.appendChild(document.createTextNode(organisermap.registeredUserId.email));
+							// set value property of opt
+							opt.setAttribute("value", organisermap._id);
+							// add opt to end of select box (sel)
+							sel1.appendChild(opt);
+						}
+					}
 
+				}
+
+			}
+		})
+		if (response.value == "") {
+			closeShare();
+		}
+	}
+	// find org bitisi
+	function doSomething2() {
+		if (document.getElementById('organiserOptions').value == "") {
+			closeShare();
+		}
+	}
+	function clear(id) {
+		var sel1 = document.getElementById(id);
+		var i, L = sel1.options.length - 1;
+		for (i = L; i >= 0; i--) {
+			sel1.remove(i);
+		}
+		return sel1
+	}
+
+</script>
+
+
+<script>
+	function isShared() {
+		//shareworkflow
+		// addworkflowform
+		const cb = document.getElementById('shareworkflow');
+		if (cb.checked) {
+			document.getElementById('sharedDiv').style.display = '';
+			document.getElementById('WorkUnitIdSelect1').required = true;
+			document.getElementById('OrganiserIdSelect1').required = true;
+			var sel = document.getElementById('WorkUnitIdSelect1');
+			var sel1 = document.getElementById('mainProcess');
+			//mainProcess
+
+
+			$.ajax({
+				url: "/onchangefiles/secureOrganiser", // the endpoint
+				type: "GET", // http method
+				//console.log(json.user[i]['iscommission'])
+				success: function (json) {
+					//console.log(json.organiser)
+					//console.log(json.mainprocesses)
+					for (let i = 0; i < json.mainprocesses.length; i++) {
+						let mainmap = json.mainprocesses[i];
+						//console.log(mainmap)
+						//console.log("id",)
+						//console.log("selected one", sel1.value)
+						if ((JSON.stringify(sel1.value) == JSON.stringify(mainmap._id))) {
+							//eklemeleri cikarma
+							//console.log('elendi')
+							//console.log("elendi", mainmap.workUnitId._id)
+							//
+							document.getElementById('invisibleMainId').value = mainmap.workUnitId._id
+							$('#WorkUnitIdSelect1').find('[value=' + mainmap.workUnitId._id + ']').hide();
+							$('#WorkUnitIdSelect2').find('[value=' + mainmap.workUnitId._id + ']').hide(); // show()
+						}
+					}
+				}
+			})
+			//sel.setAttribute("required", true);
+			//if son
+		}
+
+
+		else {
+			closeShare();
+		}
+		// is shared metod kapanisi	
+	}
+	// is shared finito
+
+	function findSomething(response) {
+		document.getElementById('WorkUnitIdSelect2').required = false;
+		document.getElementById('WorkUnitIdSelect2').selectedIndex = "0"
+		document.getElementById('OrganiserIdSelect2').required = false;
+		document.getElementById('OrganiserIdSelect2').selectedIndex = "0"
+		document.getElementById('WorkUnitIdSelect2').disabled = true;
+		document.getElementById('OrganiserIdSelect2').disabled = true;
+		if (response.value == "" && document.getElementById("invisibleMainId2").value != "") {
+			$('#WorkUnitIdSelect1').find('[value=' + document.getElementById("invisibleMainId2").value + ']').show()
+		}
+		if (response.value != "") {
+			if (response.value != document.getElementById("invisibleMainId3").value && document.getElementById("invisibleMainId3").value != "") {
+				$('#WorkUnitIdSelect2').find('[value=' + document.getElementById("invisibleMainId3").value + ']').show()
+				$('#WorkUnitIdSelect1').find('[value=' + document.getElementById("invisibleMainId2").value + ']').show()
+			}
+			document.getElementById("invisibleMainId3").value = response.value;
+			$('#WorkUnitIdSelect2').find('[value=' + response.value + ']').hide()
+
+
+		}
+		//console.log("i found something", response.value)
+		const sel1 = clear('OrganiserIdSelect1');
+		if (sel1.value == "") {
+			var opt1 = document.createElement('option');
+			// create text node to add to option element (opt)
+			opt1.appendChild(document.createTextNode("Select One Organiser"));
+			opt1.setAttribute("value", "");
+			sel1.appendChild(opt1);
+		}
+		$.ajax({
+			url: "/onchangefiles/secureOrganiser", // the endpoint
+			type: "GET", // http method
+			//console.log(json.user[i]['iscommission'])
+			success: function (json) {
+
+				//console.log(json.organiser)
+				//
+				//
+				//console.log(json.mainprocesses)
+				//workunits
+				for (let i = 0; i < json.workunits.length; i++) {
+					let workunitmap = json.workunits[i];
+					for (let j = 0; j < json.organiser.length; j++) {
+						let organisermap = json.organiser[j];
+						if (JSON.stringify(response.value) == JSON.stringify(workunitmap._id) && JSON.stringify(organisermap.workUnitId._id) == JSON.stringify(workunitmap._id)) {
+							var sel = document.getElementById('OrganiserIdSelect1');
+							// create new option element
+							var opt = document.createElement('option');
+							// create text node to add to option element (opt)
+							opt.appendChild(document.createTextNode(organisermap.registeredUserId.email));
 							// set value property of opt
 							opt.setAttribute("value", organisermap._id);
 							// add opt to end of select box (sel)
@@ -241,11 +368,151 @@
 
 			}
 		})
+		console.log(response.value)
+	}
+	// find something
+	function doSomething() {
+		if (document.getElementById('organiserOptions').value != "") {
+			isShared();
+		} else {
+			closeShare();
+		}
+	}
+	// dosmthng
+	function closeShare() {
+
+		//
+		var invis = document.getElementById('invisibleMainId')
+		if (invis.value != "") {
+			console.log("kapandi", invis.value)
+			$('#WorkUnitIdSelect1').find('[value=' + invis.value + ']').show(); // hide();
+			$('#WorkUnitIdSelect2').find('[value=' + invis.value + ']').show();
+		}
+		var invis2 = document.getElementById('invisibleMainId2')
+		if (invis2.value != "") {
+			//console.log("kapandi", invis.value)
+			$('#WorkUnitIdSelect2').find('[value=' + invis2.value + ']').show(); // hide();
+			$('#WorkUnitIdSelect1').find('[value=' + invis2.value + ']').show();
+			$('#WorkUnitIdSelect2').find('[value=' + document.getElementById('WorkUnitIdSelect1').value + ']').show();
+		}
+		document.getElementById('shareworkflow').checked = false;
+		document.getElementById('sharedDiv').style.display = 'none';
+		document.getElementById('WorkUnitIdSelect1').required = false;
+		document.getElementById('WorkUnitIdSelect1').selectedIndex = "0"
+		document.getElementById('OrganiserIdSelect1').required = false;
+		document.getElementById('OrganiserIdSelect1').selectedIndex = "0"
+		document.getElementById('WorkUnitIdSelect2').required = false;
+		document.getElementById('WorkUnitIdSelect2').selectedIndex = "0"
+		document.getElementById('OrganiserIdSelect2').required = false;
+		document.getElementById('OrganiserIdSelect2').selectedIndex = "0"
+		// organiserleri temizle
+		const sel1 = clear('OrganiserIdSelect1');
+		var opt1 = document.createElement('option');
+		opt1.appendChild(document.createTextNode("Select One Organiser"));
+		opt1.setAttribute("value", "");
+		sel1.appendChild(opt1);
+		const sel2 = clear('OrganiserIdSelect2');
+		var opt2 = document.createElement('option');
+		opt2.appendChild(document.createTextNode("Select One Organiser"));
+		opt2.setAttribute("value", "");
+		sel2.appendChild(opt2);
+		document.getElementById('invisibleMainId').value = "";
+		document.getElementById('invisibleMainId2').value = "";
+		document.getElementById("invisibleMainId3").value = "";
+		document.getElementById('OrganiserIdSelect2').disabled = true;
+		document.getElementById('WorkUnitIdSelect2').disabled = true;
+	}
+	//clsoe share
+
+	function bosdeneme(response) {
+		if (response.value == "") {
+			// disable 2nd workunit
+			document.getElementById("WorkUnitIdSelect2").selectedIndex = "0";
+			document.getElementById("WorkUnitIdSelect2").required = false;
+			document.getElementById("WorkUnitIdSelect2").disabled = true;
+			document.getElementById("OrganiserIdSelect2").disabled = true;
+			// clear 2nd organisers
+			const sel1 = clear('OrganiserIdSelect2');
+			if (sel1.value == "") {
+				var opt1 = document.createElement('option');
+				// create text node to add to option element (opt)
+				opt1.appendChild(document.createTextNode("Select One Organiser"));
+				opt1.setAttribute("value", "");
+				sel1.appendChild(opt1);
+			}
+			if(document.getElementById("invisibleMainId2").value!="" ){
+				$('#WorkUnitIdSelect1').find('[value=' + document.getElementById("invisibleMainId2").value + ']').show();
+			}
+		}
+		else {
+			document.getElementById("WorkUnitIdSelect2").disabled = false;
+
+		}
+	}
+	// bos deneme
+	function bosdeneme3(response) {
+		if (response.value != document.getElementById("invisibleMainId2").value && document.getElementById("invisibleMainId2").value != "") {
+			$('#WorkUnitIdSelect1').find('[value=' + document.getElementById("invisibleMainId2").value + ']').show();
+		}
+		if (response.value == "") {
+			// disable 2nd workunit
+			document.getElementById("OrganiserIdSelect2").required = false;
+			document.getElementById("OrganiserIdSelect2").disabled = true;
+			document.getElementById("WorkUnitIdSelect2").required = false;
+		}
+		else {
+			$('#WorkUnitIdSelect1').find('[value=' + response.value + ']').hide()
+			document.getElementById("invisibleMainId2").value = response.value;
+			document.getElementById("OrganiserIdSelect2").disabled = false;
+			document.getElementById("OrganiserIdSelect2").required = true;
+			///
+			const sel1 = clear('OrganiserIdSelect2');
+			if (sel1.value == "") {
+				var opt1 = document.createElement('option');
+				// create text node to add to option element (opt)
+				opt1.appendChild(document.createTextNode("Select One Organiser"));
+				opt1.setAttribute("value", "");
+				sel1.appendChild(opt1);
+			}
+			$.ajax({
+				url: "/onchangefiles/secureOrganiser", // the endpoint
+				type: "GET", // http method
+				//console.log(json.user[i]['iscommission'])
+				success: function (json) {
+
+					//console.log(json.organiser)
+					//
+					//
+					//console.log(json.mainprocesses)
+					//workunits
+					for (let i = 0; i < json.workunits.length; i++) {
+						let workunitmap = json.workunits[i];
+						for (let j = 0; j < json.organiser.length; j++) {
+							let organisermap = json.organiser[j];
+							if (JSON.stringify(response.value) == JSON.stringify(workunitmap._id) && JSON.stringify(organisermap.workUnitId._id) == JSON.stringify(workunitmap._id)) {
+								var sel = document.getElementById('OrganiserIdSelect2');
+								// create new option element
+								var opt = document.createElement('option');
+								// create text node to add to option element (opt)
+								opt.appendChild(document.createTextNode(organisermap.registeredUserId.email));
+								// set value property of opt
+								opt.setAttribute("value", organisermap._id);
+								// add opt to end of select box (sel)
+								sel.appendChild(opt);
+							}
+						}
+
+					}
+
+				}
+			})
+
+
+		}
 	}
 
-
-
 </script>
+
 {{!--
 <script>
 	Swal.fire({
@@ -493,12 +760,12 @@
 
 <script>
 
-function changeReasonBtnClicked(changeId) {
-  document.getElementById("changeReasonId").value = changeId;
-};
-function rejectReasonBtnClicked(rejectId) {
-  document.getElementById("rejectReasonId").value = rejectId;
-};
+	function changeReasonBtnClicked(changeId) {
+		document.getElementById("changeReasonId").value = changeId;
+	};
+	function rejectReasonBtnClicked(rejectId) {
+		document.getElementById("rejectReasonId").value = rejectId;
+	};
 </script>
 </body>
 

@@ -8,21 +8,36 @@ const MainProcess = require('../models/MainProcess');
 const Administrator = require('../models/Administrator');
 const Manager = require('../models/Manager');
 const Organiser = require('../models/Organiser');
-const { model } = require('../models/RegisteredUser');
+const Registereduser = require('../models/RegisteredUser');
 
 router.post('/addworkflow', (req, res) => {
   const { acadadm, workprocessName } = req.body
-  //console.log(req.body)
+   if(req.body.isSharedWff){
+    Administrator.findOne(({ endDate: null, registeredUserId: res.locals.userid })).lean().then(admin => {
+      Workflow.create({
+        ...req.body,
+        creatorId: admin._id,
+        workflowNo: 1,
+      }, (error, wf) => {
+        //console.log("wfff",wf)
+        return res.redirect('/')
+      })
+    })
+ }
+ else{
   Administrator.findOne(({ endDate: null, registeredUserId: res.locals.userid })).lean().then(admin => {
     Workflow.create({
       ...req.body,
       creatorId: admin._id,
       workflowNo: 1,
+      isShared:false
     }, (error, wf) => {
       //console.log("wfff",wf)
       return res.redirect('/')
     })
   })
+ }
+
 })
 
 router.get('/addworkflow', async (req, res) => {
@@ -31,10 +46,11 @@ router.get('/addworkflow', async (req, res) => {
   // Administrator // registeredUserId _id
   //create: create, acadadm: acadadm,
   const admin = await Administrator.findOne(({ registeredUserId: res.locals.userid })).lean().exec();
+  const workunits = await WorkUnit.find({endDate:null}).lean().exec()
   if (admin) {
     MainProcess.find({ deleteDate: null }).populate({ path: "workUnitId", model: WorkUnit }).lean().then(mainprocesses => {
       Organiser.find({ endDate: null }).populate({ path: 'registeredUserId', model: RegisteredUser }).lean().then(organiser => {
-        return res.render('site/onchange', { create: "1", acadadm: admin.acad, mainprocesses: mainprocesses, organiser: organiser })
+        return res.render('site/onchange', { create: "1", acadadm: admin.acad, mainprocesses: mainprocesses, organiser: organiser,workunits:workunits })
       })
     })
   }
@@ -47,9 +63,10 @@ router.get('/addworkflow', async (req, res) => {
 router.get('/secureOrganiser', (req, res) => {
   Organiser.find({ endDate: null }).populate([{ path: 'workUnitId', model: WorkUnit },{path: 'registeredUserId', model: RegisteredUser}]).lean().then(organiser => {
     MainProcess.find({ deleteDate: null }).populate({ path: "workUnitId", model: WorkUnit }).lean().then(mainprocesses => {
-      res.send(({ organiser: organiser,mainprocesses:mainprocesses }))
+      WorkUnit.find({ endDate: null }).lean().then(workunits => {
+      res.send(({ organiser: organiser,mainprocesses:mainprocesses, workunits:workunits }))
     })
-    
+  })
   })
 })
 
