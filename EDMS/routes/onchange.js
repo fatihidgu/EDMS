@@ -9,34 +9,54 @@ const Administrator = require('../models/Administrator');
 const Manager = require('../models/Manager');
 const Organiser = require('../models/Organiser');
 const Registereduser = require('../models/RegisteredUser');
+const SharedWorkflow = require('../models/SharedWorkflows');
 
-router.post('/addworkflow', (req, res) => {
+router.post('/addworkflow', async (req, res) => {
   const { acadadm, workprocessName } = req.body
-   if(req.body.isSharedWff){
+  console.log(req.body)
+  if (req.body.isSharedWff) {
     Administrator.findOne(({ endDate: null, registeredUserId: res.locals.userid })).lean().then(admin => {
-      Workflow.create({
-        ...req.body,
-        creatorId: admin._id,
-        workflowNo: 1,
-      }, (error, wf) => {
-        //console.log("wfff",wf)
-        return res.redirect('/')
+      if (req.body.selectedWorkUnitId2 != "") {
+        //2
+        Workflow.find({ mainProcessId: req.body.mainProcessId }).then(count => {
+          Workflow.create({ ...req.body, creatorId: admin._id, workflowNo: count.length + 1, isShared: true }, (error, wf) => {
+            //console.log("wfff",wf)
+            SharedWorkflow.create({ workflowId: wf._id, organiserId: req.body.selectedOrganisertId1, workUnitId: req.body.selectedWorkUnitId1 }, (error, sharedwf) => {
+              SharedWorkflow.create({ workflowId: wf._id, organiserId: req.body.selectedOrganisertId2, workUnitId: req.body.selectedWorkUnitId2 }, (error, sharedwf2) => {
+                console.log(error)
+                return res.redirect('/')
+              })
+            })
+
+          })
+        })
+      } else {
+        //1
+        Workflow.find({ mainProcessId: req.body.mainProcessId }).then(count => {
+          Workflow.create({ ...req.body, creatorId: admin._id, workflowNo: count.length + 1, isShared: true }, (error, wf) => {
+            //console.log("wfff",wf)
+            SharedWorkflow.create({ workflowId: wf._id, organiserId: req.body.selectedOrganisertId1, workUnitId: req.body.selectedWorkUnitId1 }, (error, sharedwf) => {
+              console.log(error)
+              return res.redirect('/')
+            })
+
+          })
+        })
+      }
+
+    })
+  }
+  else {
+    Administrator.findOne(({ endDate: null, registeredUserId: res.locals.userid })).lean().then(admin => {
+      Workflow.find({ mainProcessId: req.body.mainProcessId }).then(count => {
+        Workflow.create({ ...req.body, creatorId: admin._id, workflowNo: count.length + 1, isShared: false }, (error, wf) => {
+          //console.log("wfff",wf)
+          return res.redirect('/')
+        })
       })
+
     })
- }
- else{
-  Administrator.findOne(({ endDate: null, registeredUserId: res.locals.userid })).lean().then(admin => {
-    Workflow.create({
-      ...req.body,
-      creatorId: admin._id,
-      workflowNo: 1,
-      isShared:false
-    }, (error, wf) => {
-      //console.log("wfff",wf)
-      return res.redirect('/')
-    })
-  })
- }
+  }
 
 })
 
@@ -46,11 +66,11 @@ router.get('/addworkflow', async (req, res) => {
   // Administrator // registeredUserId _id
   //create: create, acadadm: acadadm,
   const admin = await Administrator.findOne(({ registeredUserId: res.locals.userid })).lean().exec();
-  const workunits = await WorkUnit.find({endDate:null}).lean().exec()
+  const workunits = await WorkUnit.find({ endDate: null }).lean().exec()
   if (admin) {
     MainProcess.find({ deleteDate: null }).populate({ path: "workUnitId", model: WorkUnit }).lean().then(mainprocesses => {
       Organiser.find({ endDate: null }).populate({ path: 'registeredUserId', model: RegisteredUser }).lean().then(organiser => {
-        return res.render('site/onchange', { create: "1", acadadm: admin.acad, mainprocesses: mainprocesses, organiser: organiser,workunits:workunits })
+        return res.render('site/onchange', { create: "1", acadadm: admin.acad, mainprocesses: mainprocesses, organiser: organiser, workunits: workunits })
       })
     })
   }
@@ -61,12 +81,12 @@ router.get('/addworkflow', async (req, res) => {
 })
 
 router.get('/secureOrganiser', (req, res) => {
-  Organiser.find({ endDate: null }).populate([{ path: 'workUnitId', model: WorkUnit },{path: 'registeredUserId', model: RegisteredUser}]).lean().then(organiser => {
+  Organiser.find({ endDate: null }).populate([{ path: 'workUnitId', model: WorkUnit }, { path: 'registeredUserId', model: RegisteredUser }]).lean().then(organiser => {
     MainProcess.find({ deleteDate: null }).populate({ path: "workUnitId", model: WorkUnit }).lean().then(mainprocesses => {
       WorkUnit.find({ endDate: null }).lean().then(workunits => {
-      res.send(({ organiser: organiser,mainprocesses:mainprocesses, workunits:workunits }))
+        res.send(({ organiser: organiser, mainprocesses: mainprocesses, workunits: workunits }))
+      })
     })
-  })
   })
 })
 
@@ -84,7 +104,7 @@ router.get('/:id', async (req, res) => {
       workflowId: req.params.id,
     }).lean().then(wff => {
       Workflow.findById(req.params.id).populate({ path: 'mainProcessId', model: MainProcess }).lean().then(workf => {
-        
+
         var a = []
         var i = 0
         onChangeFiles.forEach(onChangeFile => {

@@ -5,55 +5,66 @@ const Workunit = require('../models/WorkUnit')
 
 router.get('/addmainprocess', (req, res) => {
     Workunit.find({ endDate: null }).lean().then(workunits => {
-        Mainprocess.find({}).populate({path:'workUnitId', model:Workunit}).lean().then(mainprocesses => {
+        Mainprocess.find({}).populate({ path: 'workUnitId', model: Workunit }).lean().then(mainprocesses => {
             //console.log(mainprocesses)
             return res.render('site/mainprocess', { mainprocesses: mainprocesses, workunits: workunits })
         })
     })
 })
 
-router.post('/addmainprocess', (req, res) => {
+router.post('/addmainprocess', async (req, res) => {
     try {
         const mainname = req.body.workprocess
-        const mainno = req.body.workprocessno
         const mainwid = req.body.workunitid
 
         if (typeof mainname === 'object') {
             for (let index = 0; index < mainname.length; index++) {
                 const mainnamestr = JSON.stringify(mainname[index]);
-                if (mainnamestr.charAt(1) == " " || mainname[index] == "" || mainno[index] == "") {
-                    //console.log('olusturulamaz',mainnamestr)
+                const notUnique = await Mainprocess.find({ mainProcessName: mainname[index], workUnitId: mainwid[index] }).exec();
+                //console.log(notUnique)
+                if (mainnamestr.charAt(1) == " " || mainname[index] == "" || notUnique[0] != null) {
                 }
                 else {
-                    Mainprocess.create({
-                        mainProcessName: mainname[index],
-                        mainProcessNo: mainno[index],
-                        workUnitId: mainwid[index]
+                    Mainprocess.find({ workUnitId: mainwid[index] }).then(count => {
+                        Mainprocess.create({
+                            mainProcessName: mainname[index],
+                            workUnitId: mainwid[index],
+                            mainProcessNo: count.length + 1
+                        })
                     })
                 }
-
             }
             req.session.sessionFlash = {
                 type: 'alert alert-success',
-                message: 'Your main processess successfully added'
+                message: 'Your main processes successfully added.'
             }
             return res.redirect('/mainprocess/addmainprocess')
         } else {
-            if (mainname == null || mainname.charAt(0) == ' ' || mainname == '' || mainno == "") {
+            //uniq deilse
+
+            const notUnique = await Mainprocess.findOne({ mainProcessName: mainname, workUnitId: mainwid }).exec();
+            if (mainname == null || mainname.charAt(0) == ' ' || mainname == '' || notUnique != null) {
                 //console.log('olusturulamaz')
+                req.session.sessionFlash = {
+                    type: 'alert alert-warning',
+                    message: 'Mainprocess name and workunit must be unique!'
+                }
+                return res.redirect('/mainprocess/addmainprocess')
             }
             else {
-                Mainprocess.create({
-                    mainProcessName: mainname,
-                    mainProcessNo: mainno,
-                    workUnitId: mainwid
+                Mainprocess.find({ workUnitId: mainwid }).then(count => {
+                    Mainprocess.create({
+                        mainProcessName: mainname,
+                        workUnitId: mainwid,
+                        mainProcessNo: count.length + 1
+                    })
                 })
+                req.session.sessionFlash = {
+                    type: 'alert alert-success',
+                    message: 'Your main process successfully added.'
+                }
+                return res.redirect('/mainprocess/addmainprocess')
             }
-            req.session.sessionFlash = {
-                type: 'alert alert-success',
-                message: 'Your main process successfully added.'
-            }
-            return res.redirect('/mainprocess/addmainprocess')
         }
     }
     catch (err) {

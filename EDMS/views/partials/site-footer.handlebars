@@ -440,7 +440,7 @@
 				opt1.setAttribute("value", "");
 				sel1.appendChild(opt1);
 			}
-			if(document.getElementById("invisibleMainId2").value!="" ){
+			if (document.getElementById("invisibleMainId2").value != "") {
 				$('#WorkUnitIdSelect1').find('[value=' + document.getElementById("invisibleMainId2").value + ']').show();
 			}
 		}
@@ -590,11 +590,20 @@
 
 <script>
 	function addTableMainProcess() {
+		var bool = false;
 		let str = JSON.stringify(document.getElementById('workprocessid').value)
-
-		if (document.getElementById('workprocessid').value === "" || document.getElementById('workprocessnoid').value === "" ||
-			document.getElementById('workunitid').value === "" || str.charAt(1) == " ") {
-			Swal.fire('Check the Main Process Name. You cant start with space. Main Process Name, Main Process No and Related Work Unit cant be null!', '', 'error')
+		$('#workprocesstable tr').each(function () {
+			var $tds = $(this).find('td');
+			if ($tds.length != 0) {
+				var $currText = $tds.eq(0).text();
+				var str2 = $("#workunitid option:selected").text();
+				if (JSON.stringify(document.getElementById('workprocessid').value + "-" + str2.split("-")[1]) == JSON.stringify($currText)) {
+					bool = true
+				}
+			}
+		});
+		if (document.getElementById('workprocessid').value === "" || document.getElementById('workunitid').value === "" || str.charAt(1) == " " || bool) {
+			Swal.fire('Check the Main Process Name. You cant start with space. Mainprocess Name and Related Work Unit should be unique(Main Process Name, Related Work Unit cant be null!).', '', 'error')
 
 		}
 		else {
@@ -606,8 +615,9 @@
 			var td = document.createElement('td');
 			var td1 = document.createElement('td');
 			var td2 = document.createElement('td');
-			td.appendChild(document.createTextNode(document.getElementById('workprocessid').value));
-			td1.appendChild(document.createTextNode(document.getElementById('workprocessnoid').value));
+			var str1 = $("#workunitid option:selected").text();
+
+			td.appendChild(document.createTextNode(document.getElementById('workprocessid').value + "-" + str1.split("-")[1]));
 			td2.appendChild(document.createTextNode("Onchange"));
 			tr.appendChild(td);
 			tr.appendChild(td1);
@@ -618,8 +628,6 @@
 
 			var form = document.getElementById('workform');
 			//id="workform"
-
-
 			// Create an input element for workprocess
 			var work = document.createElement("input");
 			work.setAttribute("type", "text");
@@ -627,14 +635,6 @@
 			work.setAttribute("name", "workprocess");
 			work.setAttribute("value", document.getElementById('workprocessid').value);
 			work.style.display = 'none';
-
-			// Create an input element for workprocessno
-			var workno = document.createElement("input");
-			workno.setAttribute("type", "text");
-			workno.setAttribute("name", "workprocessno");
-			workno.setAttribute("readonly", true);
-			workno.style.display = 'none';
-			workno.setAttribute("value", document.getElementById('workprocessnoid').value);
 
 			//workunitid
 			var workid = document.createElement("input");
@@ -647,9 +647,8 @@
 			// Append the email_ID input to the form
 			form.append(work);
 			// Append the password to the form
-			form.append(workno);
+
 			document.getElementById('workprocessid').value = ""
-			document.getElementById('workprocessnoid').value = ""
 			document.getElementById('workunitid').selectedIndex = 0
 		}
 	}
