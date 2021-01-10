@@ -682,140 +682,140 @@ router.get('/upload/:fileId', async (req, res) => {
 });
 
 
-router.get('/:id', async (req, res) => {
-  //console.log("deneme1")
-  if (req.session.userId) {
-    //file olmayacak boş bakınma
-
-    const onChangeFiles = await File.find({
-      workflowId: req.params.id,
-      approvalStatus: {
-        $gte: 0,
-        $lt: 4
-      },
-      deleteDate: null
-    }).exec();
-    const wf = await Workflow.findById(req.params.id).exec();
-    const mp = await MainProcess.findById(wf.mainProcessId).exec();
-    const organiser = await Organiser.findById(wf.organiserId).exec();
-    const manager = await Manager.findOne({
-      workUnitId: mp.workUnitId,
-      endDate: null
-    });
-    const administrator = await Administrator.findOne({
-      acad: wf.acad,
-      endDate: null
-    });
-    const committee = await Committee.findOne({
-      endDate: null
-    });
-
-    const userO = await RegisteredUser.findById(organiser.registeredUserId).exec();
-    const userM = await RegisteredUser.findById(manager.registeredUserId).exec();
-    const userA = await RegisteredUser.findById(administrator.registeredUserId).exec();
-    const userC = await RegisteredUser.findById(committee.registeredUserId).exec();
-    //console.log("ONCHANGE")
-    //console.log(onChangeFiles)
-    var a = []
-    var i = 0
-    for (var onChangeFile of onChangeFiles) {
-      i = i + 1
-      var change = await Change.findOne({
-        fileNo: onChangeFile._id
-      }, {}, {
-        sort: {
-          'creationDate': -1
-        }
-      })
-      if (change == null) {
-        a.push({
-          approvalStatus: onChangeFile.approvalStatus,
-          fileNo: onChangeFile.fileNo,
-          _id: onChangeFile._id,
-          changeReason: "-",
-          rejectReason: "-",
-          rejectStatus: "-",
-          organiserRUId: userO._id.toString(),
-          managerRUId: userM._id.toString(),
-          administratorRUId: userA._id.toString(),
-          committeeRUId: userC._id.toString(),
-          userId: req.session.userId
-        });
-
-      } else {
-        var reject = await Reject.findOne({
-          changeId: change._id,
-          deleteDate: null
-        })
-        if (reject == null) {
-          a.push({
-            approvalStatus: onChangeFile.approvalStatus,
-            fileNo: onChangeFile.fileNo,
-            _id: onChangeFile._id,
-            changeReason: change.changeReason,
-            rejectReason: "-",
-            rejectStatus: "-",
-            organiserRUId: userO._id.toString(),
-            managerRUId: userM._id.toString(),
-            administratorRUId: userA._id.toString(),
-            committeeRUId: userC._id.toString(),
-            userId: req.session.userId
-          });
-
-        } else {
-          var role = {
-            1: "Manager",
-            2: "Administrator",
-            3: "Committee"
-          };
-
-
-          a.push({
-            approvalStatus: onChangeFile.approvalStatus,
-            fileNo: onChangeFile.fileNo,
-            _id: onChangeFile._id,
-            changeReason: change.changeReason,
-            rejectReason: reject.rejectReason,
-            rejectStatus: role[reject.rejectRole],
-            organiserRUId: userO.id.toString(),
-            managerRUId: userM._id.toString(),
-            administratorRUId: userA._id.toString(),
-            committeeRUId: userC.id.toString(),
-            userId: req.session.userId
-          });
-        }
-      }
-    }
-    var approvWfFiles = await File.find({approvalStatus:4,deleteDate:null,workflowId:req.params.id},'fileNo approvalDate').exec()
-    var approvedWFFiles =[]
-    approvWfFiles.forEach(approvedFile => approvedWFFiles.push({_id:approvedFile._id,fileNo:approvedFile.fileNo,approvalDate:formatDate(approvedFile.approvalDate)}))
-
-    File.find({
-      deleteDate: null,
-      approvalStatus: 4,
-      workflowId: req.params.id,
-    }).lean().then(wff => {
-      Workflow.findById(req.params.id).populate({
-        path: 'mainProcessId',
-        model: MainProcess
-      }).lean().then(workf => {
-        //console.log(onChangeFiles)
-
-        return res.render('site/onchange2', {
-          approvedFiles: approvedWFFiles,
-          workf: workf,
-          onChangeFiles: a
-        })
-      })
-
-
-    })
-  } else {
-    res.redirect('/registeredusers/login')
-  }
-
-})
-
+// router.get('/:id', async (req, res) => {
+//   //console.log("deneme1")
+//   if (req.session.userId) {
+//     //file olmayacak boş bakınma
+//
+//     const onChangeFiles = await File.find({
+//       workflowId: req.params.id,
+//       approvalStatus: {
+//         $gte: 0,
+//         $lt: 4
+//       },
+//       deleteDate: null
+//     }).exec();
+//     const wf = await Workflow.findById(req.params.id).exec();
+//     const mp = await MainProcess.findById(wf.mainProcessId).exec();
+//     const organiser = await Organiser.findById(wf.organiserId).exec();
+//     const manager = await Manager.findOne({
+//       workUnitId: mp.workUnitId,
+//       endDate: null
+//     });
+//     const administrator = await Administrator.findOne({
+//       acad: wf.acad,
+//       endDate: null
+//     });
+//     const committee = await Committee.findOne({
+//       endDate: null
+//     });
+//
+//     const userO = await RegisteredUser.findById(organiser.registeredUserId).exec();
+//     const userM = await RegisteredUser.findById(manager.registeredUserId).exec();
+//     const userA = await RegisteredUser.findById(administrator.registeredUserId).exec();
+//     const userC = await RegisteredUser.findById(committee.registeredUserId).exec();
+//     //console.log("ONCHANGE")
+//     //console.log(onChangeFiles)
+//     var a = []
+//     var i = 0
+//     for (var onChangeFile of onChangeFiles) {
+//       i = i + 1
+//       var change = await Change.findOne({
+//         fileNo: onChangeFile._id
+//       }, {}, {
+//         sort: {
+//           'creationDate': -1
+//         }
+//       })
+//       if (change == null) {
+//         a.push({
+//           approvalStatus: onChangeFile.approvalStatus,
+//           fileNo: onChangeFile.fileNo,
+//           _id: onChangeFile._id,
+//           changeReason: "-",
+//           rejectReason: "-",
+//           rejectStatus: "-",
+//           organiserRUId: userO._id.toString(),
+//           managerRUId: userM._id.toString(),
+//           administratorRUId: userA._id.toString(),
+//           committeeRUId: userC._id.toString(),
+//           userId: req.session.userId
+//         });
+//
+//       } else {
+//         var reject = await Reject.findOne({
+//           changeId: change._id,
+//           deleteDate: null
+//         })
+//         if (reject == null) {
+//           a.push({
+//             approvalStatus: onChangeFile.approvalStatus,
+//             fileNo: onChangeFile.fileNo,
+//             _id: onChangeFile._id,
+//             changeReason: change.changeReason,
+//             rejectReason: "-",
+//             rejectStatus: "-",
+//             organiserRUId: userO._id.toString(),
+//             managerRUId: userM._id.toString(),
+//             administratorRUId: userA._id.toString(),
+//             committeeRUId: userC._id.toString(),
+//             userId: req.session.userId
+//           });
+//
+//         } else {
+//           var role = {
+//             1: "Manager",
+//             2: "Administrator",
+//             3: "Committee"
+//           };
+//
+//
+//           a.push({
+//             approvalStatus: onChangeFile.approvalStatus,
+//             fileNo: onChangeFile.fileNo,
+//             _id: onChangeFile._id,
+//             changeReason: change.changeReason,
+//             rejectReason: reject.rejectReason,
+//             rejectStatus: role[reject.rejectRole],
+//             organiserRUId: userO.id.toString(),
+//             managerRUId: userM._id.toString(),
+//             administratorRUId: userA._id.toString(),
+//             committeeRUId: userC.id.toString(),
+//             userId: req.session.userId
+//           });
+//         }
+//       }
+//     }
+//     var approvWfFiles = await File.find({approvalStatus:4,deleteDate:null,workflowId:req.params.id},'fileNo approvalDate').exec()
+//     var approvedWFFiles =[]
+//     approvWfFiles.forEach(approvedFile => approvedWFFiles.push({_id:approvedFile._id,fileNo:approvedFile.fileNo,approvalDate:formatDate(approvedFile.approvalDate)}))
+//
+//     File.find({
+//       deleteDate: null,
+//       approvalStatus: 4,
+//       workflowId: req.params.id,
+//     }).lean().then(wff => {
+//       Workflow.findById(req.params.id).populate({
+//         path: 'mainProcessId',
+//         model: MainProcess
+//       }).lean().then(workf => {
+//         //console.log(onChangeFiles)
+//
+//         return res.render('site/onchange', {
+//           approvedFiles: approvedWFFiles,
+//           workf: workf,
+//           onChangeFiles: a
+//         })
+//       })
+//
+//
+//     })
+//   } else {
+//     res.redirect('/registeredusers/login')
+//   }
+//
+// })
+//
 
 
 module.exports = router

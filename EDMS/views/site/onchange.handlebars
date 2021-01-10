@@ -141,7 +141,7 @@
             <label class="col-5 col-sm-5  float-left">Work Process:</label>
 
             <input class="form-control form-control-sm" type="text" name="workprocessName" style="width: fit-content;" required>
-            
+
             <br><br>
             <label class="col-5 col-sm-5 float-left">Academic/Administrative:</label>
             {{#if (or
@@ -211,7 +211,7 @@
             </div>
             <div class="text-center"> <button type="submit" class="main-btn" type="submit">Create</button></div>
           </form>
-          <input class="form-control form-control-sm" type="text" id="invisibleMainId" value="" readonly hidden> 
+          <input class="form-control form-control-sm" type="text" id="invisibleMainId" value="" readonly hidden>
           <input class="form-control form-control-sm" type="text" id="invisibleMainId2" value="" readonly hidden>
           <input class="form-control form-control-sm" type="text" id="invisibleMainId3" value=""  readonly hidden>
         </div>
@@ -226,10 +226,8 @@
           <div class="col-md-12">
             <nav>
               <div class="nav nav-tabs nav-fill" role="tablist" style="border:2px solid #ccc; font-weight: bolder;">
-                <a class="nav-item nav-link active" data-toggle="tab" href="#nav-home" role="tab"
-                  aria-controls="nav-home" aria-selected="true">On Change Files</a>
-                <a class="nav-item nav-link" data-toggle="tab" href="#nav-profile" role="tab"
-                  aria-controls="nav-profile" aria-selected="false">Approved Files</a>
+                <a class="nav-item nav-link active" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">On Change Files</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Approved Files</a>
               </div>
             </nav>
             <div class="tab-content" id="nav-tabContent " style="border:1px solid #ccc;">
@@ -237,10 +235,10 @@
                 <div class="table-responsive">
                   <div>
                     {{#if addNewFile}}
-                    <form action="/createfile/create/{{workf._id}}" method="get">
-                      <button type="submit" class="btn" style="background:none">Add New
-                        File</button>
-                    </form>
+                      <form action="/createfile/create/{{workf._id}}" method="get">
+                        <button type="submit" class="btn" style="background:none">Add New
+                          File</button>
+                      </form>
                     {{/if}}
                   </div>
                   <table class="table table-hover" cellspacing="0">
@@ -256,42 +254,103 @@
                     </thead>
                     <tbody>
                       {{#each onChangeFiles}}
-                      <tr>
-                        <td>{{fileNo}}</td>
-                        <td>{{approvalStatus}}</td>
-                        <td>{{changeReason}}</td>
-                        <td>{{rejectStatus}}</td>
-                        <td>{{rejectReason}}</td>
-                        <td style="text-align:center">
-                          <div class="w-100">
-                            <form action="/createfile/download" class="float-left" method="post">
-                              <input type="hidden" name="file_id" value="{{_id}}">
-                              <button type="submit" class="btn" style="background:none"><i
-                                  class="fa fa-download"></i></button>
-                            </form>
-                            <form action="/createfile/delete" class="float-left" method="post">
-                              <input type="hidden" name="file_id" value="{{_id}}">
+                        <tr>
+                          <td>{{fileNo}}</td>
+                          <td>
+                            {{#if (eq approvalStatus 0)}}
+                            Onchange
+                            {{/if}}
+                            {{#if (eq approvalStatus 1)}}
+                            Manager Approval
+                            {{/if}}
+                            {{#if (eq approvalStatus 2)}}
+                            Administrator Approval
+                            {{/if}}
+                            {{#if (eq approvalStatus 3)}}
+                            Committee Approval
+                            {{/if}}
+                          </td>
+                          <td>{{changeReason}}</td>
+                          <td>{{rejectStatus}}</td>
+                          <td>{{rejectReason}}</td>
+                          <td style="text-align:center">
+                            <div class="w-100 float-left">
 
-                              <button type="submit" class="btn" class="float-left" style="background:none"><i
-                                  class="fa fa-trash"></i></button>
-                            </form>
-                            <form action="/createfile/upload/{{_id}}" method="get">
-                              <button type="submit" class="btn" style="background:none; color:pink"><i
-                                  class="fa fa-upload"></i></button>
-                            </form>
-                            <button type="button" class="btn" onclick="changeReasonBtnClicked('{{_id}}');"
-                              data-toggle="modal" data-target="#changeReason" style="background:none">
-                              <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                            </button>
+                              <form action="/createfile/download" method="post">
+                                <input type="hidden" name="file_id" value="{{_id}}">
+                                <button type="submit" title="download" class="btn" style="background:none"><i class="fa fa-download"></i></button>
+                              </form>
 
-                            <button type="button" class="btn" onclick="rejectReasonBtnClicked('{{_id}}');"
-                              data-toggle="modal" data-target="#rejectReason" style="background:none">
-                              <i class="fa fa-times" aria-hidden="true"></i>
-                            </button>
-                          </div>
 
-                        </td>
-                      </tr>
+                              {{#if (eq approvalStatus 0)}}
+                                {{#if (eq organiserRUId userId)}}
+                                  <form action="/createfile/upload/{{_id}}" method="get">
+                                    <button type="submit" title="upload" class="btn" style="background:none;"><i class="fa fa-upload"></i></button>
+                                  </form>
+                                  <button type="button" class="btn" title="send for approval" onclick="changeReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#changeReason" style="background:none">
+                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                  </button>
+                                {{/if}}
+                              {{/if}}
+
+
+                              {{#if (eq approvalStatus 1)}}
+                                {{#if (eq userId managerRUId)}}
+                                  <button type="button" class="btn" title="reject changes" onclick="rejectReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#rejectReason" style="background:none">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                  </button>
+                                  <form action="/createfile/change" method="post">
+                                    <input type="hidden" name="fileId" value="{{_id}}">
+                                    <button type="submit" class="btn" title="send for approval" style="background:none"><i class="fa fa-paper-plane-o"></i></button>
+                                  </form>
+                                {{/if}}
+                              {{/if}}
+
+                              {{#if (eq approvalStatus 2)}}
+                                {{#if (eq userId administratorRUId)}}
+                                  <button type="button" class="btn" title="reject changes" onclick="rejectReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#rejectReason" style="background:none">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                  </button>
+                                  <form action="/createfile/change" method="post">
+                                    <input type="hidden" name="fileId" value="{{_id}}">
+                                    <button type="submit" class="btn" title="send for approval" style="background:none;"><i class="fa fa-paper-plane-o"></i></button>
+                                  </form>
+                                  <form action="/createfile/approve" method="post">
+                                    <input type="hidden" name="fileId" value="{{_id}}">
+                                    <button type="submit" class="btn" title="approve" style="background:none;"><i class="fa fa-check"></i></button>
+                                  </form>
+                                {{/if}}
+                              {{/if}}
+
+                              {{#if (eq approvalStatus 3)}}
+                                {{#if (eq userId committeeRUId)}}
+                                  <button type="button" class="btn" title="reject changes" onclick="rejectReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#rejectReason" style="background:none">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                  </button>
+                                  <form action="/createfile/approve" method="post">
+                                    <input type="hidden" name="fileId" value="{{_id}}">
+                                    <button type="submit" class="btn" title="approve" style="background:none;"><i class="fa fa-check"></i></button>
+                                  </form>
+                                {{/if}}
+                              {{/if}}
+
+                              <!-- <form action="/createfile/delete" class="float-left" method="post">
+                                <input type="hidden" name="file_id" value="{{_id}}">
+
+                                <button type="submit" class="btn" class="float-left" style="background:none"><i class="fa fa-trash"></i></button>
+                              </form>
+                              <form action="/createfile/upload/{{_id}}" method="get">
+                                <button type="submit" class="btn" style="background:none; color:pink"><i class="fa fa-upload"></i></button>
+                              </form>
+                              <button type="button" class="btn" onclick="changeReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#changeReason" style="background:none">
+                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                              </button> -->
+
+
+                            </div>
+
+                          </td>
+                        </tr>
 
                       {{/each}}
 
@@ -310,30 +369,28 @@
                       </tr>
                     </thead>
 
-                    {{#each wff}}
-                    <tr>
-                      <td>{{fileNo}}</td>
-                      <td>{{approvalDate}}</td>
-                      <td style="text-align:center">
-                        <div class="w-100">
-                          <form action="/createfile/download" class="float-left" method="post">
-                            <input type="hidden" name="file_id" value="{{_id}}">
-                            <button type="submit" class="btn" style="background:none"><i class="fa fa-download"
-                                value="1"></i></button>
-                          </form>
-                          <!-- <form action="/createfile/delete" class="float-left" method="post">
+                    {{#each approvedFiles}}
+                      <tr>
+                        <td>{{fileNo}}</td>
+                        <td>{{approvalDate}}</td>
+                        <td style="text-align:center">
+                          <div class="w-100">
+                            <form action="/createfile/download" class="float-left" method="post">
+                              <input type="hidden" name="file_id" value="{{_id}}">
+                              <button type="submit" class="btn" style="background:none"><i class="fa fa-download" value="1"></i></button>
+                            </form>
+                            <!-- <form action="/createfile/delete" class="float-left" method="post">
                               <input type="hidden" name="file_id" value="{{_id}}">
 
                               <button type="submit" class="btn" class="float-left" style="background:none"><i class="fa fa-trash" value="1"></i></button>
                             </form> -->
-                          <form action="/createfile/upload/{{_id}}" method="get">
-                            <button type="submit" class="btn" style="background:none; color:pink"><i
-                                class="fa fa-upload" value="1"></i></button>
-                          </form>
-                        </div>
+                            <form action="/createfile/upload/{{_id}}" method="get">
+                              <button type="submit" class="btn" style="background:none;"><i class="fa fa-upload" value="1"></i></button>
+                            </form>
+                          </div>
 
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
                     {{/each}}
 
                   </table>
