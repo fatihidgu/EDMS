@@ -37,6 +37,21 @@ function oneFileUpdate(filter, update) {
   });
 }
 
+//date formatter
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [day, month, year].join('/');
+}
+
 //MOVE File PATH
 function changeFilePath(currentPath, newPath) {
   fs.rename(currentPath, newPath, function(err) {
@@ -375,39 +390,71 @@ router.post("/change", async (req, res) => {
     })
     if (file != null && organiser != null && manager != null && administrator != null && committee != null) {
 
-      if(file.approvalStatus == 0){
+      if (file.approvalStatus == 0) {
 
-              const newChange = new Change({
-                fileNo: file._id,
-                organiserId: organiser._id,
-                changeReason: req.body.reason,
-                managerId: manager._id,
-                administratorId: administrator._id,
-                committeeId: committee._id
-              });
-              newChange.save();
+        const newChange = new Change({
+          fileNo: file._id,
+          organiserId: organiser._id,
+          changeReason: req.body.reason,
+          managerId: manager._id,
+          administratorId: administrator._id,
+          committeeId: committee._id
+        });
+        newChange.save();
 
-              oneFileUpdate({_id: file._id}, {approvalStatus: 1});
-      }else if(file.approvalStatus == 1){
-        var change = await Change.findOneAndUpdate({fileNo:file._id,endDate:null})
+        oneFileUpdate({
+          _id: file._id
+        }, {
+          approvalStatus: 1
+        });
+      } else if (file.approvalStatus == 1) {
+        var change = await Change.findOneAndUpdate({
+          fileNo: file._id,
+          endDate: null
+        })
 
-        Change.findOneAndUpdate({fileNo:file._id,endDate:null}, {managerApprovalDate:Date.now()}, {new: true}, (err) => {
+        Change.findOneAndUpdate({
+          fileNo: file._id,
+          endDate: null
+        }, {
+          managerApprovalDate: Date.now()
+        }, {
+          new: true
+        }, (err) => {
           if (err) {
             console.log(err);
           }
         });
-        oneFileUpdate({_id:file._id},{approvalStatus:2});
+        oneFileUpdate({
+          _id: file._id
+        }, {
+          approvalStatus: 2
+        });
 
-      }else if(file.approvalStatus == 2){
-        var change = await Change.findOneAndUpdate({fileNo:file._id,endDate:null})
+      } else if (file.approvalStatus == 2) {
+        var change = await Change.findOneAndUpdate({
+          fileNo: file._id,
+          endDate: null
+        })
 
-        Change.findOneAndUpdate({fileNo:file._id,endDate:null}, {administratorApprovalDate:Date.now()}, {new: true}, (err) => {
+        Change.findOneAndUpdate({
+          fileNo: file._id,
+          endDate: null
+        }, {
+          administratorApprovalDate: Date.now()
+        }, {
+          new: true
+        }, (err) => {
           if (err) {
             console.log(err);
           }
         });
-        oneFileUpdate({_id:file._id},{approvalStatus:3});
-      }else{
+        oneFileUpdate({
+          _id: file._id
+        }, {
+          approvalStatus: 3
+        });
+      } else {
         console.log("something wrong");
       }
 
@@ -438,7 +485,13 @@ router.post("/reject", async (req, res) => {
     });
 
     if (file != null && change != null) {
-      console.log(1)
+      Reject.findOneAndUpdate({
+        changeId: change._id,
+        deleteDate: null
+      }, {
+        deleteDate: Date.now()
+      }).exec();
+
       const newReject = new Reject({
         changeId: change._id,
         rejectReason: req.body.reason,
@@ -493,32 +546,26 @@ router.post("/approve", async (req, res) => {
     var committee = await Committee.findOne({
       endDate: null
     })
+    var change = await Change.findOne({fileNo:file._id,deleteDate:null})
 
     if (file != null && change != null && administrator != null && committee != null) {
-      if (req.params.userid == administrator._id || req.params.userid == committee._id) {
-
-        const newReject = new Reject({
+      if (res.locals.userid == administrator.registeredUserId || res.locals.userid == committee.registeredUserId) {
+        Reject.findOneAndUpdate({
           changeId: change._id,
-          rejectReason: req.body.reason,
-          rejectRole: file.approvalStatus,
-          rejecterId: req.params.userid
-        });
-        newReject.save();
-        oneFileUpdate({
-          _id: file._id
-        }, {
-          approvalStatus: 4
-        });
-        Change.findOneAndUpdate({
-          _id: change._id
+          deleteDate: null
         }, {
           $set: {
             deleteDate: Date.now()
           }
         }).exec();
-        Reject.findOneAndUpdate({
-          changeId: change._id,
-          deleteDate: null
+        oneFileUpdate({
+          _id: file._id
+        }, {
+          approvalStatus: 4,
+          approvalDate: Date.now()
+        });
+        Change.findOneAndUpdate({
+          _id: change._id
         }, {
           $set: {
             deleteDate: Date.now()
@@ -531,11 +578,8 @@ router.post("/approve", async (req, res) => {
         }
         const address = '/onchangefiles/' + wf._id;
         return res.redirect(address);
-
-
       }
     }
-
   } else {
     res.redirect('/registeredusers/register')
   }
@@ -654,9 +698,17 @@ router.get('/:id', async (req, res) => {
     const wf = await Workflow.findById(req.params.id).exec();
     const mp = await MainProcess.findById(wf.mainProcessId).exec();
     const organiser = await Organiser.findById(wf.organiserId).exec();
-    const manager = await Manager.findOne({workUnitId:mp.workUnitId,endDate:null});
-    const administrator = await Administrator.findOne({acad:wf.acad,endDate:null});
-    const committee = await Committee.findOne({endDate:null});
+    const manager = await Manager.findOne({
+      workUnitId: mp.workUnitId,
+      endDate: null
+    });
+    const administrator = await Administrator.findOne({
+      acad: wf.acad,
+      endDate: null
+    });
+    const committee = await Committee.findOne({
+      endDate: null
+    });
 
     const userO = await RegisteredUser.findById(organiser.registeredUserId).exec();
     const userM = await RegisteredUser.findById(manager.registeredUserId).exec();
@@ -669,8 +721,11 @@ router.get('/:id', async (req, res) => {
     for (var onChangeFile of onChangeFiles) {
       i = i + 1
       var change = await Change.findOne({
-        fileNo: onChangeFile._id,
-        endDate: null
+        fileNo: onChangeFile._id
+      }, {}, {
+        sort: {
+          'creationDate': -1
+        }
       })
       if (change == null) {
         a.push({
@@ -680,16 +735,17 @@ router.get('/:id', async (req, res) => {
           changeReason: "-",
           rejectReason: "-",
           rejectStatus: "-",
-          organiserRUId:userO._id.toString(),
-          managerRUId:userM._id.toString(),
-          administratorRUId:userA._id.toString(),
-          committeeRUId:userC._id.toString(),
-          userId:req.session.userId
+          organiserRUId: userO._id.toString(),
+          managerRUId: userM._id.toString(),
+          administratorRUId: userA._id.toString(),
+          committeeRUId: userC._id.toString(),
+          userId: req.session.userId
         });
 
       } else {
         var reject = await Reject.findOne({
-          changeId: change._id
+          changeId: change._id,
+          deleteDate: null
         })
         if (reject == null) {
           a.push({
@@ -699,11 +755,11 @@ router.get('/:id', async (req, res) => {
             changeReason: change.changeReason,
             rejectReason: "-",
             rejectStatus: "-",
-            organiserRUId:userO._id.toString(),
-            managerRUId:userM._id.toString(),
-            administratorRUId:userA._id.toString(),
-            committeeRUId:userC._id.toString(),
-            userId:req.session.userId
+            organiserRUId: userO._id.toString(),
+            managerRUId: userM._id.toString(),
+            administratorRUId: userA._id.toString(),
+            committeeRUId: userC._id.toString(),
+            userId: req.session.userId
           });
 
         } else {
@@ -713,6 +769,7 @@ router.get('/:id', async (req, res) => {
             3: "Committee"
           };
 
+
           a.push({
             approvalStatus: onChangeFile.approvalStatus,
             fileNo: onChangeFile.fileNo,
@@ -720,15 +777,18 @@ router.get('/:id', async (req, res) => {
             changeReason: change.changeReason,
             rejectReason: reject.rejectReason,
             rejectStatus: role[reject.rejectRole],
-            organiserRUId:userO.id.toString(),
-            managerRUId:userM._id.toString(),
-            administratorRUId:userA._id.toString(),
-            committeeRUId:userC.id.toString(),
-            userId:req.session.userId
+            organiserRUId: userO.id.toString(),
+            managerRUId: userM._id.toString(),
+            administratorRUId: userA._id.toString(),
+            committeeRUId: userC.id.toString(),
+            userId: req.session.userId
           });
         }
       }
     }
+    var approvWfFiles = await File.find({approvalStatus:4,deleteDate:null,workflowId:req.params.id},'fileNo approvalDate').exec()
+    var approvedWFFiles =[]
+    approvWfFiles.forEach(approvedFile => approvedWFFiles.push({_id:approvedFile._id,fileNo:approvedFile.fileNo,approvalDate:formatDate(approvedFile.approvalDate)}))
 
     File.find({
       deleteDate: null,
@@ -741,11 +801,8 @@ router.get('/:id', async (req, res) => {
       }).lean().then(workf => {
         //console.log(onChangeFiles)
 
-
-
-
         return res.render('site/onchange2', {
-          wff: wff,
+          approvedFiles: approvedWFFiles,
           workf: workf,
           onChangeFiles: a
         })

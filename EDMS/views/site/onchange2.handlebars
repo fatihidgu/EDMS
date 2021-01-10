@@ -1,0 +1,359 @@
+<section class="page-image page-image-about md-padding">
+  <h1 class="text-white text-center">Workflows</h1>
+</section>
+
+<!--==========================
+    ABOUTUS Section Bizim mekan
+============================-->
+
+<section id="contact" style="background-color: #283792;;">
+  <div class="container">
+
+    <div class="row text-center" style="background-color: #283792;;">
+      <div class="col-md-12 ">
+        {{> site-alt-nav}}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="aboutus" class="md-padding">
+  <div class="container">
+
+
+    <div class="">
+
+      <div class="modal fade" id="changeReason" tabindex="-1" role="dialog" aria-labelledby="changeReasonTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title" id="changeReasonTitle">Reason Of Change</h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form class="form" action="/createfile/change" method="POST">
+                <textarea rows="4" cols="50" class="col-md-12 form-control" name="reason" placeholder="Enter here...." maxlength="150" minlength="25" required></textarea>
+                <input type="hidden" id="changeReasonId" name="fileId" value="">
+                <br><br><br>
+                <div class="col-md-12 text-center">
+                  <button type="button" class="btn btn-secondary col-md-5 mx-auto" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary col-md-5 mx-auto">Send</button>
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- -->
+
+      <div class="modal fade" id="rejectReason" tabindex="-1" role="dialog" aria-labelledby="rejectReasonTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title" id="rejectReasonTitle">Reason Of Reject</h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form class="form" action="/createfile/reject" method="POST">
+                <textarea rows="4" cols="50" class="col-md-12 form-control" name="reason" placeholder="Enter here...." maxlength="150" minlength="25" required></textarea>
+                <input type="hidden" id="rejectReasonId" name="fileId" value="">
+                <br><br><br>
+                <div class="col-md-12 text-center">
+                  <button type="button" class="btn btn-secondary col-md-5 mx-auto" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary col-md-5 mx-auto">Send</button>
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+    {{#if sessionFlash.message}}
+      <div class="{{sessionFlash.type}}">
+        {{sessionFlash.message}}
+      </div>
+    {{/if}}
+
+    {{#unless create}}
+      <div class="row">
+        <div class="col-md-2 text-left"></div>
+        <div class="col-md-8 bg-light py-3">
+          {{!-- looking workflows and editing--}}
+          <form action="" method="POST">
+            <label class="col-5 col-sm-5  float-left">Work Process:</label>
+            <input class="form-control form-control-sm" name="workprocessName" id="workproc" type="text" value="{{workf.workprocessName}}" style="width: fit-content;" disabled>
+            <br><br>
+            <label class="col-5 col-sm-5 float-left">Academic/Administrative:</label>
+            {{#if workf.acad}}
+              <input class="form-control form-control-sm" type="text" value="Academic" style="width: fit-content;" disabled><br><br>
+            {{/if}} {{#unless workf.acad}}
+              <input class="form-control form-control-sm" type="text" value="Administrative" style="width: fit-content;" disabled><br><br>
+            {{/unless}}
+            <label class="col-5 col-sm-5 float-left">Main Process:</label>
+            <input class="form-control form-control-sm" n type="text" value="{{workf.mainProcessId.mainProcessName}}" style="width: fit-content;" disabled><br><br>
+            <div class="text-center">
+              <button id="button1" type="submit" class="main-btn" type="submit" style="display: none;" onclick="SwitchButtons()">Save</button>
+            </div>
+
+          </form>
+          {{#if edit}}
+            <div class="text-center">
+              <button id="button2" class="main-btn" type="submit" onclick="SwitchButtons()">Edit</button>
+            </div>
+
+          {{/if}}
+        </div>
+      </div>
+    {{/unless}}
+    {{!-- creating workflows --}}
+    {{#if (or
+    (eq create "1")
+    )}}
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2 text-left"></div>
+          <div class="col-md-8 bg-light py-3">
+            <form action="/onchangefiles/addworkflow" method="POST">
+
+              <label class="col-5 col-sm-5  float-left">Work Process:</label>
+
+              <input class="form-control form-control-sm" type="text" name="workprocessName" style="width: fit-content;" required>
+              <br><br>
+              <label class="col-5 col-sm-5 float-left">Academic/Administrative:</label>
+              {{#if (or
+            (eq acadadm 1)
+            )}}
+                <input class="form-control form-control-sm" type="text" value="Academic" style="width: fit-content;" disabled><br><br>
+                <input class="form-control form-control-sm" type="text" name="acad" value="{{acadadm}}" style="width: fit-content;" readonly required hidden>
+              {{/if }}
+              {{#if (or
+            (eq acadadm 0)
+            )}}
+
+                <input class="form-control form-control-sm" type="text" value="Administrative" style="width: fit-content;" disabled><br><br>
+                <input class="form-control form-control-sm" type="text" name="acad" value="{{acadadm}}" style="width: fit-content;" readonly required hidden><br><br>
+
+              {{/if }}
+
+              <label class="col-5 col-sm-5 float-left">Main Process:</label>
+
+              <select class="form-control  form-control-sm" style="width: fit-content;" name="mainProcessId" onchange="findOrganiser(this)" required>
+                <option value="">Select One</option>
+                {{#each mainprocesses}}
+                  <option value="{{_id}}">{{mainProcessName}}-{{workUnitId.workUnitCode}}</option>
+                {{/each}}
+              </select><br><br>
+              <label class="col-5 col-sm-5 float-left">Organiser:</label>
+
+              <select class="form-control  form-control-sm" style="width: fit-content;" name="organiserId" required id="organiserOptions">
+                <option value="">Select One Mainprocess</option>
+              </select>
+
+
+              <div class="text-center"> <button type="submit" class="main-btn" type="submit">Create</button></div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+    {{/if}}
+
+    {{!-- showing files --}}
+    <section id="tabs" class="project-tab">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <nav>
+              <div class="nav nav-tabs nav-fill" role="tablist" style="border:2px solid #ccc; font-weight: bolder;">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">On Change Files</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Approved Files</a>
+              </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent " style="border:1px solid #ccc;">
+              <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="table-responsive">
+                  <div>
+                    {{#if addNewFile}}
+                      <form action="/createfile/create/{{workf._id}}" method="get">
+                        <button type="submit" class="btn" style="background:none">Add New
+                          File</button>
+                      </form>
+                    {{/if}}
+                  </div>
+                  <table class="table table-hover" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>File No</th>
+                        <th>Approved Status</th>
+                        <th>Change Reason</th>
+                        <th>Rejection Statu</th>
+                        <th>Rejection Reason</th>
+                        <th>Options</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each onChangeFiles}}
+                        <tr>
+                          <td>{{fileNo}}</td>
+                          <td>
+                            {{#if (eq approvalStatus 0)}}
+                            Onchange
+                            {{/if}}
+                            {{#if (eq approvalStatus 1)}}
+                            Manager Approval
+                            {{/if}}
+                            {{#if (eq approvalStatus 2)}}
+                            Administrator Approval
+                            {{/if}}
+                            {{#if (eq approvalStatus 3)}}
+                            Committee Approval
+                            {{/if}}
+                          </td>
+                          <td>{{changeReason}}</td>
+                          <td>{{rejectStatus}}</td>
+                          <td>{{rejectReason}}</td>
+                          <td style="text-align:center">
+                            <div class="w-100 float-left">
+
+                              <form action="/createfile/download" method="post">
+                                <input type="hidden" name="file_id" value="{{_id}}">
+                                <button type="submit" title="download" class="btn" style="background:none"><i class="fa fa-download"></i></button>
+                              </form>
+
+
+                              {{#if (eq approvalStatus 0)}}
+                                {{#if (eq organiserRUId userId)}}
+                                  <form action="/createfile/upload/{{_id}}" method="get">
+                                    <button type="submit" title="upload" class="btn" style="background:none;"><i class="fa fa-upload"></i></button>
+                                  </form>
+                                  <button type="button" class="btn" title="send for approval" onclick="changeReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#changeReason" style="background:none">
+                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                  </button>
+                                {{/if}}
+                              {{/if}}
+
+
+                              {{#if (eq approvalStatus 1)}}
+                                {{#if (eq userId managerRUId)}}
+                                  <button type="button" class="btn" title="reject changes" onclick="rejectReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#rejectReason" style="background:none">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                  </button>
+                                  <form action="/createfile/change" method="post">
+                                    <input type="hidden" name="fileId" value="{{_id}}">
+                                    <button type="submit" class="btn" title="send for approval" style="background:none"><i class="fa fa-paper-plane-o"></i></button>
+                                  </form>
+                                {{/if}}
+                              {{/if}}
+
+                              {{#if (eq approvalStatus 2)}}
+                                {{#if (eq userId administratorRUId)}}
+                                  <button type="button" class="btn" title="reject changes" onclick="rejectReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#rejectReason" style="background:none">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                  </button>
+                                  <form action="/createfile/change" method="post">
+                                    <input type="hidden" name="fileId" value="{{_id}}">
+                                    <button type="submit" class="btn" title="send for approval" style="background:none;"><i class="fa fa-paper-plane-o"></i></button>
+                                  </form>
+                                  <form action="/createfile/approve" method="post">
+                                    <input type="hidden" name="fileId" value="{{_id}}">
+                                    <button type="submit" class="btn" title="approve" style="background:none;"><i class="fa fa-check"></i></button>
+                                  </form>
+                                {{/if}}
+                              {{/if}}
+
+                              {{#if (eq approvalStatus 3)}}
+                                {{#if (eq userId committeeRUId)}}
+                                  <button type="button" class="btn" title="reject changes" onclick="rejectReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#rejectReason" style="background:none">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                  </button>
+                                  <form action="/createfile/approve" method="post">
+                                    <input type="hidden" name="fileId" value="{{_id}}">
+                                    <button type="submit" class="btn" title="approve" style="background:none;"><i class="fa fa-check"></i></button>
+                                  </form>
+                                {{/if}}
+                              {{/if}}
+
+                              <!-- <form action="/createfile/delete" class="float-left" method="post">
+                                <input type="hidden" name="file_id" value="{{_id}}">
+
+                                <button type="submit" class="btn" class="float-left" style="background:none"><i class="fa fa-trash"></i></button>
+                              </form>
+                              <form action="/createfile/upload/{{_id}}" method="get">
+                                <button type="submit" class="btn" style="background:none; color:pink"><i class="fa fa-upload"></i></button>
+                              </form>
+                              <button type="button" class="btn" onclick="changeReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#changeReason" style="background:none">
+                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                              </button> -->
+
+
+                            </div>
+
+                          </td>
+                        </tr>
+
+                      {{/each}}
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div class="table-responsive">
+                  <table class="table table-hover" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>File No</th>
+                        <th>Approval Date</th>
+                        <th>Options</th>
+                      </tr>
+                    </thead>
+
+                    {{#each approvedFiles}}
+                      <tr>
+                        <td>{{fileNo}}</td>
+                        <td>{{approvalDate}}</td>
+                        <td style="text-align:center">
+                          <div class="w-100">
+                            <form action="/createfile/download" class="float-left" method="post">
+                              <input type="hidden" name="file_id" value="{{_id}}">
+                              <button type="submit" class="btn" style="background:none"><i class="fa fa-download" value="1"></i></button>
+                            </form>
+                            <!-- <form action="/createfile/delete" class="float-left" method="post">
+                              <input type="hidden" name="file_id" value="{{_id}}">
+
+                              <button type="submit" class="btn" class="float-left" style="background:none"><i class="fa fa-trash" value="1"></i></button>
+                            </form> -->
+                            <form action="/createfile/upload/{{_id}}" method="get">
+                              <button type="submit" class="btn" style="background:none;"><i class="fa fa-upload" value="1"></i></button>
+                            </form>
+                          </div>
+
+                        </td>
+                      </tr>
+                    {{/each}}
+
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>

@@ -491,6 +491,8 @@ router.get('/editworkunit/:id?', async (req, res) => {
           select: 'name surname email'
         }).exec()
 
+        const administrator = await Administrator.findOne({endDate:null,acad:workUnit.acad}).exec();
+
         const manager = await Manager.findOne({
           workUnitId: workUnit._id,
           endDate: null
@@ -530,7 +532,7 @@ router.get('/editworkunit/:id?', async (req, res) => {
         var organisersIds = a.map(function(element) {
           return element.registeredUserId;
         });
-        organisersIds.push(manager.registeredUserId._id)
+        //organisersIds.push(manager.registeredUserId._id)
         const organiserOptions = await RegisteredUser.find({
           _id: {
             $nin: organisersIds
@@ -557,7 +559,10 @@ router.get('/editworkunit/:id?', async (req, res) => {
           work_unit_name: workUnit.workUnitName,
           acad: acad,
           organisers: a,
-          organiserOptions: organiserOptions
+          organiserOptions: organiserOptions,
+          managerRUId:manager.registeredUserId._id.toString(),
+          administratorRUId:administrator.registeredUserId.toString(),
+          userId:req.session.userId
         })
       } else {
         const managerOptions = await RegisteredUser.find({
