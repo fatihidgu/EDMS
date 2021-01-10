@@ -70,19 +70,14 @@
 
 
 											{{#if (or
-											(stringeq creatorId ../adminId)
+											(stringeq creatorId.registeredUserId ../userid)
+											(or (stringeq organiserId.registeredUserId ../userid))
 											)}}
-											<td style="text-align:center">
-												<form action="/onchangefiles/{{_id}}" method="POST">
-													<input class="form-control" name="addNewFile" type="text" value="1"
-														required="required" readonly hidden>
-													<button type="submit" class="btn"
-														style="background:none; none;color:#283792">
-														<i class="fas fa-hand-paper"></i></button>
-												</form>
+
+											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
+													<i class="fas fa-hand-paper">
 											</td>
 											{{else}}
-
 											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
 													<i class="fas fa-eye">
 													</i> </a>
@@ -97,7 +92,8 @@
 								aria-labelledby="nav-profile-tab">
 								<div class="table-responsive">
 									{{#if admin}}
-									<a href="/onchangefiles/addworkflow"><input type="button" class="btn" style="background:none"value="Create New Workflow"></a>
+									<a href="/onchangefiles/addworkflow"><input type="button" class="btn"
+											style="background:none" value="Create New Workflow"></a>
 									{{/if}}
 									<table class="table table-hover" cellspacing="0">
 										<thead>

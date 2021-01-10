@@ -94,7 +94,10 @@ router.get('/:id', async (req, res) => {
   //console.log("deneme1")
   if (req.session.userId) {
     //file olmayacak boş bakınma
-
+    var edit=false
+    var addNewFile=0
+    //const edit = true // check
+    //addNewFile: req.body.addNewFile
     const onChangeFiles = await File.find({ workflowId: req.params.id, approvalStatus: { $gte: 0, $lt: 4 }, deleteDate: null }).exec();
     //console.log("ONCHANGE")
     //console.log(onChangeFiles)
@@ -103,8 +106,13 @@ router.get('/:id', async (req, res) => {
       approvalStatus: 4,
       workflowId: req.params.id,
     }).lean().then(wff => {
-      Workflow.findById(req.params.id).populate({ path: 'mainProcessId', model: MainProcess }).lean().then(workf => {
-
+      Workflow.findById(req.params.id).populate([{ path: 'mainProcessId', model: MainProcess }, { path: 'creatorId', model: Administrator }]).lean().then(workf => {
+        if(res.locals.userid==workf.creatorId.registeredUserId && workf.deleteDate==null){
+          edit=true
+        }
+        if(res.locals.admin && workf.deleteDate==null){
+          addNewFile=1
+        }
         var a = []
         var i = 0
         onChangeFiles.forEach(onChangeFile => {
@@ -116,7 +124,9 @@ router.get('/:id', async (req, res) => {
         return res.render('site/onchange', {
           wff: wff,
           workf: workf,
-          onChangeFiles: a
+          onChangeFiles: a,
+          edit: edit,
+          addNewFile: addNewFile
         })
       })
 
@@ -132,7 +142,7 @@ router.post('/:id', (req, res) => {
   //console.log("deneme2")
   if (req.session.userId) {
     //ilgili filelar ve düzenleme yerleri olacak
-    const edit = true
+    
     if (req.body.workprocessName) {
       //console.log(req.body.workprocessName)
       Workflow.findByIdAndUpdate(req.params.id, {
@@ -140,19 +150,9 @@ router.post('/:id', (req, res) => {
       }).then(us => {
       })
     }
-    File.find({
-      deleteDate: null
-    }).lean().then(wff => {
-      Workflow.findById(req.params.id).populate({ path: 'mainProcessId', model: MainProcess }).lean().then(workf => {
-        //console.log("buraya girmmeis olmasi lazim")
-        return res.render('site/onchange', {
-          wff: wff,
-          workf: workf,
-          edit: edit,
-          addNewFile: req.body.addNewFile
-        })
-      })
-    })
+       res.redirect('/onchangefiles/'+req.params.id)
+   
+
   } else {
     res.redirect('/registeredusers/login')
   }
