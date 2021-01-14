@@ -42,7 +42,7 @@ app.use(expressSession({
 
 //middle ware
 app.use((req, res, next) => {
-  const { userId, isBlockedSession } = req.session
+  const { userId, isBlockedSession} = req.session
   User.findOne({ _id: userId }, (error, user) => {
     if (userId && !isBlockedSession) {
       res.locals = {
@@ -50,7 +50,10 @@ app.use((req, res, next) => {
         links: true,
         usernameye: user.name + " " + user.surname,
         admin: user.isAdmin,
-        isBlockedLocal: user.isBlocked
+        isBlockedLocal: user.isBlocked,
+        isOrganiser: user.isOrganiser,
+        isCommitte: user.isCommittee,
+        isManager: user.isManager
       }
 
     } else {
@@ -58,7 +61,10 @@ app.use((req, res, next) => {
         links: false,
         userid: null,
         admin: false,
-        isBlockedLocal: false
+        isBlockedLocal: false,
+        isOraganiser:false,
+        isCommitte:false,
+        isManager:false
       }
     }
     //  console.log("req.session",req.session)

@@ -12,7 +12,7 @@ mongoose.connect("mongodb://127.0.0.1/EDMS", {
 
 adm.create({
   acad:1,
-  registeredUserId:"5ff23134b956dd418ceafdcf"
+  registeredUserId:"5ffd8b8e266adf3804fbe5b3"
 }, (error, user) => {
 })
 
