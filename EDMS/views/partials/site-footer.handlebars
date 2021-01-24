@@ -576,7 +576,14 @@
 						url: "/registeredusers/roles",
 						data: $(form).serialize(),
 						success: function () {
-							Swal.fire('Saved!', '', 'success')
+							Swal.fire({
+							title: 'Saved!',
+							text: '',
+							icon: 'success'
+						}).then((result) => {
+							// Reload the Page
+							window.location.reload();
+						});
 						}
 					});
 				} else if (result.isDenied) {
@@ -755,7 +762,44 @@
 
 
 </script>
+<script>
+	function denemeon7(response) {
+		Swal.fire({
+			title: 'Do you want to save the changes?',
+			showDenyButton: true,
+			confirmButtonText: `Save`,
+			denyButtonText: `Don't save`,
+		}).then((result) => {
 
+			/* Read more about isConfirmed, isDenied below */
+			if (result.isConfirmed) {
+				let form = document.getElementById("disableformid")
+				$.ajax({
+					type: "POST",
+					url: "/workflows/disable",
+					data: $(form).serialize(),
+					success: function () {
+
+						Swal.fire({
+							title: 'Saved!',
+							text: '',
+							icon: 'success'
+						}).then((result) => {
+							// Reload the Page
+							window.location.reload();
+						});
+
+
+					}
+				});
+			} else if (result.isDenied) {
+				Swal.fire('Changes are not saved', '', 'info')
+			}
+		})
+
+
+	}
+</script>
 
 <script>
 

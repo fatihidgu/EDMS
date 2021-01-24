@@ -144,19 +144,16 @@ router.post('/roles', (req, res) => {
             }
         }
     })
-    if (req.body.email != "sad@gmail.com") {
-        User.findOneAndUpdate({ email: req.body.email }, { ...req.body }).then(us => {
-        })
-        req.session.sessionFlash = {
-            type: 'alert alert-success',
-            message: 'New passwords are not match'
-        }
-
+    User.findOneAndUpdate({ email: req.body.email }, { ...req.body }).then(us => {
+    })
+    if (true) {
+        res.redirect('registeredusers/roles')
     }
     else {
-        console.log("cant do anything")
         res.redirect('/roles')
     }
+
+
 
 
 })
@@ -250,49 +247,48 @@ router.post('/forgetpassword', async (req, res) => {
         res.redirect('/')
     }
     else {
-       const userExist= await User.findOne({email:req.body.email}).exec()
+        const userExist = await User.findOne({ email: req.body.email }).exec()
         if (userExist) {
             var randompass = Math.random().toString(36).slice(-8);
-            //console.log(randompass)
+            console.log(randompass)
             bcrypt.hash(randompass, BCRYPT_SALT_ROUNDS)
-            .then(function (hashedPassword) {
-                userExist.password = hashedPassword
-                userExist.save()
-            })
+                .then(function (hashedPassword) {
+                    userExist.password = hashedPassword
+                    userExist.save()
+                })
             const outputHTML = `
-            <h2>Mail Detail</h2>
-            <p>${randompass}</p>
-            <li>Phone: deneme</li>
-            <h3>Message</h3>
-            <p>${randompass}</p>
+            <h2>You requested a password change.</h2>
+            <p>Your password has been changed. You can login with your new password to the E-Document Management System</p>
+            <h3>Your new password is below.</h3>
+            <li>Your new password: ${randompass}</li>
             `
-          
-              "use strict";
-              const nodemailer = require("nodemailer");
-          
-            
-              async function main() {
-                  let transporter = nodemailer.createTransport({
-                      host: "smtp.gmail.com",
-                      port: 465,
-                      secure: true, // true for 465, false for other ports
-                      auth: {
-                          user: "edmanagementsystem@gmail.com", // generated ethereal user
-                          pass: "ed_123456", // generated ethereal password
-                      },
-                  });
-          
-                  // send mail with defined transport object
-                  let info = await transporter.sendMail({
-                      from: `edmanagementsystem@gmail.com` ,// sender address
-                      to: req.body.email, // list of receivers
-                      subject: "Your Password Has Changed", // Subject line
-                      text:  "Passwrod Change", // plain text body
-                      html: outputHTML, // html body
-                  });
-              }
-          
-              main().catch(console.error);
+
+            "use strict";
+            const nodemailer = require("nodemailer");
+
+
+            async function main() {
+                let transporter = nodemailer.createTransport({
+                    host: "smtp.gmail.com",
+                    port: 465,
+                    secure: true, // true for 465, false for other ports
+                    auth: {
+                        user: "edmanagementsystem@gmail.com", // generated ethereal user
+                        pass: "ed_123456", // generated ethereal password
+                    },
+                });
+
+                // send mail with defined transport object
+                let info = await transporter.sendMail({
+                    from: `edmanagementsystem@gmail.com`,// sender address
+                    to: req.body.email, // list of receivers
+                    subject: "Your Password Has Changed", // Subject line
+                    text: "Passwrod Change", // plain text body
+                    html: outputHTML, // html body
+                });
+            }
+
+            main().catch(console.error);
             req.session.sessionFlash = {
                 type: 'alert alert-success',
                 message: 'We sent new password to your email.'
