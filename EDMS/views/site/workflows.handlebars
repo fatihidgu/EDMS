@@ -25,6 +25,8 @@
 					</div>
 				</div>
 			</div> -->
+			<input class=" form-control" type="text" id="scrh" onkeyup="arama()" placeholder="Search for Work Process" title="Type in a name">
+			<br>
 		<section id="tabs" class="project-tab">
 			<div class="container">
 				<div class="row">
@@ -45,7 +47,7 @@
 							<div class="tab-pane fade show active" id="nav-home" role="tabpanel"
 								aria-labelledby="nav-home-tab">
 								<div class="table-responsive">
-									<table class="table table-hover" cellspacing="0">
+									<table class="table table-hover myTable" cellspacing="0" id="workflow_table">
 										<thead>
 											<tr>
 												<th>Work Process</th>
@@ -113,7 +115,7 @@
 									<a href="/onchangefiles/addworkflow"><input type="button" class="btn"
 											style="background:none" value="Create New Workflow"></a>
 									{{/if}}
-									<table class="table table-hover" cellspacing="0">
+									<table class="table table-hover myTable" cellspacing="0">
 										<thead>
 											<tr>
 												<th>Work Process</th>
@@ -150,8 +152,8 @@
 							</div>
 							<div class="tab-pane fade" id="nav-contact" role="tabpanel"
 								aria-labelledby="nav-contact-tab">
-								<div class="table-responsive">
-									<table class="table table-hover " cellspacing="0">
+								<div class="table-responsive" >
+									<table class="table table-hover myTable" cellspacing="0">
 										<thead>
 											<tr>
 												<th>Work Process</th>
