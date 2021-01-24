@@ -67,21 +67,39 @@
 
 											<td> </td>
 											<td> </td>
+											<td style="text-align:center">
 
 
-											{{#if (or
-											(stringeq creatorId.registeredUserId ../userid)
-											(or (stringeq organiserId.registeredUserId ../userid))
-											)}}
+												{{#if (or
+												(stringeq creatorId.registeredUserId ../userid)
+												(or (stringeq organiserId.registeredUserId ../userid))
+												)}}
 
-											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
-													<i class="fas fa-hand-paper">
-											</td>
-											{{else}}
-											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
+												<a href="/onchangefiles/{{_id}}">
+													<i class="fas fa-hand-paper"></i> </a>
+
+
+												{{#if (or
+												(stringeq creatorId.registeredUserId ../userid))
+												}}
+												<form action="/workflows/disable" method="POST" id="disableformid">
+													<input type="text" name="workflowid" value="{{_id}}" readonly hidden>
+													<button type="button" class="btn" onclick="denemeon7(this)"
+														style="background:none; none;color:#283792">
+														<i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+												</form>
+
+												{{/if}}
+
+												{{else}}
+												<a href="/onchangefiles/{{_id}}">
 													<i class="fas fa-eye">
 													</i> </a>
 												{{/if}}
+											</td>
+
+
+
 
 										</tr>
 										{{/each}}
