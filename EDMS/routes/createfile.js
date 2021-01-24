@@ -517,13 +517,13 @@ router.post("/reject", async (req, res) => {
       }, {
         approvalStatus: 0
       });
-      Change.findOneAndUpdate({
-        _id: change._id
-      }, {
-        $set: {
-          deleteDate: Date.now()
-        }
-      }).exec()
+      // Change.findOneAndUpdate({
+      //   _id: change._id
+      // }, {
+      //   $set: {
+      //     deleteDate: Date.now()
+      //   }
+      // }).exec()
 
       req.session.sessionFlash = {
         type: 'alert alert-success',
