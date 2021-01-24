@@ -283,7 +283,7 @@
 
 
                               {{#if (eq approvalStatus 0)}}
-                                {{#if (eq organiserRUId userId)}}
+                                {{#if isOrganiser}}
                                   <form action="/createfile/upload/{{_id}}" method="get">
                                     <button type="submit" title="upload" class="btn" style="background:none;"><i class="fa fa-upload"></i></button>
                                   </form>
@@ -295,7 +295,7 @@
 
 
                               {{#if (eq approvalStatus 1)}}
-                                {{#if (eq userId managerRUId)}}
+                                {{#if isManager}}
                                   <button type="button" class="btn" title="reject changes" onclick="rejectReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#rejectReason" style="background:none">
                                     <i class="fa fa-times" aria-hidden="true"></i>
                                   </button>
@@ -307,7 +307,7 @@
                               {{/if}}
 
                               {{#if (eq approvalStatus 2)}}
-                                {{#if (eq userId administratorRUId)}}
+                                {{#if isAdministrator}}
                                   <button type="button" class="btn" title="reject changes" onclick="rejectReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#rejectReason" style="background:none">
                                     <i class="fa fa-times" aria-hidden="true"></i>
                                   </button>
@@ -323,7 +323,7 @@
                               {{/if}}
 
                               {{#if (eq approvalStatus 3)}}
-                                {{#if (eq userId committeeRUId)}}
+                                {{#if isCommittee}}
                                   <button type="button" class="btn" title="reject changes" onclick="rejectReasonBtnClicked('{{_id}}');" data-toggle="modal" data-target="#rejectReason" style="background:none">
                                     <i class="fa fa-times" aria-hidden="true"></i>
                                   </button>

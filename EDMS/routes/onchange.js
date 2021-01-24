@@ -13,6 +13,7 @@ const SharedWorkflow = require('../models/SharedWorkflows');
 const Committee = require('../models/Committee');
 const Change = require('../models/Change');
 const Reject = require('../models/Reject');
+const Approve = require('../models/Approve');
 
 
 
@@ -142,85 +143,75 @@ router.get('/:id', async (req, res) => {
       acad: wf.acad,
       endDate: null
     });
-    const committee = await Committee.findOne({
+    const committee = await Committee.find({
       endDate: null
     });
 
-    const userO = await RegisteredUser.findById(organiser.registeredUserId).exec();
-    const userM = await RegisteredUser.findById(manager.registeredUserId).exec();
-    const userA = await RegisteredUser.findById(administrator.registeredUserId).exec();
-    const userC = await RegisteredUser.findById(committee.registeredUserId).exec();
+
+    const isOrganiser = (organiser.registeredUserId == req.session.userId)
+    const isManager = (manager.registeredUserId == req.session.userId)
+    const isAdministrator = (administrator.registeredUserId==req.session.userId)
+    const isCommittee = (committee.some( committeeMember => committeeMember.registeredUserId == req.session.userId ))
+
+    console.log(isOrganiser,"-",isManager,"-",isAdministrator,"-",isCommittee)
     //console.log("ONCHANGE")
     //console.log(onChangeFiles)
     var a = []
     var i = 0
+    var fileValues ={}
     for (var onChangeFile of onChangeFiles) {
       i = i + 1
       var change = await Change.findOne({
-        fileNo: onChangeFile._id
+        fileNo: onChangeFile._id,
+        deleteDate:null
       }, {}, {
         sort: {
           'creationDate': -1
         }
       })
-      if (change == null) {
-        a.push({
-          approvalStatus: onChangeFile.approvalStatus,
-          fileNo: onChangeFile.fileNo,
-          _id: onChangeFile._id,
-          changeReason: "-",
-          rejectReason: "-",
-          rejectStatus: "-",
-          organiserRUId: userO._id.toString(),
-          managerRUId: userM._id.toString(),
-          administratorRUId: userA._id.toString(),
-          committeeRUId: userC._id.toString(),
-          userId: req.session.userId
-        });
+      fileValues = {
+        approvalStatus: onChangeFile.approvalStatus,
+        fileNo: onChangeFile.fileNo,
+        _id: onChangeFile._id,
+        changeReason: "-",
+        rejectReason: "-",
+        rejectStatus: "-",
+        isOrganiser: isOrganiser,
+        isManager: isManager,
+        isAdministrator: isAdministrator,
+        isCommittee: isCommittee,
+        userId: req.session.userId
+      };
 
-      } else {
+      if (change !== null) {
+        var approve = await Approve.findOne({
+            changeId: change._id,
+            approverId:req.session.userId,
+            deleteDate: null
+          });
+          console.log(change._id)
+          console.log(approve)
         var reject = await Reject.findOne({
           changeId: change._id,
           deleteDate: null
         })
         if (reject == null) {
-          a.push({
-            approvalStatus: onChangeFile.approvalStatus,
-            fileNo: onChangeFile.fileNo,
-            _id: onChangeFile._id,
-            changeReason: change.changeReason,
-            rejectReason: "-",
-            rejectStatus: "-",
-            organiserRUId: userO._id.toString(),
-            managerRUId: userM._id.toString(),
-            administratorRUId: userA._id.toString(),
-            committeeRUId: userC._id.toString(),
-            userId: req.session.userId
-          });
-
+          fileValues.changeReason = change.changeReason
         } else {
           var role = {
             1: "Manager",
             2: "Administrator",
             3: "Committee"
           };
-
-
-          a.push({
-            approvalStatus: onChangeFile.approvalStatus,
-            fileNo: onChangeFile.fileNo,
-            _id: onChangeFile._id,
-            changeReason: change.changeReason,
-            rejectReason: reject.rejectReason,
-            rejectStatus: role[reject.rejectRole],
-            organiserRUId: userO.id.toString(),
-            managerRUId: userM._id.toString(),
-            administratorRUId: userA._id.toString(),
-            committeeRUId: userC.id.toString(),
-            userId: req.session.userId
-          });
+          fileValues.changeReason = change.changeReason
+          fileValues.rejectReason = reject.rejectReason
+          fileValues.rejectStatus = role[reject.rejectRole]
+        }
+        if(approve !== null){
+          fileValues.isCommittee = false
         }
       }
+      a.push(fileValues)
     }
     var approvWfFiles = await File.find({approvalStatus:4,deleteDate:null,workflowId:req.params.id},'fileNo approvalDate').exec()
     var approvedWFFiles =[]
