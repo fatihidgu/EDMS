@@ -16,7 +16,7 @@ router.get('/allworkunits', async (req, res) => {
 
     const workUnitManager = await Manager.find({}).populate({
       path: 'workUnitId',
-      select: 'workUnitCode workUnitName'
+      select: 'workUnitCode workUnitName acad'
     }).populate({
       path: 'registeredUserId',
       select: 'email'
@@ -29,9 +29,12 @@ router.get('/allworkunits', async (req, res) => {
       }
     }).lean().exec();
 
+    var isAdministrator = await Administrator.findOne({endDate:null,registeredUserId:res.locals.userid}).exec();
+
     var myworkunits = []
     //console.log("a",workUnitManager)
-
+    console.log("-")
+    console.log(workUnitManager);
 
     workUnitManager.forEach(b => {
       //console.log("b",b)
@@ -63,7 +66,17 @@ router.get('/allworkunits', async (req, res) => {
               workUnitCode: b.workUnitId.workUnitCode,
               managerEmail: b.registeredUserId.email
             })
+          } else if (isAdministrator != null) {
+            if (b.workUnitId.acad == isAdministrator.acad) {
+              myworkunits.push({
+                workUnitId: b.workUnitId._id,
+                workUnitName: b.workUnitId.workUnitName,
+                workUnitCode: b.workUnitId.workUnitCode,
+                managerEmail: b.registeredUserId.email
+              })
+            }
           }
+          
         }
       }
     });

@@ -11,164 +11,184 @@
   <div class="container">
 
 
-    </div>
+  </div>
 
-    {{#if sessionFlash.message}}
-      <div class="{{sessionFlash.type}}">
-        {{sessionFlash.message}}
-      </div>
-    {{/if}}
-    <!-- {{#each sessionFlash}}
+
+  <!-- {{#each sessionFlash}}
       <div class="{{type}}">
         {{message}}
       </div>
     {{/each}} -->
 
-    <div class="container">
+  <div class="container">
+    {{#if sessionFlash.message}}
+    <div class="{{sessionFlash.type}}">
+      {{sessionFlash.message}}
+    </div>
+    {{/if}}
+    {{#unless (eq create "0")}}
+    <div class="row">
+      <div class="col-md-2 text-left"></div>
+      <div class="col-md-8 bg-light py-3">
+        <h2 class="text-center" style="color:#283792">Work Unit</h2><br><br>
+        <form action="/workunits/editworkunit" method="POST">
+          <label class="col-5 col-sm-5  float-left">Work Unit Code:</label>
+          <input class="form-control form-control-sm " style="width: fit-content;" type="text" name="work_unit_code"
+            placeholder="Code" required> <br><br>
+          <label class="col-5 col-sm-5 float-left">Work Unit Name:</label>
+          <input class="form-control form-control-sm " type="text" name="work_unit_name" placeholder="Name"
+            style="width: fit-content;" required><br><br>
+          <label class="col-5 col-sm-5 float-left">Academic/Administrative:</label>
+          {{#if (eq acad "1")}}
+          <label class="col-5 col-sm-5">Academic</label>
+          <input type="hidden" name="acad" value="1">
+          {{/if}}
+          {{#if (eq acad "0")}}
+          <label class="col-5 col-sm-5">Administrative</label>
+          <input type="hidden" name="acad" value="0">
+          {{/if}}
+          <br><br>
+          <label class="col-5 col-sm-5 float-left">Manager</label>
+          <select class="form-control  form-control-sm" style="width: fit-content;" name="manager" required>
+            <option value="" selected disabled>Select a Manager</option>
+            {{#each managerOptions}}
+            <option value="{{_id}}">{{email}}</option>
+            {{/each}}
+          </select><br><br><br><br>
+          <button type="submit" class="main-btn float-right" type="submit">Create</button>
+        </form>
+      </div>
+    </div>
+    {{/unless}}
 
-      {{#unless (eq create "0")}}
+    {{#if (eq create "0")}}
+
+    <div class="row">
+      <div class="col-md-2 text-left"></div>
+
+      <div class="col-md-8 bg-light py-3">
+        <h2 class="text-center" style="color:#283792">Work Unit</h2><br><br>
+        <form id="wu-edit-form" action="/workunits/editworkunit/{{work_unit_id}}" method="POST">
+          <label class="col-5 col-sm-5 float-left">Work Unit Code:</label>
+          <input type="text" name="work_unit_code" class="form-control form-control-sm " style="width: fit-content;"
+            readonly value="{{work_unit_code}}" required><br><br>
+          <label class="col-5 col-sm-5 float-left">Work Unit Name:</label>
+
+          <input type="text" id="work_unit_name_id" name="work_unit_name" class="form-control form-control-sm wu-edit"
+            style="width: fit-content;" disabled value="{{work_unit_name}}"><br><br>
+          <label class="col-5 col-sm-5 float-left">Academic/Administrative:</label>
+          {{#if (eq acad "1")}}
+          <label class="col-5 col-sm-5">Academic</label>
+          <input type="hidden" name="acad" value="1">
+          {{/if}}
+          {{#if (eq acad "0")}}
+          <label class="col-5 col-sm-5">Administrative</label>
+          <input type="hidden" name="acad" value="0">
+          {{/if}}
+          <br><br>
+          <label class="col-5 col-sm-5 float-left">Manager</label>
+
+          <select name="manager" disabled class="form-control  form-control-sm  wu-edit" style="width: fit-content;">
+
+            <option value="{{currentManager._id}}" selected="true">{{currentManager.email}}</option>
+            {{#each managerOptions}}
+            <option value="{{_id}}">{{email}}</option>
+            {{/each}}
+
+          </select><br><br><br>
+          {{#if (eq administratorRUId userId)}}
+          <button class="main-btn float-right" type="button" onclick="wuEditBtn1f();" name="save" id="wuEditBtn1"
+            style="display:none;">Save</button>
+          <button class="main-btn float-right" type="button" onclick="wuEditBtn2f()" id="wuEditBtn2">Edit</button>
+          {{/if}}
+
+          <br><br>
+
+
+        </form>
+
+      </div>
+    </div>
+    <br><br>
+    <section id="tabs" class="project-tab">
+      <div class="container">
         <div class="row">
-          <div class="col-md-2 text-left"></div>
-          <div class="col-md-8 bg-light py-3">
-            <h2 class="text-center" style="color:#283792">Work Unit</h2><br><br>
-            <form action="/workunits/editworkunit" method="POST">
-              <label class="col-5 col-sm-5" id="" for="">Work Unit Code:</label>
-              <input class="col-5 col-sm-5" type="text" id="" name="work_unit_code" placeholder="Code" required><br><br>
-              <label class="col-5 col-sm-5" for="">Work Unit Name:</label>
-              <input class="col-5 col-sm-5" type="text" id="" name="work_unit_name" placeholder="Name" required><br><br>
-              <label class="col-5 col-sm-5" for="">Academic/Administrative:</label>
-              {{#if (eq acad "1")}}
-                <label class="col-5 col-sm-5" for="">Academic</label>
-                <input type="hidden" name="acad" value="1">
-              {{/if}}
-              {{#if (eq acad "0")}}
-                <label class="col-5 col-sm-5" for="">Administrative</label>
-                <input type="hidden" name="acad" value="0">
-              {{/if}}
-              <br><br>
-              <label class="col-5 col-sm-5" for="">Manager</label>
-              <select class="col-5 col-sm-5" size="1px" name="manager" id="">
-                {{#each managerOptions}}
-                  <option value="{{_id}}">{{email}}</option>
-                {{/each}}
-              </select><br><br><br><br>
-              <button type="submit" class="btn btn-primary float-right" type="submit">Create</button>
-            </form>
-          </div>
-        </div>
-      {{/unless}}
-
-      {{#if (eq create "0")}}
-
-        <div class="row">
-          <div class="col-md-2 text-left"></div>
-
-          <div class="col-md-8 bg-light py-3">
-            <h2 class="text-center" style="color:#283792">Work Unit</h2><br><br>
-            <form id="wu-edit-form" action="/workunits/editworkunit/{{work_unit_id}}" method="POST">
-              <label class="col-5 col-sm-5" id="" for="">Work Unit Code:</label>
-              <input type="text" id="" name="work_unit_code" class="col-5 col-sm-5 wu-edit" placeholder="Code" disabled value="{{work_unit_code}}"><br><br>
-              <label class="col-5 col-sm-5" for="">Work Unit Name:</label>
-              <input type="text" id="" name="work_unit_name" class="col-5 col-sm-5 wu-edit" placeholder="Name" disabled value="{{work_unit_name}}"><br><br>
-              <label class="col-5 col-sm-5" for="">Academic/Administrative:</label>
-              {{#if (eq acad "1")}}
-                <label class="col-5 col-sm-5" for="">Academic</label>
-                <input type="hidden" name="acad" value="1">
-              {{/if}}
-              {{#if (eq acad "0")}}
-                <label class="col-5 col-sm-5" for="">Administrative</label>
-                <input type="hidden" name="acad" value="0">
-              {{/if}}
-              <br><br>
-              <label class="col-5 col-sm-5" for="">Manager</label>
-              <select size="1px" name="manager" disabled class="col-5 col-sm-5 wu-edit" id="">
-
-                <option value="{{currentManager._id}}" selected="true">{{currentManager.email}}</option>
-                {{#each managerOptions}}
-                  <option value="{{_id}}">{{email}}</option>
-                {{/each}}
-
-              </select><br><br><br>
-              {{#if (eq administratorRUId userId)}}
-              <button class="btn btn-primary float-right" type="button" onclick="wuEditBtn1f();" name="save" id="wuEditBtn1" style="display:none;">Save</button>
-              <button class="btn btn-primary float-right" type="button" onclick="wuEditBtn2f()" id="wuEditBtn2">Edit</button>
-              {{/if}}
-
-              <br><br>
+          <div class="col-md-12">
 
 
-            </form>
-
-          </div>
-        </div>
-        <br><br>
-        <section id="tabs" class="project-tab">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-12">
-
-
-                <div class="tab-content bg-light" id="nav-tabContent " style="border:1px solid #ccc;">
+            <div class="tab-content bg-light" id="nav-tabContent " style="border:1px solid #ccc;">
+              <div class="text-center">
+                <br>
+                <h2 class="text-center" style="color:#283792">Personel</h2><br>
+              </div>
+              <div>
+                <div class="table-responsive">
                   <div class="text-center">
-                    <br>
-                    <h2 class="text-center" style="color:#283792">Personel</h2><br>
-                  </div>
-                  <div>
-                    <div class="table-responsive">
-                      <div class="text-center">
-                        {{#if (eq managerRUId userId)}}
-                        {{#unless (eq organiserOptions.length 0)}}
-                          <form class="col-md-12" action="/workunits/addPersonel" method="POST">
-                            <label for="" class="mx-3">Choose Personel</label>
-                            <select class="mx-3" name="organiserId">
+                    {{#if (eq managerRUId userId)}}
+                    {{#unless (eq organiserOptions.length 0)}}
+                    <form class="col-md-12" action="/workunits/addPersonel" method="POST">
+                      <div class="d-flex justify-content-center">
+                        <label class="mx-3 float-left" style="margin-top: 6px;">Choose Personel</label>
+                        <div class="d-flex justify-content-center float-left">
+                          <select class="mx-3 form-control " style="width:fit-content; " name="organiserId">
 
-                              {{#each organiserOptions}}
-                                <option value="{{_id}}">{{email}}</option>
-                              {{/each}}
+                            {{#each organiserOptions}}
+                            <option value="{{_id}}">{{email}}</option>
+                            {{/each}}
 
-                            </select>
-                            <input type="hidden" name="workUnitId" value="{{work_unit_id}}">
-                            <button type="submit" class="btn btn-primary mx-3">Add</button>
-                          </form>
-                        {{/unless}}
-                        {{#if (eq organiserOptions.length 0)}}
+                          </select>
+                        </div>
+                        <input type="hidden" name="workUnitId" value="{{work_unit_id}}">
 
-                          <form class="col-md-12" action="#" method="POST">
-                            <label for="" class="mx-3">Choose Personel</label>
-
-                            <select class="mx-3" name="organiserId" disabled>
-                              <option value="" selected>No Value</option>
-                            </select>
-                            <button type="button" disabled class="btn btn-primary mx-3">Add</button>
-                          </form>
-                        {{/if}}
-                        {{/if}}
-                        <br><br>
+                        <button  class="main-btn mx-3 float-left btn-xs"
+                          style="margin-top: 0px; margin-bottom: 0px; padding-bottom: 6px;">Add</button>
                       </div>
-                      <table class="table table-hover" cellspacing="0">
-                        <thead>
-                          <tr>
-                            <th>Name</th>
-                            <th>Surname</th>
-                            <th>Email</th>
-                            <th>Options</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {{#each organisers}}
-                            <tr>
-                              <th>{{name}}</th>
-                              <th>{{surname}}</th>
-                              <th>{{email}}</th>
-                              <th>
-                              {{#if (eq ../managerRUId ../userId)}}
 
-                                <form action="/workunits/removePersonel" method="POST">
-                                  <input type="hidden" name="organiserId" style="display:none;" value="{{organiserId}}">
-                                  <button type="submit" class="btn" style="background:none; none;color:#283792">
-                                    <i class="fa fa-minus-circle" aria-hidden="true"></i></button>
-                                </form>
-                                <!-- <button type="button" class="btn" onclick="changeReasonBtnClicked('{{surname}}');" data-toggle="modal" data-target="#changeReason" data-whatever="@{{surname}}" style="background:none">
+                    </form>
+                    {{/unless}}
+                    {{#if (eq organiserOptions.length 0)}}
+
+                    <form class="col-md-12" action="" method="POST">
+                      <div class="d-flex justify-content-center">
+                        <label class="mx-3 float-left" style="margin-top: 6px;">Choose Personel</label>
+                        <div class="d-flex justify-content-center float-left">
+                          <select class="mx-3 form-control " style="width:fit-content; " name="organiserId" disabled>
+                            <option value="" selected>No Value</option>
+                          </select>
+                        </div>
+
+                      </div>
+                    </form>
+
+
+                    {{/if}}
+                    {{/if}}
+                    <br><br>
+                  </div>
+                  <table class="table table-hover" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th>Options</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each organisers}}
+                      <tr>
+                        <th>{{name}}</th>
+                        <th>{{surname}}</th>
+                        <th>{{email}}</th>
+                        <th>
+                          {{#if (eq ../managerRUId ../userId)}}
+
+                          <form action="/workunits/removePersonel" method="POST">
+                            <input type="hidden" name="organiserId" style="display:none;" value="{{organiserId}}">
+                            <button type="submit" class="btn" style="background:none; none;color:#283792">
+                              <i class="fa fa-minus-circle" aria-hidden="true"></i></button>
+                          </form>
+                          <!-- <button type="button" class="btn" onclick="changeReasonBtnClicked('{{surname}}');" data-toggle="modal" data-target="#changeReason" data-whatever="@{{surname}}" style="background:none">
                                   <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
                                 </button>
 
@@ -176,24 +196,24 @@
                                   <i class="fa fa-times" aria-hidden="true"></i>
                                 </button> -->
 
-                              {{/if}}
-                              </th>
+                          {{/if}}
+                        </th>
 
-                            </tr>
-                          {{/each}}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
                 </div>
               </div>
+
             </div>
           </div>
-        </section>
+        </div>
+      </div>
+    </section>
 
-      {{/if}}
-    </div>
+    {{/if}}
+  </div>
   </div>
 
 
