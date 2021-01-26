@@ -25,8 +25,9 @@
 					</div>
 				</div>
 			</div> -->
-			<input class=" form-control" type="text" id="scrh" onkeyup="arama()" placeholder="Search for Work Process" title="Type in a name">
-			<br>
+		<input class=" form-control" type="text" id="scrh" onkeyup="arama()" placeholder="Search for Work Process"
+			title="Type in a name">
+		<br>
 		<section id="tabs" class="project-tab">
 			<div class="container">
 				<div class="row">
@@ -67,14 +68,24 @@
 											<td>Administrative</td>
 											{{/unless}}
 
-											<td> </td>
-											<td> </td>
+											{{#each ../wunits}}
+											{{#if (or
+											(stringeq _id ../organiserId.workUnitId)
+											)}}
+											<td> {{workUnitName}} </td>
+											{{/if}}
+											{{/each}}
+											
+											<td> {{ mainProcessId.mainProcessName}}</td>
 											<td style="text-align:center">
 
 
 												{{#if (or
 												(stringeq creatorId.registeredUserId ../userid)
 												(or (stringeq organiserId.registeredUserId ../userid))
+												(or (stringeq organiserId1.registeredUserId ../userid))
+												(or (stringeq organiserId2.registeredUserId ../userid))
+												(or (stringeq managerId.registeredUserId ../userid))
 												)}}
 
 												<a href="/onchangefiles/{{_id}}">
@@ -85,7 +96,8 @@
 												(stringeq creatorId.registeredUserId ../userid))
 												}}
 												<form action="/workflows/disable" method="POST" id="disableformid">
-													<input type="text" name="workflowid" value="{{_id}}" readonly hidden>
+													<input type="text" name="workflowid" value="{{_id}}" readonly
+														hidden>
 													<button type="button" class="btn" onclick="denemeon7(this)"
 														style="background:none; none;color:#283792">
 														<i class="fas fa-trash-alt" aria-hidden="true"></i></button>
@@ -152,7 +164,7 @@
 							</div>
 							<div class="tab-pane fade" id="nav-contact" role="tabpanel"
 								aria-labelledby="nav-contact-tab">
-								<div class="table-responsive" >
+								<div class="table-responsive">
 									<table class="table table-hover myTable" cellspacing="0">
 										<thead>
 											<tr>

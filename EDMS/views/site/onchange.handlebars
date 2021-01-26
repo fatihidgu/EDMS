@@ -111,8 +111,44 @@
             disabled><br><br>
           {{/unless}}
           <label class="col-5 col-sm-5 float-left">Main Process:</label>
-          <input class="form-control form-control-sm" n type="text" value="{{workf.mainProcessId.mainProcessName}}"
+          <input class="form-control form-control-sm" type="text" value="{{workf.mainProcessId.mainProcessName}}"
             style="width: fit-content;" disabled><br><br>
+          <label class="col-5 col-sm-5 float-left">Organiser:</label>
+
+          <select class="form-control  form-control-sm " style="width: fit-content;" name="organiserId" id="organiser1" disabled required>
+            <option value="{{currentOrganiser.registeredUserId._id}}" selected>{{currentOrganiser.registeredUserId.email}}</option>
+            {{#each organiserOptions}}
+            <option value="{{_id}}">{{email}}</option>
+            {{/each}}
+
+          </select><br><br>
+          {{!-- //org 1 --}}
+          {{#if workf.organiserId1}}
+          <label class="col-5 col-sm-5 float-left">Organiser 2:</label>
+
+          <select class="form-control  form-control-sm" style="width: fit-content;" name="organiserId1" id="organiser2" disabled required>
+            <option value="{{currentorg2.registeredUserId._id}}" selected>{{currentorg2.registeredUserId.email}}</option>
+            {{#each organiserOptions2}}
+            <option value="{{_id}}">{{email}}</option>
+            {{/each}}
+
+          </select><br><br>
+          {{/if}}
+          {{!-- org 2 --}}
+          {{#if workf.organiserId2}}
+          <label class="col-5 col-sm-5 float-left">Organiser 3:</label>
+
+          <select class="form-control  form-control-sm" style="width: fit-content;" id="organiser3" name="organiserId2" disabled required>
+            <option value="{{currentorg3.registeredUserId._id}}" selected>{{currentorg3.registeredUserId.email}}</option>
+            {{#each organiserOptions3}}
+            <option value="{{_id}}">{{email}}</option>
+            {{/each}}
+
+          </select><br><br>
+          {{/if}}
+
+
+
           <div class="text-center">
             <button id="button1" type="submit" class="main-btn" type="submit" style="display: none;"
               onclick="SwitchButtons()">Save</button>
@@ -276,7 +312,8 @@
                           Committee Approval
                           {{/if}}
                         </td>
-                        <td style="text-wrap: normal; word-wrap: break-word; text-align: justify;">{{changeReason}} </td>
+                        <td style="text-wrap: normal; word-wrap: break-word; text-align: justify;">{{changeReason}}
+                        </td>
                         <td>{{rejectStatus}}</td>
                         <td style="text-wrap: normal; word-wrap: break-word; text-align: justify;">{{rejectReason}}</td>
                         <td style="text-align:center">
