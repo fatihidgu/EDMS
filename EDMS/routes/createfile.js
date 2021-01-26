@@ -110,9 +110,14 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
   const ext = path.extname(req.file.path);
   const oldFilePath = req.file.path;
-
-  var fileNo = file_type.workflowFileTypeCode + "-" + main_process.mainProcessNo + "-" + work_unit.workUnitCode +
-    "-" + work_process.workflowNo + "-" + "0";
+  var fileNo
+  if(work_process.isShared){
+    fileNo = file_type.workflowFileTypeCode + "-" + main_process.mainProcessNo + "-" + work_unit.workUnitCode +
+     "-" + work_process.workflowNo + "-" + "1";
+  }else{
+    fileNo = file_type.workflowFileTypeCode + "-" + main_process.mainProcessNo + "-" + work_unit.workUnitCode +
+     "-" + work_process.workflowNo + "-" + "0";
+  }
 
   var filen = fileNo + ext
   var directory = path.join(__dirname, '..', 'uploads', 'files', work_unit.workUnitCode);
