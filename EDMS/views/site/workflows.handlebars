@@ -26,7 +26,7 @@
 				</div>
 			</div> -->
 		<input class=" form-control" type="text" id="scrh" onkeyup="arama()" placeholder="Search for Work Process"
-			title="Type in a name">
+			>
 		<br>
 		<section id="tabs" class="project-tab">
 			<div class="container">
@@ -67,15 +67,23 @@
 											{{#unless acad}}
 											<td>Administrative</td>
 											{{/unless}}
+											<td>
+												{{#each ../wunits}}
+												{{#if (or
+												(stringeq _id ../organiserId.workUnitId)
+												(stringeq _id ../organiserId1.workUnitId)
+												(stringeq _id ../organiserId2.workUnitId)
+												)}}
 
-											{{#each ../wunits}}
-											{{#if (or
-											(stringeq _id ../organiserId.workUnitId)
-											)}}
-											<td> {{workUnitName}} </td>
-											{{/if}}
-											{{/each}}
-											
+												-{{workUnitName}}
+												<br>
+
+												{{/if}}
+												{{/each}}
+											</td>
+
+
+
 											<td> {{ mainProcessId.mainProcessName}}</td>
 											<td style="text-align:center">
 
@@ -137,7 +145,7 @@
 												<th>Options</th>
 											</tr>
 										</thead>
-										{{#each adminworkflows}}
+										{{#each myworkflows}}
 										<tr>
 											<td> {{workprocessName}} </td>
 											{{#if acad}}
@@ -147,8 +155,24 @@
 											<td>Administrative</td>
 											{{/unless}}
 
-											<td> </td>
-											<td> </td>
+											<td>
+												{{#each ../wunits}}
+												{{#if (or
+												(stringeq _id ../organiserId.workUnitId)
+												(stringeq _id ../organiserId1.workUnitId)
+												(stringeq _id ../organiserId2.workUnitId)
+												)}}
+
+												-{{workUnitName}}
+												<br>
+
+												{{/if}}
+												{{/each}}
+											</td>
+
+
+
+											<td> {{ mainProcessId.mainProcessName}}</td>
 											<td style="text-align:center">
 												<form action="/onchangefiles/{{_id}}" method="POST">
 													<button type="submit" class="btn"
@@ -184,8 +208,25 @@
 											{{#unless acad}}
 											<td>Administrative</td>
 											{{/unless}}
-											<td> </td>
-											<td> </td>
+											
+											<td>
+												{{#each ../wunits}}
+												{{#if (or
+												(stringeq _id ../organiserId.workUnitId)
+												(stringeq _id ../organiserId1.workUnitId)
+												(stringeq _id ../organiserId2.workUnitId)
+												)}}
+
+												-{{workUnitName}}
+												<br>
+
+												{{/if}}
+												{{/each}}
+											</td>
+
+
+
+											<td> {{ mainProcessId.mainProcessName}}</td>
 											<td style="text-align:center"><a href="/onchangefiles/{{_id}}">
 													<i class="fas fa-eye"></a></td>
 										</tr>

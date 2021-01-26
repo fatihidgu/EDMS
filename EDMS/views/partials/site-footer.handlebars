@@ -853,6 +853,32 @@ function arama() {
   }}
 }
 </script>
+<script>
+
+function arama1() {
+  var input, filter, tables, tr, td, i, txtValue,j,table,td2,td3,td4;
+  input = document.getElementById("scrh1");
+  filter = input.value.toUpperCase();
+  tables = document.getElementsByClassName("myTable1");
+  for( j = 0; j< tables.length; j++){
+  table = tables[j];
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+
+    
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+    
+      if (txtValue.toUpperCase().indexOf(filter) > -1 ){
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }}
+}
+</script>
 </body>
 
 </html>
