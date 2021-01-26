@@ -312,8 +312,7 @@ router.get('/:id', async (req, res) => {
           }).lean().exec()
           const shwfmp = await SharedWorkflows.findOne({
             workflowId: wf._id,
-            organiserId: wf.organiserId1,
-            deleteDate: null
+            organiserId: wf.organiserId1
           }).lean().exec()
           const organisers2 = await Organiser.find({
             workUnitId: shwfmp.workUnitId,
@@ -370,7 +369,6 @@ router.get('/:id', async (req, res) => {
           const shwfmp = await SharedWorkflows.findOne({
             workflowId: wf._id,
             organiserId: wf.organiserId1,
-            deleteDate: null
           }).lean().exec()
           const organisers2 = await Organiser.find({
             workUnitId: shwfmp.workUnitId,
@@ -413,8 +411,7 @@ router.get('/:id', async (req, res) => {
           }).lean().exec()
           const shwfmp2 = await SharedWorkflows.findOne({
             workflowId: wf._id,
-            organiserId: wf.organiserId2,
-            deleteDate: null
+            organiserId: wf.organiserId2
           }).lean().exec()
           const organisers3 = await Organiser.find({
             workUnitId: shwfmp2.workUnitId,
