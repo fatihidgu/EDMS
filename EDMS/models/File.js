@@ -11,7 +11,7 @@ const FileSchema = new Schema(
         workflowId:{type: Schema.Types.ObjectId, ref: 'Workflow',required:true},
         fileNo:{type: String,required:true},
         creationDate:{type: Date,default:Date.now,required:true},
-        revisionDate:{type:Date},
+        revisionDate:{type:Date,defaul:null},
         approvalStatus:{type:Number,default:0,required:true},
         approvalDate:{type:Date,default:null},
         filePath:{type:String,required:true},

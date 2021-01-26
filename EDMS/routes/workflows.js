@@ -29,7 +29,7 @@ router.get('/allworkflows', async (req, res) => {
             , { path: 'organiserId1', model: Organiser }, { path: 'organiserId2', model: Organiser }]).lean().exec();
         const wunits = await WorkUnit.find().lean().exec();
 
-        const adminid = await Administrator.findOne({ registeredUserId: res.locals.userid, endDate: null })
+        const adminid = await Administrator.find({ registeredUserId: res.locals.userid, endDate: null })
         const orgid = await Organiser.find({ registeredUserId: res.locals.userid, endDate: null }).lean().exec();
         const managerid = await Manager.find({ registeredUserId: res.locals.userid, endDate: null }).lean().exec();
 

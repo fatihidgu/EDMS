@@ -269,14 +269,16 @@
           <div class="col-md-12">
             <nav>
               <div class="nav nav-tabs nav-fill" role="tablist" style="border:2px solid #ccc; font-weight: bolder;">
-                <a class="nav-item nav-link active" data-toggle="tab" href="#nav-home" role="tab"
-                  aria-controls="nav-home" aria-selected="true">On Change Files</a>
-                <a class="nav-item nav-link" data-toggle="tab" href="#nav-profile" role="tab"
-                  aria-controls="nav-profile" aria-selected="false">Approved Files</a>
+                <a class="nav-item nav-link active" data-toggle="tab" href="#nav-onchange" role="tab"
+                  aria-controls="nav-onchange" aria-selected="true">On Change Files</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-approved" role="tab"
+                  aria-controls="nav-approved" aria-selected="false">Approved Files</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-old" role="tab"
+                    aria-controls="nav-old" aria-selected="false">Old Files</a>
               </div>
             </nav>
             <div class="tab-content" id="nav-tabContent " style="border:1px solid #ccc;">
-              <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+              <div class="tab-pane fade show active" id="nav-onchange" role="tabpanel" aria-labelledby="nav-onchange-tab">
                 <div class="table-responsive">
                   <div>
                     {{#if addNewFile}}
@@ -418,13 +420,15 @@
                   </table>
                 </div>
               </div>
-              <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+              <div class="tab-pane fade" id="nav-approved" role="tabpanel" aria-labelledby="nav-approved-tab">
                 <div class="table-responsive">
                   <table class="table table-hover myTable1" cellspacing="0">
                     <thead>
                       <tr>
                         <th>File No</th>
+                        <th>Version</th>
                         <th>Approval Date</th>
+                        <th>Revision Date</th>
                         <th>Options</th>
                       </tr>
                     </thead>
@@ -432,23 +436,25 @@
                     {{#each approvedFiles}}
                     <tr>
                       <td>{{fileNo}}</td>
+                      <td>{{version}}</td>
                       <td>{{approvalDate}}</td>
+                      <td>{{revisionDate}}</td>
+
                       <td style="text-align:center">
+
                         <div class="w-100">
                           <form action="/createfile/download" class="float-left" method="post">
                             <input type="hidden" name="file_id" value="{{_id}}">
                             <button type="submit" class="btn" style="background:none; color:#283792"><i
                                 class="fa fa-download" value="1"></i></button>
                           </form>
-                          <!-- <form action="/createfile/delete" class="float-left" method="post">
+                          {{#if isAdministrator}}
+                          <form action="/createfile/delete" class="float-left" method="post">
                               <input type="hidden" name="file_id" value="{{_id}}">
-
                               <button type="submit" class="btn" class="float-left" style="background:none"><i class="fa fa-trash" value="1"></i></button>
-                            </form> -->
-                          <form action="/createfile/upload/{{_id}}" method="get">
-                            <button type="submit" class="btn" style="background:none; color:#283792"><i
-                                class="fa fa-upload" value="1"></i></button>
-                          </form>
+                            </form>
+                            {{/if}}
+
                         </div>
 
                       </td>
@@ -458,6 +464,43 @@
                   </table>
                 </div>
               </div>
+              <div class="tab-pane fade" id="nav-old" role="tabpanel" aria-labelledby="nav-old-tab">
+                <div class="table-responsive">
+                  <table class="table table-hover myTable1" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>File No</th>
+                        <th>Version</th>
+                        <th>Approval Date</th>
+                        <th>Revision Date</th>
+                        <th>Options</th>
+                      </tr>
+                    </thead>
+
+                    {{#each oldFiles}}
+                    <tr>
+                      <td>{{fileNo}}</td>
+                      <td>{{version}}</td>
+                      <td>{{approvalDate}}</td>
+                      <td>{{revisionDate}}</td>
+                      <td style="text-align:center">
+                        <div class="w-100">
+                          <form action="/createfile/download" class="float-left" method="post">
+                            <input type="hidden" name="file_id" value="{{_id}}">
+                            <button type="submit" class="btn" style="background:none; color:#283792"><i
+                                class="fa fa-download" value="1"></i></button>
+                          </form>
+
+                        </div>
+
+                      </td>
+                    </tr>
+                    {{/each}}
+
+                  </table>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

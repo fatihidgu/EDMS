@@ -150,7 +150,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 // DELETE FILE
 router.post('/delete', (req, res) => {
-  //console.log("delete")
+  console.log("delete")
+
   file_id = req.body.file_id;
   //console.log("delete",file_id)
 
@@ -313,7 +314,7 @@ router.post('/update', upload.single('file'), (req, res) => {
           workflowId: choosenFile.workflowId,
           fileNo: choosenFile.fileNo,
           creatorId: req.session.userId,
-          revisionDate: null,
+          revisionDate: Date.now(),
           approvalStatus: 0,
           approvalDate: null,
           filePath: newFileGoesTo,
@@ -347,7 +348,7 @@ router.post('/update', upload.single('file'), (req, res) => {
           fileNo: choosenFile.fileNo,
           workflowFileTypeId: choosenFile.workflowFileTypeId,
           creatorId: choosenFile.creatorId,
-          revisionDate: new Date(),
+          revisionDate: null,
           filePath: newFileGoesTo
         });
         File.findByIdAndUpdate({
@@ -591,12 +592,23 @@ router.post("/approve", async (req, res) => {
         console.log("*********")
 
         if(approves.length == (committee.length - 1 )){
-          oneFileUpdate({
-            _id: file._id
-          }, {
-            approvalStatus: 4,
-            approvalDate: Date.now()
-          });
+          if(file.approvalDate==null){
+            oneFileUpdate({
+              _id: file._id
+            }, {
+              approvalStatus: 4,
+              approvalDate: Date.now(),
+              revisionDate:Date.now()
+            });
+          }else{
+            oneFileUpdate({
+              _id: file._id
+            }, {
+              approvalStatus: 4,
+              revisionDate:Date.now()
+            });
+          }
+
           Change.findOneAndUpdate({
             _id: change._id
           }, {
@@ -640,12 +652,24 @@ router.post("/approve", async (req, res) => {
         console.log("*********")
 
 
+        if(file.approvalDate==null){
           oneFileUpdate({
             _id: file._id
           }, {
             approvalStatus: 4,
-            approvalDate: Date.now()
+            approvalDate: Date.now(),
+            revisionDate:Date.now()
           });
+        }else{
+          oneFileUpdate({
+            _id: file._id
+          }, {
+            approvalStatus: 4,
+            revisionDate:Date.now()
+          });
+        }
+
+
           Change.findOneAndUpdate({
             _id: change._id
           }, {

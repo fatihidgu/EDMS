@@ -20,6 +20,9 @@ const SharedWorkflows = require('../models/SharedWorkflows');
 
 //date formatter
 function formatDate(date) {
+  if(date == null){
+    return "-"
+  }
   var d = new Date(date),
     month = '' + (d.getMonth() + 1),
     day = '' + d.getDate(),
@@ -188,7 +191,7 @@ router.get('/:id', async (req, res) => {
         email: 1
       }
     }).lean().exec()
-    // 
+    //
     const manager = await Manager.findOne({
       workUnitId: mp.workUnitId,
       endDate: null
@@ -267,10 +270,15 @@ router.get('/:id', async (req, res) => {
       }
       a.push(fileValues)
     }
-    var approvWfFiles = await File.find({ approvalStatus: 4, deleteDate: null, workflowId: req.params.id }, 'fileNo approvalDate').exec()
+    var approvWfFiles = await File.find({ approvalStatus: 4, deleteDate: null, workflowId: req.params.id }).exec()
     var approvedWFFiles = []
-    approvWfFiles.forEach(approvedFile => approvedWFFiles.push({ _id: approvedFile._id, fileNo: approvedFile.fileNo, approvalDate: formatDate(approvedFile.approvalDate) }))
 
+    approvWfFiles.forEach(approvedFile => approvedWFFiles.push({ _id: approvedFile._id,version:(approvedFile.version+1),revisionDate:formatDate(approvedFile.revisionDate), fileNo: approvedFile.fileNo, approvalDate: formatDate(approvedFile.approvalDate),isAdministrator:isAdministrator }))
+    var oldWfFiles = await File.find({ approvalStatus: 5, workflowId: req.params.id }).exec()
+    oldFiles = []
+    oldWfFiles.forEach(function(file) {
+         oldFiles.push({fileNo:file.fileNo,approvalDate:formatDate(file.approvalDate),version:(file.version+1),revisionDate:formatDate(file.revisionDate),_id:file._id});
+     });
 
     //new
     File.find({
@@ -342,6 +350,7 @@ router.get('/:id', async (req, res) => {
             approvedFiles: approvedWFFiles,
             workf: workf,
             onChangeFiles: a,
+            oldFiles:oldFiles,
             edit: edit,
             addNewFile: addNewFile,
             organiserOptions: organiserOptions,
@@ -443,6 +452,7 @@ router.get('/:id', async (req, res) => {
             approvedFiles: approvedWFFiles,
             workf: workf,
             onChangeFiles: a,
+            oldFiles:oldFiles,
             edit: edit,
             addNewFile: addNewFile,
             organiserOptions: organiserOptions,
@@ -459,6 +469,7 @@ router.get('/:id', async (req, res) => {
             approvedFiles: approvedWFFiles,
             workf: workf,
             onChangeFiles: a,
+            oldFiles:oldFiles,
             edit: edit,
             addNewFile: addNewFile,
             organiserOptions: organiserOptions,
@@ -500,7 +511,7 @@ router.post('/:id', async (req, res) => {
           Workflow.findByIdAndUpdate(req.params.id, {
             organiserId1:organiserId1._id,
             organiserId2:organiserId2._id
-          }).then(async (wf) => { 
+          }).then(async (wf) => {
            const shwfs= await  SharedWorkflow.find({workflowId:wf._id}).exec()
             for(i=0; i<shwfs.length;i++){
               if(i==0){
@@ -517,7 +528,7 @@ router.post('/:id', async (req, res) => {
         else if (organiserId1) {
           Workflow.findByIdAndUpdate(req.params.id, {
             organiserId1:organiserId1._id,
-          }).then(async (wf) => { 
+          }).then(async (wf) => {
             await  SharedWorkflow.findOneAndUpdate({workflowId:wf._id},{organiserId:organiserId1._id} ).exec()
           })
         }
