@@ -94,7 +94,9 @@ router.post('/disable', async (req, res) => {
         await sharedWorkflow.updateMany({ workflowId: req.body.workflowid, deleteDate: null }, { deleteDate: Date.now() }).exec() // for
         //{ deleteDate: Date.now() }
         //fıle
-        const filed = await file.updateMany({ workflowId: req.body.workflowid, deleteDate: null }, { deleteDate: Date.now() }).exec() // for
+        await file.updateMany({ workflowId: req.body.workflowid, deleteDate: null, approvalStatus: 4 }, { deleteDate: Date.now(), approvalStatus: 5 }).exec() // for
+
+        await file.updateMany({ workflowId: req.body.workflowid, deleteDate: null }, { deleteDate: Date.now() }).exec() // for
         //change
         // const change1 = await change.findOneAndUpdate({ fileNo: filed.fileNo }, { deleteDate: Date.now() }).exec() // ?
         //reject
