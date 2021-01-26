@@ -39,6 +39,11 @@
 						</nav>
 						<div class="tab-content" id="nav-tabContent " style="border:1px solid #ccc;">
 							<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+								{{#if sessionFlash.message}}
+								<div class="{{sessionFlash.type}}">
+									{{sessionFlash.message}}
+								</div>
+								{{/if}}
 								<div class="table-responsive">
 									<table class="table table-hover" cellspacing="0">
 										<thead>
@@ -59,8 +64,23 @@
 													<form action="/workunits/editworkunit/{{workUnitId}}" method="GET">
 														<button type="submit" class="btn"
 															style="background:none; none;color:#283792">
-															<i class="fas fa-hand-paper" aria-hidden="true"></i></button>
+															{{#if (or isManager isAdministrator isOrganiser isCommittee)}}
+															<i class="fas fa-hand-paper" aria-hidden="true"></i>
+															{{/if}}
+															{{#unless (or isManager isAdministrator isOrganiser isCommittee)}}
+															<i class="fas fa-eye" aria-hidden="true"></i>
+															{{/unless}}
+
+														</button>
 													</form>
+
+													{{#if isAdministrator}}
+													<form action="/workunits/deleteworkunit/{{workUnitId}}" method="POST">
+													<button type="submit" class="btn"style="background:none; none;color:#283792">
+															<i class="fas fa-trash-alt" aria-hidden="true"></i>
+													</button>
+												</form>
+													{{/if}}
 												</td>
 											</tr>
 										{{/each}}
@@ -68,6 +88,12 @@
 								</div>
 							</div>
 							<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+								
+								{{#if sessionFlash.personelMessage.message}}
+								<div class="{{sessionFlash.personelMessage.type}}">
+									{{sessionFlash.personelMessage.message}}
+								</div>
+								{{/if}}
 								<div class="table-responsive">
 									{{#if admin}}
 										<form action="/workunits/editworkunit" method="GET">
@@ -79,6 +105,7 @@
 											<tr>
 												<th>Unit Code</th>
 												<th>Unit Name</th>
+												<th>Manager</th>
 												<th>Options</th>
 											</tr>
 										</thead>
@@ -86,6 +113,7 @@
 											<tr>
 												<td> {{workUnitCode}} </td>
 												<td> {{workUnitName}}</td>
+												<td>{{managerEmail}}</td>
 												<td style="text-align:center">
 													<form action="/workunits/editworkunit/{{workUnitId}}" method="GET">
 														<input class="form-control" name="create" type="hidden" value="0">

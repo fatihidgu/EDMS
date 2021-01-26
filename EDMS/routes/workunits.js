@@ -8,6 +8,8 @@ const Administrator = require('../models/Administrator')
 const MainProcess = require('../models/MainProcess')
 const Workflow = require('../models/Workflow')
 const File = require('../models/File')
+const Committee = require('../models/Committee')
+
 
 
 
@@ -29,57 +31,45 @@ router.get('/allworkunits', async (req, res) => {
       }
     }).lean().exec();
 
-    var isAdministrator = await Administrator.findOne({endDate:null,registeredUserId:res.locals.userid}).exec();
+    var isCommittee = await Committee.findOne({endDate:null,registeredUserId:res.locals.userid}).exec();
 
     var myworkunits = []
-    //console.log("a",workUnitManager)
-    console.log("-")
-    console.log(workUnitManager);
 
-    workUnitManager.forEach(b => {
-      //console.log("b",b)
-      if (b.endDate != null) {
-        // oldworkunits.push({
-        //   workUnitId: b.workUnitId._id,
-        //   workUnitName: b.workUnitId.workUnitName,
-        //   workUnitCode: b.workUnitId.workUnitCode
-        // })
-      } else {
-
-        const workUnitExist = WorkUnit.findOne({
+    for(const b of workUnitManager){
+      if (b.endDate == null) {
+        const workUnitExist =await WorkUnit.findOne({
           _id: b.workUnitId._id
         }).lean().exec();
 
+        const isOrganiser = await Organiser.findOne({workUnitId:b.workUnitId._id,endDate:null,registeredUserId:res.locals.userid})
+        const isAdministrator = await Administrator.findOne({endDate:null,registeredUserId:res.locals.userid,acad:b.workUnitId.acad}).exec();
+        const isManager = (b.registeredUserId._id==res.locals.userid)
+
         if (workUnitExist.endDate == null) {
+
           workunits.push({
             workUnitId: b.workUnitId._id,
             workUnitName: b.workUnitId.workUnitName,
             workUnitCode: b.workUnitId.workUnitCode,
-            managerEmail: b.registeredUserId.email
+            managerEmail: b.registeredUserId.email,
+            isManager: isManager,
+            isAdministrator: (isAdministrator!=null && b.workUnitId.acad == isAdministrator.acad),
+            isOrganiser:(isOrganiser!=null),
+            isCommittee:(isCommittee!=null)
           })
-
-
-          if (b.registeredUserId._id == req.session.userId) {
+          isPartOfWorkUnit = ((isManager) || ((isAdministrator != null)&&(b.workUnitId.acad == isAdministrator.acad)) || (isOrganiser != null) || (isCommittee !=null) )
+          if (isPartOfWorkUnit) {
             myworkunits.push({
               workUnitId: b.workUnitId._id,
               workUnitName: b.workUnitId.workUnitName,
               workUnitCode: b.workUnitId.workUnitCode,
               managerEmail: b.registeredUserId.email
             })
-          } else if (isAdministrator != null) {
-            if (b.workUnitId.acad == isAdministrator.acad) {
-              myworkunits.push({
-                workUnitId: b.workUnitId._id,
-                workUnitName: b.workUnitId.workUnitName,
-                workUnitCode: b.workUnitId.workUnitCode,
-                managerEmail: b.registeredUserId.email
-              })
-            }
           }
-          
+
         }
       }
-    });
+    }
 
     return res.render('site/workunits', {
       workunits: workunits,
@@ -109,12 +99,10 @@ router.get('/treeview', async (req, res) => {
       deleteDate: null
     }).lean().exec()
     //var files = await File.find({endDate:null}).exec()
-    //console.log(mainProcesses)
     var result = []
     var k = []
     var m = []
     var n = []
-    //console.log("*********")
     workUnits.forEach(workUnit => {
       m = []
       var mainProc = mainProcesses.filter(x => x.workUnitId.toString() === workUnit._id.toString());
@@ -126,10 +114,7 @@ router.get('/treeview', async (req, res) => {
       } else {
         mainProc.forEach(mp => {
           var workf = workflows.filter(x => x.mainProcessId.toString() === mp._id.toString());
-          // console.log(workf)
-          // console.log(mp.mainProcessName)
-          // console.log(workUnit.workUnitName)
-          // console.log("^^^^^")
+
           if (workf == null) {
             m.push({
               mainProcess: mp,
@@ -144,8 +129,8 @@ router.get('/treeview', async (req, res) => {
               }else{
                 n.push({workflow:wf.workprocessName,files:fileFiltered})
               }
-            })
 
+            })
             m.push({
               mainProcess: mp.mainProcessName,
               workflows: n
@@ -153,107 +138,13 @@ router.get('/treeview', async (req, res) => {
           }
         })
       }
-      //console.log(m)
       k.push({
         workUnit: workUnit.workUnitName,
         mainProcesses: m
       })
-      //workUnit.endDate = t;
-      //console.log("*",workUnit)
-      //console.log(t);
+
     })
-
-    //console.log("-----k0-----")
-   // console.log(k[0])
-    //console.log("------m0----")
-   // console.log(k[0].mainProcesses[0])
-    //console.log("------w----")
-    //console.log(k[0].mainProcesses[0].workflows)
-    //console.log(workUnits)
-
-
-    workflows1 = {
-      name: "wf1",
-      files: [{
-        name: "a",
-        id: 1
-      }, {
-        name: "b",
-        id: 2
-      }, {
-        name: "c",
-        id: 3
-      }]
-    }
-    workflows2 = {
-      name: "wf2",
-      files: [{
-        name: "aa",
-        id: 1
-      }, {
-        name: "bb",
-        id: 2
-      }, {
-        name: "cc",
-        id: 3
-      }]
-    }
-    workflows3 = {
-      name: "wf3",
-      files: [{
-        name: "x",
-        id: 1
-      }, {
-        name: "y",
-        id: 2
-      }, {
-        name: "z",
-        id: 3
-      }]
-    }
-    workflows4 = {
-      name: "wf4",
-      files: [{
-        name: "xx",
-        id: 1
-      }, {
-        name: "yy",
-        id: 2
-      }, {
-        name: "zz",
-        id: 3
-      }]
-    }
-    mainProcesses1 = {
-      name: "Aprocess",
-      workflows: [workflows1, workflows2]
-    }
-    mainProcesses2 = {
-      name: "Bprocess",
-      workflows: [workflows2, workflows4]
-    }
-    mainProcesses3 = {
-      name: "Cprocess",
-      workflows: [workflows3, workflows4]
-    }
-    workUnit1 = {
-      name: "İK",
-      mainProcesses: [mainProcesses1, mainProcesses2]
-    }
-    workUnit2 = {
-      name: "REK",
-      mainProcesses: [mainProcesses1, mainProcesses2]
-    }
-    workUnit3 = {
-      name: "MF",
-      mainProcesses: [mainProcesses3]
-    }
-    workUnitss = [workUnit1, workUnit2, workUnit3]
-
-
-
     return res.render('site/treeview', {
-      workUnits: workUnitss,
       workUnits: k
     });
   } else {
@@ -262,14 +153,12 @@ router.get('/treeview', async (req, res) => {
 })
 
 router.post('/editworkunit/:id?', async (req, res) => {
- // console.log("post")
-  //console.log(req.body)
+
   try {
 
     if (req.session.userId) {
       if (req.params.id) {
 
-        //console.log("body", req.body)
         const ru = req.session.userId
         RegisteredUser.findOneAndUpdate({
           _id: req.body.manager
@@ -296,7 +185,6 @@ router.post('/editworkunit/:id?', async (req, res) => {
           endDate: null
         }).exec();
         if (managerExist == null) {
-         // console.log("if de")
           Manager.updateMany({
             workUnitId: workUnit._id,
             endDate: null,
@@ -382,13 +270,11 @@ router.post('/editworkunit/:id?', async (req, res) => {
       res.redirect('/registeredusers/login')
     }
   } catch (err) {
-  //  console.log("error", err);
   }
 
 })
 
 router.post('/addPersonel', async (req, res) => {
- // console.log(req.body)
   try {
 
     if (req.session.userId) {
@@ -397,7 +283,6 @@ router.post('/addPersonel', async (req, res) => {
         isOrganiser: true,
         isBlocked: false
       }).lean().exec();
-     // console.log(ruExist)
       if (ruExist == null) {
         return res.redirect('/registeredusers/login')
       }
@@ -410,8 +295,7 @@ router.post('/addPersonel', async (req, res) => {
         workUnitId: req.body.workUnitId,
         endDate: null
       }).exec();
-     // console.log("wu", workUnit)
-      //console.log("re", organiserExist)
+
 
       if (organiserExist == null && !(workUnit == null)) {
         const organiser = new Organiser({
@@ -420,23 +304,20 @@ router.post('/addPersonel', async (req, res) => {
           endDate: null
         });
         organiser.save();
-       // console.log(organiser)
       }
       req.session.sessionFlash = {
         type: 'alert alert-success',
-        message: 'Personel added.'
+        message: 'Personel added.',
+        personel:true
       }
 
       const address = 'editworkunit/' + workUnit._id
-     // console.log("add", address)
       return res.redirect(address)
 
     } else {
-      //console.log("else")
       res.redirect('/registeredusers/login')
     }
   } catch (err) {
-   // console.log("error", err);
   }
 
 
@@ -447,13 +328,28 @@ router.post('/removePersonel', async (req, res) => {
   try {
 
     if (req.session.userId) {
+      req.session.sessionFlash = []
       const organiserExist = await Organiser.findOne({
         _id: req.body.organiserId,
         endDate: null
       }).exec();
 
-     // console.log("re", organiserExist)
+      var isOrganiserWorking = await Workflow.find({ $or:[ {'organiserId':organiserExist._id}, {'organiserId1':organiserExist._id}, {'organiserId2':organiserExist._id} ]})
 
+      if(isOrganiserWorking.length != 0){
+        var msg = "Personel can not be removed until following workflows assigned to another personel; "
+        for(workflow of isOrganiserWorking){
+          msg = msg + workflow.workprocessName +", "
+        }
+        msg = msg.slice(0,-2)
+        req.session.sessionFlash =
+          {
+            type: 'alert alert-warning',
+            message: msg,
+            personel: true
+          }
+
+      }else{
       if (!(organiserExist == null)) {
         Organiser.findOneAndUpdate({
           _id: organiserExist._id
@@ -462,36 +358,96 @@ router.post('/removePersonel', async (req, res) => {
         }).exec();
       }
 
-      req.session.sessionFlash = [{
+      req.session.sessionFlash = {
           type: 'alert alert-success',
-          message: 'Personel removed.'
-        },
-        {
-          type: 'alert alert-warning',
-          message: 'Personel removed!.'
+          message: 'Personel removed.',
+          personel:true
         }
-      ]
 
-      //return res.redirect(req.headers.referer)
-      //
+      }
+
+
       const address = 'editworkunit/' + organiserExist.workUnitId
-      // console.log("add",address)
       return res.redirect(address)
 
     } else {
-      //console.log("else")
       res.redirect('/registeredusers/login')
     }
   } catch (err) {
-    //console.log("error", err);
   }
 
 })
 
+router.post('/deleteworkunit/:id', async (req, res) => {
+
+  try {
+
+    if (req.session.userId) {
+      req.session.sessionFlash = [];
+      const activeMainProcesses = await MainProcess.find({
+        workUnitId:req.params.id,
+        deleteDate: null
+      }).exec();
+
+      if(activeMainProcesses.length==0){
+        Manager.updateMany({
+          workUnitId: req.params.id,
+          endDate: null
+        }, {
+          $set: {
+            endDate: Date.now()
+          }
+        }).exec();
+        Organiser.updateMany({
+          workUnitId: req.params.id,
+          endDate: null
+        }, {
+          $set: {
+            endDate: Date.now()
+          }
+        }).exec();
+        WorkUnit.updateMany({
+          _id: req.params.id,
+          endDate: null
+        }, {
+          $set: {
+            endDate: Date.now()
+          }
+        }).exec();
+
+        req.session.sessionFlash = {
+          type: 'alert alert-success',
+          message: "Work unit is deleted",
+        }
+
+      }else{
+        var msg = "You have to disable following main processes to delete that work unit; "
+        for(activeMainProcess of activeMainProcesses){
+          msg = msg + activeMainProcess.mainProcessNo +"-"+ activeMainProcess.mainProcessName+ " , "
+        }
+        msg = msg.slice(0,-2)
+        req.session.sessionFlash = {
+          type: 'alert alert-warning',
+          message: msg
+        }
+      }
+
+
+       res.redirect("/workunits/allworkunits")
+
+    } else {
+      res.redirect('/registeredusers/login')
+    }
+  } catch (err) {
+  }
+
+})
+
+
+
 router.get('/editworkunit/:id?', async (req, res) => {
   try {
     if (req.session.userId) {
-      //console.log("hello")
       if (req.params.id) {
         var edit = 0
         const workUnit = await WorkUnit.findById(req.params.id).exec();
@@ -592,7 +548,6 @@ router.get('/editworkunit/:id?', async (req, res) => {
         }).exec();
 
         acad = "" + admin.acad
-        //console.log(acad)
         res.render('site/editworkunits', {
           create: "1",
           acad: acad,
@@ -603,7 +558,6 @@ router.get('/editworkunit/:id?', async (req, res) => {
       res.redirect('/registeredusers/login')
     }
   } catch (err) {
-    //console.log("error", err);
   }
 })
 

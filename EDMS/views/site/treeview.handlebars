@@ -76,7 +76,14 @@
             {{#unless (eq files.length 0)}}
             <hr>
             {{#each files}}
-              <h5> {{fileNo}} </h5>
+            <form action="/createfile/download" class="col-md-12" method="POST">
+              <button type="submit" class="btn col-md-12" style="text-align:left; background:none; none;color:#283792">
+
+                <h5 onclick=""> {{fileNo}} </h5>
+              </button>
+              <input type="hidden" name="file_id" value="{{_id}}">
+            </form>
+
               <hr>
             {{/each}}
             {{/unless}}

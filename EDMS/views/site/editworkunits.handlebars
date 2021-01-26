@@ -21,11 +21,11 @@
     {{/each}} -->
 
   <div class="container">
-    {{#if sessionFlash.message}}
+    {{#unless sessionFlash.personel}}
     <div class="{{sessionFlash.type}}">
       {{sessionFlash.message}}
     </div>
-    {{/if}}
+    {{/unless}}
     {{#unless (eq create "0")}}
     <div class="row">
       <div class="col-md-2 text-left"></div>
@@ -165,6 +165,12 @@
                     {{/if}}
                     <br><br>
                   </div>
+                  
+                  {{#if sessionFlash.personel}}
+                  <div class="{{sessionFlash.type}}">
+                    {{sessionFlash.message}}
+                  </div>
+                  {{/if}}
                   <table class="table table-hover" cellspacing="0">
                     <thead>
                       <tr>
