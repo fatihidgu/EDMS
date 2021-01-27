@@ -149,6 +149,9 @@ router.get('/:id', async (req, res) => {
     const wf = await Workflow.findById(req.params.id).exec();
     const mp = await MainProcess.findById(wf.mainProcessId).exec();
     const organiser = await Organiser.findById(wf.organiserId).exec();
+    const organiser1 = await Organiser.findById(wf.organiserId1).exec();
+    const organiser2 = await Organiser.findById(wf.organiserId2).exec();
+
     // org 1
 
     const currentorg = await Organiser.findOne({
@@ -205,7 +208,7 @@ router.get('/:id', async (req, res) => {
     });
 
 
-    const isOrganiser = (organiser.registeredUserId == req.session.userId)
+    const isOrganiser = (organiser.registeredUserId == req.session.userId || (organiser1 != null && organiser1.registeredUserId == req.session.userId) || (organiser2 != null && organiser2.registeredUserId == req.session.userId ))
     const isManager = (manager.registeredUserId == req.session.userId)
     const isAdministrator = (administrator.registeredUserId == req.session.userId)
     const isCommittee = (committee.some(committeeMember => committeeMember.registeredUserId == req.session.userId))

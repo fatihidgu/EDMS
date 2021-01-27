@@ -80,7 +80,7 @@
 
 							{{#if User}}
 							<div class="form-group">
-								<input class="form-control" name="password" type="password" placeholder="Password *"
+								<input class="form-control" name="password" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" placeholder="Password *"
 									value="{{User.password}}" required="required"
 									data-validation-required-message="Please enter your password.">
 								<p class="help-block text-danger"></p>
@@ -88,7 +88,7 @@
 
 							{{#unless User}}
 							<div class="form-group">
-								<input class="form-control" name="password" type="password" placeholder="Password *"
+								<input class="form-control" name="password" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" placeholder="Password *"
 									value="" required="required"
 									data-validation-required-message="Please enter your password.">
 								<p class="help-block text-danger"></p>
@@ -96,7 +96,7 @@
 
 							{{#if User}}
 							<div class="form-group">
-								<input class="form-control" name="password2" type="password" value="{{User.password2}}"
+								<input class="form-control" name="password2" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" value="{{User.password2}}"
 									placeholder="Password again *" required="required"
 									data-validation-required-message="Please enter your password again correctly.">
 								<p class="help-block text-danger"></p>
@@ -104,7 +104,7 @@
 
 							{{#unless User}}
 							<div class="form-group">
-								<input class="form-control" name="password2" type="password" value=""
+								<input class="form-control" name="password2" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" value=""
 									placeholder="Password again *" required="required"
 									data-validation-required-message="Please enter your password again correctly.">
 								<p class="help-block text-danger"></p>

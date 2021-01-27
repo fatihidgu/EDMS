@@ -41,17 +41,17 @@ function oneFileUpdate(filter, update) {
 
 //date formatter
 function formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+  var d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
 
-    if (month.length < 2)
-        month = '0' + month;
-    if (day.length < 2)
-        day = '0' + day;
+  if (month.length < 2)
+    month = '0' + month;
+  if (day.length < 2)
+    day = '0' + day;
 
-    return [day, month, year].join('/');
+  return [day, month, year].join('/');
 }
 
 //MOVE File PATH
@@ -111,12 +111,12 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   const ext = path.extname(req.file.path);
   const oldFilePath = req.file.path;
   var fileNo
-  if(work_process.isShared){
+  if (work_process.isShared) {
     fileNo = file_type.workflowFileTypeCode + "-" + main_process.mainProcessNo + "-" + work_unit.workUnitCode +
-     "-" + work_process.workflowNo + "-" + "1";
-  }else{
+      "-" + work_process.workflowNo + "-" + "1";
+  } else {
     fileNo = file_type.workflowFileTypeCode + "-" + main_process.mainProcessNo + "-" + work_unit.workUnitCode +
-     "-" + work_process.workflowNo + "-" + "0";
+      "-" + work_process.workflowNo + "-" + "0";
   }
 
   var filen = fileNo + ext
@@ -565,13 +565,16 @@ router.post("/approve", async (req, res) => {
       endDate: null
     })
     var isCommittee = await Committee.findOne({
-      endDate:null,
-      registeredUserId:res.locals.userid
+      endDate: null,
+      registeredUserId: res.locals.userid
     })
-    var change = await Change.findOne({fileNo:file._id,deleteDate:null})
+    var change = await Change.findOne({
+      fileNo: file._id,
+      deleteDate: null
+    })
 
     if (file != null && change != null && administrator != null && committee != null) {
-      if (file.approvalStatus==3 || isCommittee !=null) {
+      if (file.approvalStatus == 3 || isCommittee != null) {
         Reject.findOneAndUpdate({
           changeId: change._id,
           deleteDate: null
@@ -583,34 +586,33 @@ router.post("/approve", async (req, res) => {
 
 
         Approve.create({
-          changeId:change._id,
-          approverId:res.locals.userid
-        }, (error, user) => {
-        })
+          changeId: change._id,
+          approverId: res.locals.userid
+        }, (error, user) => {})
 
         const approves = await Approve.find({
-          changeId:change._id,
-          deleteDate:null
+          changeId: change._id,
+          deleteDate: null
         }).exec()
         console.log(approves)
         console.log(committee)
         console.log("*********")
 
-        if(approves.length == (committee.length - 1 )){
-          if(file.approvalDate==null){
+        if (approves.length == (committee.length - 1)) {
+          if (file.approvalDate == null) {
             oneFileUpdate({
               _id: file._id
             }, {
               approvalStatus: 4,
               approvalDate: Date.now(),
-              revisionDate:Date.now()
+              revisionDate: Date.now()
             });
-          }else{
+          } else {
             oneFileUpdate({
               _id: file._id
             }, {
               approvalStatus: 4,
-              revisionDate:Date.now()
+              revisionDate: Date.now()
             });
           }
 
@@ -631,7 +633,7 @@ router.post("/approve", async (req, res) => {
         }
         const address = '/onchangefiles/' + wf._id;
         return res.redirect(address);
-      }else if(file.approvalStatus==2 && res.locals.userid==administrator.registeredUserId){
+      } else if (file.approvalStatus == 2 && res.locals.userid == administrator.registeredUserId) {
 
         Reject.findOneAndUpdate({
           changeId: change._id,
@@ -644,44 +646,43 @@ router.post("/approve", async (req, res) => {
 
 
         Approve.create({
-          changeId:change._id,
-          approverId:res.locals.userid
-        }, (error, user) => {
-        })
+          changeId: change._id,
+          approverId: res.locals.userid
+        }, (error, user) => {})
 
         const approves = await Approve.find({
-          changeId:change._id,
-          deleteDate:null
+          changeId: change._id,
+          deleteDate: null
         }).exec()
         console.log(approves)
         console.log("*********")
 
 
-        if(file.approvalDate==null){
+        if (file.approvalDate == null) {
           oneFileUpdate({
             _id: file._id
           }, {
             approvalStatus: 4,
             approvalDate: Date.now(),
-            revisionDate:Date.now()
+            revisionDate: Date.now()
           });
-        }else{
+        } else {
           oneFileUpdate({
             _id: file._id
           }, {
             approvalStatus: 4,
-            revisionDate:Date.now()
+            revisionDate: Date.now()
           });
         }
 
 
-          Change.findOneAndUpdate({
-            _id: change._id
-          }, {
-            $set: {
-              deleteDate: Date.now()
-            }
-          }).exec();
+        Change.findOneAndUpdate({
+          _id: change._id
+        }, {
+          $set: {
+            deleteDate: Date.now()
+          }
+        }).exec();
 
 
 
@@ -693,7 +694,7 @@ router.post("/approve", async (req, res) => {
         const address = '/onchangefiles/' + wf._id;
         return res.redirect(address);
 
-      }else{
+      } else {
         console.log("Error occured");
       }
     }
@@ -703,65 +704,71 @@ router.post("/approve", async (req, res) => {
 });
 
 
-router.get('/create/:workflowId', (req, res) => {
+router.get('/create/:workflowId', async (req, res) => {
   //console.log('/create/:workflowId')
   filterIdWF = {
     _id: req.params.workflowId
   };
   //findQuery(RegisteredUser,null);
   if (req.session.userId) {
-    Workflow.findOne(filterIdWF, function(err, choosenWF) {
-      if (err) {
-        res.render('site/onchange');
-      } else {
+    var choosenWF = await Workflow.findOne(filterIdWF).exec();
 
-        var filterMP = {
-          _id: choosenWF.mainProcessId
+
+    var filterMP = {
+      _id: choosenWF.mainProcessId
+    }
+    var mainProcess = await MainProcess.findOne(filterMP).exec();
+
+    main_process_id = mainProcess._id;
+    main_process_name = mainProcess.mainProcessName;
+
+    var filterWU = {
+      endDate: null,
+      _id: mainProcess.workUnitId
+    };
+    var workUnits = await WorkUnit.find(filterWU).exec();
+    var work_unit = [];
+    for(workUnit of workUnits){
+      work_unit.push({
+        work_unit_id: workUnit._id,
+        work_unit_name: workUnit.workUnitName
+      });
+    }
+    var fileTypes = await WorkflowFileType.find({
+      deleteDate: null
+    }).exec();
+    var file_type = [];
+
+    for (fileType of fileTypes) {
+
+      var isExist = await File.findOne({
+        workflowId: req.params.workflowId,
+        deleteDate: null,
+        fileNo: {
+          $regex: "^" + fileType.workflowFileTypeCode
         }
-        MainProcess.findOne(filterMP, function(err, mainProcess) {
-          main_process_id = mainProcess._id;
-          main_process_name = mainProcess.mainProcessName;
+      });
+      if (isExist != null) {
+        console.log("*-*",fileType.workflowFileTypeCode,"*-*")
+      }else{
+      file_type.push({
+        file_type_id: fileType._id,
+        file_type_name: fileType.workflowFileTypeName
+      });
+    }
+    };
 
-          var filterWU = {
-            endDate: null,
-            _id: mainProcess.workUnitId
-          };
-          WorkUnit.find(filterWU, function(err, workUnits) {
-            var work_unit = [];
-            workUnits.forEach(workUnit => {
-              work_unit.push({
-                work_unit_id: workUnit._id,
-                work_unit_name: workUnit.workUnitName
-              });
-            })
-
-            WorkflowFileType.find({
-              deleteDate: null
-            }, function(err, fileTypes) {
-              var file_type = [];
-
-
-              fileTypes.forEach(fileType => {
-                file_type.push({
-                  file_type_id: fileType._id,
-                  file_type_name: fileType.workflowFileTypeName
-                });
-              });
-
-              return res.render('site/createfile', {
-                main_process_id: main_process_id,
-                main_process_name: main_process_name,
-                work_unit_name: work_unit[0].work_unit_name,
-                work_unit_id: work_unit[0].work_unit_id,
-                file_type: file_type,
-                workflow_id: choosenWF._id,
-                workflow_name: choosenWF.workprocessName
-              });
-            });
-          });
-        });
-      }
+    return res.render('site/createfile', {
+      main_process_id: main_process_id,
+      main_process_name: main_process_name,
+      work_unit_name: work_unit[0].work_unit_name,
+      work_unit_id: work_unit[0].work_unit_id,
+      file_type: file_type,
+      workflow_id: choosenWF._id,
+      workflow_name: choosenWF.workprocessName
     });
+
+
 
   } else {
     res.redirect('/registeredusers/login')
