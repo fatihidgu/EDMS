@@ -1,0 +1,4 @@
+_id,approvalStatus,approvalDate,deleteDate,workflowId,fileNo,filePath,workflowFileTypeId,creatorId,version,creationDate,__v
+60144242c29f452b4cb978c3,0,null,null,60144190c29f452b4cb978c2,PRS-1-KMO-1-0,C:\Users\fatih\Desktop\EDMS\EDMS\uploads\files\KMO\PRS-1-KMO-1-0.pdf,60143f1fc29f452b4cb978b5,60143a6e9825ec45ac480f99,0,2021-01-29T17:13:38.114Z,0
+60144353c29f452b4cb978c7,0,null,null,6014430fc29f452b4cb978c5,İŞA-1-MF-1-1,C:\Users\fatih\Desktop\EDMS\EDMS\uploads\files\MF\İŞA-1-MF-1-1.pdf,60143f1fc29f452b4cb978b7,60143a6e9825ec45ac480f99,0,2021-01-29T17:18:11.389Z,0
+60144380c29f452b4cb978c8,0,null,null,601442cec29f452b4cb978c4,FRM-1-MF-1-0,C:\Users\fatih\Desktop\EDMS\EDMS\uploads\files\MF\FRM-1-MF-1-0.pdf,60143f1fc29f452b4cb978b6,60143a6e9825ec45ac480f99,0,2021-01-29T17:18:56.489Z,0

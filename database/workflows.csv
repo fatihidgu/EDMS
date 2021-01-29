@@ -1,0 +1,4 @@
+_id,deleteDate,organiserId1,organiserId2,workprocessName,acad,mainProcessId,organiserId,creatorId,workflowNo,isShared,managerId,creationDate,__v
+60144190c29f452b4cb978c2,null,null,null, Personal Affairs,1,601440e5c29f452b4cb978bf,60144149c29f452b4cb978c0,60143bda67737b12201bfd2c,1,false,60144058c29f452b4cb978bc,2021-01-29T17:10:40.132Z,0
+601442cec29f452b4cb978c4,null,null,null, Personal Affairs,1,601440e5c29f452b4cb978bd,60144162c29f452b4cb978c1,60143bda67737b12201bfd2c,1,false,60143fcdc29f452b4cb978ba,2021-01-29T17:15:58.659Z,0
+6014430fc29f452b4cb978c5,null,60144149c29f452b4cb978c0,null,Permission,1,601440e5c29f452b4cb978be,60144162c29f452b4cb978c1,60143bda67737b12201bfd2c,1,true,60143fcdc29f452b4cb978ba,2021-01-29T17:17:03.369Z,0

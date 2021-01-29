@@ -1,0 +1,10 @@
+_id,isBlocked,isAdmin,isOrganiser,isCommittee,isManager,name,surname,email,password,__v
+601439449825ec45ac480f94,false,false,true,false,false,Ali,Yilmaz,ali@gmail.com,$2b$12$PjlgHblDdDgpbGIHgECGFOfnfC.ozxpUEuqaLzm9vZJJwo/UVGXzG,0
+6014396a9825ec45ac480f95,false,false,true,false,false,Veli,Solmaz,veli@gmail.com,$2b$12$CfbO6ww/uSEnqhdchsjHyeitnfnPpAwi.x1FzFQJzze10lUy9kO5W,0
+601439b59825ec45ac480f96,false,false,true,false,false,Ayşe,Solmaz,ayse@gmail.com,$2b$12$cS5zPaomG6/SUzdeKxykkeze3EWjBE78LJOvuKnpxJyYV5BIjNU9y,0
+60143a109825ec45ac480f97,false,false,false,true,false,Cemal,İbiş,cemal@gmail.com,$2b$12$k1dcaF0a2l8QCdrNP8PAPuIlQCL6oEZNJNkncJnAy9w4V9nBzXctC,0
+60143a469825ec45ac480f98,false,false,false,true,false,Hüsnü,Güreli,husnu@gmail.com,$2b$12$KFe9TceeGGWHP9sw6K4RaeG4VIS1iu5ieKXSbxpHgO1ngwmBX95N2,0
+60143a6e9825ec45ac480f99,false,true,false,false,true,Emine,Ekin,emine@gmail.com,$2b$12$yzKVA1Cdx413xaIx0APVFOfG3bo383hRQt41BYxeowJqCyp0uX7aS,0
+60143adf9825ec45ac480f9a,false,true,false,false,false,Elçin,Hancıoğlu,elcin@gmail.com,$2b$12$9KC6dsW3LbnlntyAtDMk.OZVX6iFh2AekuXv.3GIJYF5uOH6E5UOG,0
+60143b299825ec45ac480f9b,false,false,false,false,true,Mehmet,Terlikçi,mehmet@gmail.com,$2b$12$X/osKEUXsTvOUKJehN/Mo.hBoTF9yH1qb5.1h0BZYMS.tCbomYQIW,0
+60143b5f9825ec45ac480f9c,false,false,true,false,true,Ahmet,Arseven,ahmet@gmail.com,$2b$12$gPyysLhe89G8zFHp7PvmH.SJRibDFTeQSVv9E/elNquRS7EFCbwJO,0
