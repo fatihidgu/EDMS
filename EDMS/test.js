@@ -12,13 +12,13 @@ mongoose.connect("mongodb://127.0.0.1/EDMS", {
 
 
 adm.create({
-  acad:0,
-  registeredUserId:"600d65e2aee6f91768bf4cd7"
+  acad:1,
+  registeredUserId:"60143a6e9825ec45ac480f99"
 }, (error, user) => {
 })
 adm.create({
-  acad:1,
-  registeredUserId:"600d6627aee6f91768bf4cd8"
+  acad:0,
+  registeredUserId:"60143adf9825ec45ac480f9a"
 }, (error, user) => {
 })
 // org.create({

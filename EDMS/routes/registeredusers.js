@@ -101,7 +101,7 @@ router.post('/login', (req, res) => {
                 else {
                     //console.log('şifre yanlış')
                     req.session.sessionFlash = {
-                        type: 'alert alert-success',
+                        type: 'alert alert-warning',
                         message: 'Password is wrong'
                     }
                     res.render('site/login', { User: req.body, sessionFlash: req.session.sessionFlash })
@@ -110,7 +110,7 @@ router.post('/login', (req, res) => {
             } else {
                 //console.log('kullanıcı yokk')
                 req.session.sessionFlash = {
-                    type: 'alert alert-success',
+                    type: 'alert alert-warning',
                     message: 'There is no user with that e-mail.'
                 }
                 res.render('site/login', { User: req.body, sessionFlash: req.session.sessionFlash })
@@ -140,7 +140,7 @@ router.post('/roles', (req, res) => {
                 Committee.create({ registeredUserId: user._id, startDate: Date.now() })
             } else {
                 //silindi
-                console.log()
+               
                 Committee.findOneAndUpdate({ registeredUserId: user._id }, { endDate: Date.now() }).then(sa => {
                 })
             }
@@ -148,21 +148,14 @@ router.post('/roles', (req, res) => {
     })
     User.findOneAndUpdate({ email: req.body.email }, { ...req.body }).then(us => {
     })
-    if (true) {
-        res.redirect('registeredusers/roles')
-    }
-    else {
-        res.redirect('/roles')
-    }
 
-
-
+    res.redirect('registeredusers/roles')
 
 })
 
 router.get('/roles', (req, res) => {
     if (res.locals.userid && res.locals.admin) {
-        User.find().lean().then(us => {
+        User.find(null,null,{sort:{email:1}}).lean().then(us => {
             // console.log(us)
 
             res.render('site/roles', { user: us })
@@ -175,7 +168,7 @@ router.get('/roles', (req, res) => {
 })
 
 router.get('/secureUsers', (req, res) => {
-    User.find().lean().then(async (us) => {
+    User.find(null,null,{sort:{email:1}}).lean().then(async (us) => {
         var isOrganiser, isManager
         var org_email = []
         var man_email = []
@@ -191,7 +184,7 @@ router.get('/secureUsers', (req, res) => {
             }
          
         }
-        console.log(man_email)
+        
         res.send({ user: us, org_email: org_email, man_email: man_email })
 
 
@@ -270,7 +263,7 @@ router.post('/forgetpassword', async (req, res) => {
         const userExist = await User.findOne({ email: req.body.email }).exec()
         if (userExist) {
             var randompass = Math.random().toString(36).slice(-8);
-            console.log(randompass)
+           // console.log(randompass)
             bcrypt.hash(randompass, BCRYPT_SALT_ROUNDS)
                 .then(function (hashedPassword) {
                     userExist.password = hashedPassword

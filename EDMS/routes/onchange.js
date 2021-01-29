@@ -20,7 +20,7 @@ const SharedWorkflows = require('../models/SharedWorkflows');
 
 //date formatter
 function formatDate(date) {
-  if(date == null){
+  if (date == null) {
     return "-"
   }
   var d = new Date(date),
@@ -127,360 +127,479 @@ router.get('/secureOrganiser', (req, res) => {
 router.get('/:id', async (req, res) => {
   //console.log("deneme1")
   if (req.session.userId) {
-    //file olmayacak boş bakınma
-    var edit = false
-    var addNewFile = 0
-    //const edit = true // check
-    //addNewFile: req.body.addNewFile
-    //const onChangeFiles = await File.find({ workflowId: req.params.id, approvalStatus: { $gte: 0, $lt: 4 }, deleteDate: null }).exec();
-    //console.log("ONCHANGE")
-    //console.log(onChangeFiles)
+    try {
+      //file olmayacak boş bakınma
+      var edit = false
+      var addNewFile = 0
+      //const edit = true // check
+      //addNewFile: req.body.addNewFile
+      //const onChangeFiles = await File.find({ workflowId: req.params.id, approvalStatus: { $gte: 0, $lt: 4 }, deleteDate: null }).exec();
+      //console.log("ONCHANGE")
+      //console.log(onChangeFiles)
 
-    //newPath
-    const onChangeFiles = await File.find({
-      workflowId: req.params.id,
-      approvalStatus: {
-        $gte: 0,
-        $lt: 4
-      },
+      //newPath
+      const onChangeFiles = await File.find({
+        workflowId: req.params.id,
+        approvalStatus: {
+          $gte: 0,
+          $lt: 4
+        },
 
-      deleteDate: null
-    }).exec();
-    const wf = await Workflow.findById(req.params.id).exec();
-    const mp = await MainProcess.findById(wf.mainProcessId).exec();
-    const organiser = await Organiser.findById(wf.organiserId).exec();
-    const organiser1 = await Organiser.findById(wf.organiserId1).exec();
-    const organiser2 = await Organiser.findById(wf.organiserId2).exec();
-
-    // org 1
-
-    const currentorg = await Organiser.findOne({
-      _id: wf.organiserId,
-      endDate: null
-    }, 'registeredUserId').lean().populate({
-      path: 'registeredUserId',
-      select: 'name surname email'
-    }).lean().exec()
-
-    const organisers = await Organiser.find({
-      workUnitId: mp.workUnitId,
-      endDate: null
-    }, 'registeredUserId').lean().populate({
-      path: 'registeredUserId',
-      select: '_id name surname email'
-    }).lean().exec()
-    //console.log(organisers)
-    var org_array = []
-    organisers.forEach(organiser => org_array.push({
-      organiserId: organiser._id,
-      registeredUserId: organiser.registeredUserId._id,
-      name: organiser.registeredUserId.name,
-      surname: organiser.registeredUserId.surname,
-      email: organiser.registeredUserId.email
-    }))
-    var organisersIds = org_array.map(function (element) {
-      return element.registeredUserId;
-    });
-    const organiserOptions = await RegisteredUser.find({
-      _id: {
-        $in: organisersIds,
-        $ne: currentorg.registeredUserId._id
-      },
-      endDate: null,
-      isBlocked: false,
-      isOrganiser: true
-    }, null, {
-      sort: {
-        email: 1
-      }
-    }).lean().exec()
-    //
-    const manager = await Manager.findOne({
-      workUnitId: mp.workUnitId,
-      endDate: null
-    });
-    const administrator = await Administrator.findOne({
-      acad: wf.acad,
-      endDate: null
-    });
-    const committee = await Committee.find({
-      endDate: null
-    });
-
-
-    const isOrganiser = (organiser.registeredUserId == req.session.userId || (organiser1 != null && organiser1.registeredUserId == req.session.userId) || (organiser2 != null && organiser2.registeredUserId == req.session.userId ))
-    const isManager = (manager.registeredUserId == req.session.userId)
-    const isAdministrator = (administrator.registeredUserId == req.session.userId)
-    const isCommittee = (committee.some(committeeMember => committeeMember.registeredUserId == req.session.userId))
-
-    //console.log(isOrganiser, "-", isManager, "-", isAdministrator, "-", isCommittee)
-    //console.log("ONCHANGE")
-    //console.log(onChangeFiles)
-    var a = []
-    var i = 0
-    var fileValues = {}
-    for (var onChangeFile of onChangeFiles) {
-      i = i + 1
-      var change = await Change.findOne({
-        fileNo: onChangeFile._id,
         deleteDate: null
-      }, {}, {
+      }).exec();
+      const wf = await Workflow.findById(req.params.id).exec();
+      const mp = await MainProcess.findById(wf.mainProcessId).exec();
+      const organiser = await Organiser.findById(wf.organiserId).exec();
+      const organiser1 = await Organiser.findById(wf.organiserId1).exec();
+      const organiser2 = await Organiser.findById(wf.organiserId2).exec();
+
+      // org 1
+
+      const currentorg = await Organiser.findOne({
+        _id: wf.organiserId,
+        endDate: null
+      }, 'registeredUserId').lean().populate({
+        path: 'registeredUserId',
+        select: 'name surname email'
+      }).lean().exec()
+
+      const organisers = await Organiser.find({
+        workUnitId: mp.workUnitId,
+        endDate: null
+      }, 'registeredUserId').lean().populate({
+        path: 'registeredUserId',
+        select: '_id name surname email'
+      }).lean().exec()
+      //console.log(organisers)
+      var org_array = []
+      organisers.forEach(organiser => org_array.push({
+        organiserId: organiser._id,
+        registeredUserId: organiser.registeredUserId._id,
+        name: organiser.registeredUserId.name,
+        surname: organiser.registeredUserId.surname,
+        email: organiser.registeredUserId.email
+      }))
+      var organisersIds = org_array.map(function (element) {
+        return element.registeredUserId;
+      });
+      const organiserOptions = await RegisteredUser.find({
+        _id: {
+          $in: organisersIds,
+          $ne: currentorg.registeredUserId._id
+        },
+        endDate: null,
+        isBlocked: false,
+        isOrganiser: true
+      }, null, {
         sort: {
-          'creationDate': -1
+          email: 1
         }
-      })
-      fileValues = {
-        approvalStatus: onChangeFile.approvalStatus,
-        fileNo: onChangeFile.fileNo,
-        _id: onChangeFile._id,
-        changeReason: "-",
-        rejectReason: "-",
-        rejectStatus: "-",
-        isOrganiser: isOrganiser,
-        isManager: isManager,
-        isAdministrator: isAdministrator,
-        isCommittee: isCommittee,
-        userId: req.session.userId
-      };
+      }).lean().exec()
+      //
+      const manager = await Manager.findOne({
+        workUnitId: mp.workUnitId,
+        endDate: null
+      });
+      const administrator = await Administrator.findOne({
+        acad: wf.acad,
+        endDate: null
+      });
+      const committee = await Committee.find({
+        endDate: null
+      });
 
-      if (change !== null) {
-        var approve = await Approve.findOne({
-          changeId: change._id,
-          approverId: req.session.userId,
+
+      const isOrganiser = (organiser.registeredUserId == req.session.userId || (organiser1 != null && organiser1.registeredUserId == req.session.userId) || (organiser2 != null && organiser2.registeredUserId == req.session.userId))
+      const isManager = (manager.registeredUserId == req.session.userId)
+      const isAdministrator = (administrator.registeredUserId == req.session.userId)
+      const isCommittee = (committee.some(committeeMember => committeeMember.registeredUserId == req.session.userId))
+
+      //console.log(isOrganiser, "-", isManager, "-", isAdministrator, "-", isCommittee)
+      //console.log("ONCHANGE")
+      //console.log(onChangeFiles)
+      var a = []
+      var i = 0
+      var fileValues = {}
+      for (var onChangeFile of onChangeFiles) {
+        i = i + 1
+        var change = await Change.findOne({
+          fileNo: onChangeFile._id,
           deleteDate: null
-        });
-        // console.log(change._id)
-        // console.log(approve)
-        var reject = await Reject.findOne({
-          changeId: change._id,
-          deleteDate: null
+        }, {}, {
+          sort: {
+            'creationDate': -1
+          }
         })
-        if (reject == null) {
-          fileValues.changeReason = change.changeReason
-        } else {
-          var role = {
-            1: "Manager",
-            2: "Administrator",
-            3: "Committee"
-          };
-          fileValues.changeReason = change.changeReason
-          fileValues.rejectReason = reject.rejectReason
-          fileValues.rejectStatus = role[reject.rejectRole]
+        fileValues = {
+          approvalStatus: onChangeFile.approvalStatus,
+          fileNo: onChangeFile.fileNo,
+          _id: onChangeFile._id,
+          changeReason: "-",
+          rejectReason: "-",
+          rejectStatus: "-",
+          isOrganiser: isOrganiser,
+          isManager: isManager,
+          isAdministrator: isAdministrator,
+          isCommittee: isCommittee,
+          userId: req.session.userId
+        };
+
+        if (change !== null) {
+          var approve = await Approve.findOne({
+            changeId: change._id,
+            approverId: req.session.userId,
+            deleteDate: null
+          });
+          // console.log(change._id)
+          // console.log(approve)
+          var reject = await Reject.findOne({
+            changeId: change._id,
+            deleteDate: null
+          })
+          if (reject == null) {
+            fileValues.changeReason = change.changeReason
+          } else {
+            var role = {
+              1: "Manager",
+              2: "Administrator",
+              3: "Committee"
+            };
+            fileValues.changeReason = change.changeReason
+            fileValues.rejectReason = reject.rejectReason
+            fileValues.rejectStatus = role[reject.rejectRole]
+          }
+          if (approve !== null) {
+            fileValues.isCommittee = false
+          }
         }
-        if (approve !== null) {
-          fileValues.isCommittee = false
-        }
+        a.push(fileValues)
       }
-      a.push(fileValues)
+      var approvWfFiles = await File.find({ approvalStatus: 4, deleteDate: null, workflowId: req.params.id }).exec()
+      var approvedWFFiles = []
+
+      approvWfFiles.forEach(approvedFile => approvedWFFiles.push({ _id: approvedFile._id, version: (approvedFile.version + 1), revisionDate: formatDate(approvedFile.revisionDate), fileNo: approvedFile.fileNo, approvalDate: formatDate(approvedFile.approvalDate), isAdministrator: isAdministrator }))
+      var oldWfFiles = await File.find({ approvalStatus: 5, workflowId: req.params.id }).exec()
+      oldFiles = []
+      oldWfFiles.forEach(function (file) {
+        oldFiles.push({ fileNo: file.fileNo, approvalDate: formatDate(file.approvalDate), version: (file.version + 1), revisionDate: formatDate(file.revisionDate), _id: file._id });
+      });
+
+      //new
+      File.find({
+        deleteDate: null,
+        approvalStatus: 4,
+        workflowId: req.params.id,
+      }).lean().then(async (wff) => {
+        Workflow.findById(req.params.id).populate([{ path: 'mainProcessId', model: MainProcess }, { path: 'creatorId', model: Administrator }]).lean().then(async (workf) => {
+          if (res.locals.userid == workf.creatorId.registeredUserId && workf.deleteDate == null) {
+            edit = true
+          }
+          if (res.locals.admin && workf.deleteDate == null) {
+            addNewFile = 1
+          }
+
+          if (wf.organiserId2 == null && wf.organiserId1 != null) {
+            //2 but only 2
+            const currentorg2 = await Organiser.findOne({
+              _id: wf.organiserId1,
+              endDate: null
+            }, 'registeredUserId').lean().populate({
+              path: 'registeredUserId',
+              select: 'name surname email'
+            }).lean().exec()
+            const shwfmp = await SharedWorkflows.findOne({
+              workflowId: wf._id,
+              organiserId: wf.organiserId1
+            }).lean().exec()
+            const organisers2 = await Organiser.find({
+              workUnitId: shwfmp.workUnitId,
+              endDate: null
+            }, 'registeredUserId').lean().populate({
+              path: 'registeredUserId',
+              select: '_id name surname email'
+            }).lean().exec()
+            var org_array2 = []
+            organisers2.forEach(organiser => org_array2.push({
+              organiserId: organiser._id,
+              registeredUserId: organiser.registeredUserId._id,
+              name: organiser.registeredUserId.name,
+              surname: organiser.registeredUserId.surname,
+              email: organiser.registeredUserId.email
+            }))
+            var organisersIds2 = org_array2.map(function (element) {
+              return element.registeredUserId;
+            });
+            const organiserOptions2 = await RegisteredUser.find({
+              _id: {
+                $in: organisersIds2,
+                $ne: currentorg2.registeredUserId._id
+              },
+              endDate: null,
+              isBlocked: false,
+              isOrganiser: true
+            }, null, {
+              sort: {
+                email: 1
+              }
+            }).lean().exec()
+            return res.render('site/onchange', {
+              approvedFiles: approvedWFFiles,
+              workf: workf,
+              onChangeFiles: a,
+              oldFiles: oldFiles,
+              edit: edit,
+              addNewFile: addNewFile,
+              organiserOptions: organiserOptions,
+              currentOrganiser: currentorg,
+              organiserOptions2: organiserOptions2,
+              currentorg2: currentorg2,
+            })
+          } else if (wf.organiserId2 != null) {
+            //2
+            const currentorg2 = await Organiser.findOne({
+              _id: wf.organiserId1,
+              endDate: null
+            }, 'registeredUserId').lean().populate({
+              path: 'registeredUserId',
+              select: 'name surname email'
+            }).lean().exec()
+            const shwfmp = await SharedWorkflows.findOne({
+              workflowId: wf._id,
+              organiserId: wf.organiserId1,
+            }).lean().exec()
+            const organisers2 = await Organiser.find({
+              workUnitId: shwfmp.workUnitId,
+              endDate: null
+            }, 'registeredUserId').lean().populate({
+              path: 'registeredUserId',
+              select: '_id name surname email'
+            }).lean().exec()
+            var org_array2 = []
+            organisers2.forEach(organiser => org_array2.push({
+              organiserId: organiser._id,
+              registeredUserId: organiser.registeredUserId._id,
+              name: organiser.registeredUserId.name,
+              surname: organiser.registeredUserId.surname,
+              email: organiser.registeredUserId.email
+            }))
+            var organisersIds2 = org_array2.map(function (element) {
+              return element.registeredUserId;
+            });
+            const organiserOptions2 = await RegisteredUser.find({
+              _id: {
+                $in: organisersIds2,
+                $ne: currentorg2.registeredUserId._id
+              },
+              endDate: null,
+              isBlocked: false,
+              isOrganiser: true
+            }, null, {
+              sort: {
+                email: 1
+              }
+            }).lean().exec()
+            //3
+            const currentorg3 = await Organiser.findOne({
+              _id: wf.organiserId2,
+              endDate: null
+            }, 'registeredUserId').lean().populate({
+              path: 'registeredUserId',
+              select: 'name surname email'
+            }).lean().exec()
+            const shwfmp2 = await SharedWorkflows.findOne({
+              workflowId: wf._id,
+              organiserId: wf.organiserId2
+            }).lean().exec()
+            const organisers3 = await Organiser.find({
+              workUnitId: shwfmp2.workUnitId,
+              endDate: null
+            }, 'registeredUserId').lean().populate({
+              path: 'registeredUserId',
+              select: '_id name surname email'
+            }).lean().exec()
+            var org_array3 = []
+            organisers3.forEach(organiser => org_array3.push({
+              organiserId: organiser._id,
+              registeredUserId: organiser.registeredUserId._id,
+              name: organiser.registeredUserId.name,
+              surname: organiser.registeredUserId.surname,
+              email: organiser.registeredUserId.email
+            }))
+            var organisersIds3 = org_array3.map(function (element) {
+              return element.registeredUserId;
+            });
+            const organiserOptions3 = await RegisteredUser.find({
+              _id: {
+                $in: organisersIds3,
+                $ne: currentorg3.registeredUserId._id
+              },
+              endDate: null,
+              isBlocked: false,
+              isOrganiser: true
+            }, null, {
+              sort: {
+                email: 1
+              }
+            }).lean().exec()
+
+            return res.render('site/onchange', {
+              approvedFiles: approvedWFFiles,
+              workf: workf,
+              onChangeFiles: a,
+              oldFiles: oldFiles,
+              edit: edit,
+              addNewFile: addNewFile,
+              organiserOptions: organiserOptions,
+              currentOrganiser: currentorg,
+              organiserOptions2: organiserOptions2,
+              currentorg2: currentorg2,
+              organiserOptions3: organiserOptions3,
+              currentorg3: currentorg3
+            })
+
+          }
+          else {
+            return res.render('site/onchange', {
+              approvedFiles: approvedWFFiles,
+              workf: workf,
+              onChangeFiles: a,
+              oldFiles: oldFiles,
+              edit: edit,
+              addNewFile: addNewFile,
+              organiserOptions: organiserOptions,
+              currentOrganiser: currentorg,
+            })
+          }
+
+        })
+
+
+      })
     }
-    var approvWfFiles = await File.find({ approvalStatus: 4, deleteDate: null, workflowId: req.params.id }).exec()
-    var approvedWFFiles = []
+    catch (error) {
+      var edit = false
 
-    approvWfFiles.forEach(approvedFile => approvedWFFiles.push({ _id: approvedFile._id,version:(approvedFile.version+1),revisionDate:formatDate(approvedFile.revisionDate), fileNo: approvedFile.fileNo, approvalDate: formatDate(approvedFile.approvalDate),isAdministrator:isAdministrator }))
-    var oldWfFiles = await File.find({ approvalStatus: 5, workflowId: req.params.id }).exec()
-    oldFiles = []
-    oldWfFiles.forEach(function(file) {
-         oldFiles.push({fileNo:file.fileNo,approvalDate:formatDate(file.approvalDate),version:(file.version+1),revisionDate:formatDate(file.revisionDate),_id:file._id});
-     });
+      //newPath
+      const onChangeFiles = await File.find({
+        workflowId: req.params.id,
+        approvalStatus: {
+          $gte: 0,
+          $lt: 4
+        },
 
-    //new
-    File.find({
-      deleteDate: null,
-      approvalStatus: 4,
-      workflowId: req.params.id,
-    }).lean().then(async (wff) => {
-      Workflow.findById(req.params.id).populate([{ path: 'mainProcessId', model: MainProcess }, { path: 'creatorId', model: Administrator }]).lean().then(async (workf) => {
-        if (res.locals.userid == workf.creatorId.registeredUserId && workf.deleteDate == null) {
-          edit = true
-        }
-        if (res.locals.admin && workf.deleteDate == null) {
-          addNewFile = 1
-        }
-        // var a = []
-        // var i = 0
-        // onChangeFiles.forEach(onChangeFile => {
-        //   i = i + 1
-        //   a.push({ approvalStatus: onChangeFile.approvalStatus, fileNo: onChangeFile.fileNo, _id: onChangeFile._id, changeReason: "-", rejectReason: "-", rejectStatus: "-" });
-        // });
-        // console.log("a", a);
+        deleteDate: null
+      }).exec();
+      const wf = await Workflow.findById(req.params.id).exec();
+      const mp = await MainProcess.findById(wf.mainProcessId).exec();
+      const organiser = await Organiser.findById(wf.organiserId).exec();
+      const organiser1 = await Organiser.findById(wf.organiserId1).exec();
+      const organiser2 = await Organiser.findById(wf.organiserId2).exec();
 
-        if (wf.organiserId2 == null && wf.organiserId1 != null) {
-          //2 but only 2
-          const currentorg2 = await Organiser.findOne({
-            _id: wf.organiserId1,
-            endDate: null
-          }, 'registeredUserId').lean().populate({
-            path: 'registeredUserId',
-            select: 'name surname email'
-          }).lean().exec()
-          const shwfmp = await SharedWorkflows.findOne({
-            workflowId: wf._id,
-            organiserId: wf.organiserId1
-          }).lean().exec()
-          const organisers2 = await Organiser.find({
-            workUnitId: shwfmp.workUnitId,
-            endDate: null
-          }, 'registeredUserId').lean().populate({
-            path: 'registeredUserId',
-            select: '_id name surname email'
-          }).lean().exec()
-          var org_array2 = []
-          organisers2.forEach(organiser => org_array2.push({
-            organiserId: organiser._id,
-            registeredUserId: organiser.registeredUserId._id,
-            name: organiser.registeredUserId.name,
-            surname: organiser.registeredUserId.surname,
-            email: organiser.registeredUserId.email
-          }))
-          var organisersIds2 = org_array2.map(function (element) {
-            return element.registeredUserId;
-          });
-          const organiserOptions2 = await RegisteredUser.find({
-            _id: {
-              $in: organisersIds2,
-              $ne: currentorg2.registeredUserId._id
-            },
-            endDate: null,
-            isBlocked: false,
-            isOrganiser: true
-          }, null, {
-            sort: {
-              email: 1
-            }
-          }).lean().exec()
-          return res.render('site/onchange', {
-            approvedFiles: approvedWFFiles,
-            workf: workf,
-            onChangeFiles: a,
-            oldFiles:oldFiles,
-            edit: edit,
-            addNewFile: addNewFile,
-            organiserOptions: organiserOptions,
-            currentOrganiser: currentorg,
-            organiserOptions2: organiserOptions2,
-            currentorg2: currentorg2,
-          })
-        } else if (wf.organiserId2 != null) {
-          //2
-          const currentorg2 = await Organiser.findOne({
-            _id: wf.organiserId1,
-            endDate: null
-          }, 'registeredUserId').lean().populate({
-            path: 'registeredUserId',
-            select: 'name surname email'
-          }).lean().exec()
-          const shwfmp = await SharedWorkflows.findOne({
-            workflowId: wf._id,
-            organiserId: wf.organiserId1,
-          }).lean().exec()
-          const organisers2 = await Organiser.find({
-            workUnitId: shwfmp.workUnitId,
-            endDate: null
-          }, 'registeredUserId').lean().populate({
-            path: 'registeredUserId',
-            select: '_id name surname email'
-          }).lean().exec()
-          var org_array2 = []
-          organisers2.forEach(organiser => org_array2.push({
-            organiserId: organiser._id,
-            registeredUserId: organiser.registeredUserId._id,
-            name: organiser.registeredUserId.name,
-            surname: organiser.registeredUserId.surname,
-            email: organiser.registeredUserId.email
-          }))
-          var organisersIds2 = org_array2.map(function (element) {
-            return element.registeredUserId;
-          });
-          const organiserOptions2 = await RegisteredUser.find({
-            _id: {
-              $in: organisersIds2,
-              $ne: currentorg2.registeredUserId._id
-            },
-            endDate: null,
-            isBlocked: false,
-            isOrganiser: true
-          }, null, {
-            sort: {
-              email: 1
-            }
-          }).lean().exec()
-          //3
-          const currentorg3 = await Organiser.findOne({
-            _id: wf.organiserId2,
-            endDate: null
-          }, 'registeredUserId').lean().populate({
-            path: 'registeredUserId',
-            select: 'name surname email'
-          }).lean().exec()
-          const shwfmp2 = await SharedWorkflows.findOne({
-            workflowId: wf._id,
-            organiserId: wf.organiserId2
-          }).lean().exec()
-          const organisers3 = await Organiser.find({
-            workUnitId: shwfmp2.workUnitId,
-            endDate: null
-          }, 'registeredUserId').lean().populate({
-            path: 'registeredUserId',
-            select: '_id name surname email'
-          }).lean().exec()
-          var org_array3 = []
-          organisers3.forEach(organiser => org_array3.push({
-            organiserId: organiser._id,
-            registeredUserId: organiser.registeredUserId._id,
-            name: organiser.registeredUserId.name,
-            surname: organiser.registeredUserId.surname,
-            email: organiser.registeredUserId.email
-          }))
-          var organisersIds3 = org_array3.map(function (element) {
-            return element.registeredUserId;
-          });
-          const organiserOptions3 = await RegisteredUser.find({
-            _id: {
-              $in: organisersIds3,
-              $ne: currentorg3.registeredUserId._id
-            },
-            endDate: null,
-            isBlocked: false,
-            isOrganiser: true
-          }, null, {
-            sort: {
-              email: 1
-            }
-          }).lean().exec()
+      // org 1
 
-          return res.render('site/onchange', {
-            approvedFiles: approvedWFFiles,
-            workf: workf,
-            onChangeFiles: a,
-            oldFiles:oldFiles,
-            edit: edit,
-            addNewFile: addNewFile,
-            organiserOptions: organiserOptions,
-            currentOrganiser: currentorg,
-            organiserOptions2: organiserOptions2,
-            currentorg2: currentorg2,
-            organiserOptions3: organiserOptions3,
-            currentorg3: currentorg3
-          })
+      const currentorg = await Organiser.findOne({
+        _id: wf.organiserId,
+      }, 'registeredUserId').lean().populate({
+        path: 'registeredUserId',
+        select: 'name surname email'
+      }).lean().exec()
+      var oldWfFiles = await File.find({ approvalStatus: 5, workflowId: req.params.id }).exec()
+      oldFiles = []
+      oldWfFiles.forEach(function (file) {
+        oldFiles.push({ fileNo: file.fileNo, approvalDate: formatDate(file.approvalDate), version: (file.version + 1), revisionDate: formatDate(file.revisionDate), _id: file._id });
+      });
 
-        }
-        else {
-          return res.render('site/onchange', {
-            approvedFiles: approvedWFFiles,
-            workf: workf,
-            onChangeFiles: a,
-            oldFiles:oldFiles,
-            edit: edit,
-            addNewFile: addNewFile,
-            organiserOptions: organiserOptions,
-            currentOrganiser: currentorg,
-          })
-        }
+      //new
+      File.find({
+        deleteDate: null,
+        approvalStatus: 4,
+        workflowId: req.params.id,
+      }).lean().then(async (wff) => {
+        Workflow.findById(req.params.id).populate([{ path: 'mainProcessId', model: MainProcess }, { path: 'creatorId', model: Administrator }]).lean().then(async (workf) => {
+          if (res.locals.userid == workf.creatorId.registeredUserId && workf.deleteDate == null) {
+            
+          }
+          if (res.locals.admin && workf.deleteDate == null) {
+           
+          }
+          if (wf.organiserId2 == null && wf.organiserId1 != null) {
+            //2 but only 2
+            const currentorg2 = await Organiser.findOne({
+              _id: wf.organiserId1,
+             
+            }, 'registeredUserId').lean().populate({
+              path: 'registeredUserId',
+              select: 'name surname email'
+            }).lean().exec()
+            const shwfmp = await SharedWorkflows.findOne({
+              workflowId: wf._id,
+              organiserId: wf.organiserId1
+            }).lean().exec()
+            return res.render('site/onchange', {
+              approvedFiles: [],
+              workf: workf,
+              onChangeFiles: [],
+              oldFiles: oldFiles,
+              edit: 0,
+              addNewFile: 0,
+              organiserOptions: [],
+              currentOrganiser: currentorg,
+              organiserOptions2: [],
+              currentorg2: currentorg2,
+            })
+          } else if (wf.organiserId2 != null) {
+            //2
+            const currentorg2 = await Organiser.findOne({
+              _id: wf.organiserId1,
+            }, 'registeredUserId').lean().populate({
+              path: 'registeredUserId',
+              select: 'name surname email'
+            }).lean().exec()
+           
+            //3
+            const currentorg3 = await Organiser.findOne({
+              _id: wf.organiserId2,
+            }, 'registeredUserId').lean().populate({
+              path: 'registeredUserId',
+              select: 'name surname email'
+            }).lean().exec()
+          
+            return res.render('site/onchange', {
+              approvedFiles: [],
+              workf: workf,
+              onChangeFiles: [],
+              oldFiles: oldFiles,
+              edit: addNewFile,
+              addNewFile: addNewFile,
+              organiserOptions: [],
+              currentOrganiser: currentorg,
+              organiserOptions2: [],
+              currentorg2: currentorg2,
+              organiserOptions3: [],
+              currentorg3: currentorg3
+            })
+
+          }
+          else {
+            return res.render('site/onchange', {
+              approvedFiles: [],
+              workf: workf,
+              onChangeFiles: [],
+              oldFiles: oldFiles,
+              edit: 0,
+              addNewFile: 0,
+              organiserOptions: [],
+              currentOrganiser: currentorg,
+            })
+          }
+
+        })
+
 
       })
 
 
-    })
+    }
   } else {
     res.redirect('/registeredusers/login')
   }
@@ -488,13 +607,9 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/:id', async (req, res) => {
-  //console.log("deneme2")
+
   if (req.session.userId) {
     //ilgili filelar ve düzenleme yerleri olacak
-    // console.log("----------------------------------------------")
-    console.log(req.body)
-    //console.log(req.params.id)
-    // console.log("----------------------------------------------")
     // organiserId:
     // organiserId1:
     // organiserId2:
@@ -509,27 +624,27 @@ router.post('/:id', async (req, res) => {
       }).then(wf => {
         if (organiserId2) {
           Workflow.findByIdAndUpdate(req.params.id, {
-            organiserId1:organiserId1._id,
-            organiserId2:organiserId2._id
+            organiserId1: organiserId1._id,
+            organiserId2: organiserId2._id
           }).then(async (wf) => {
-           const shwfs= await  SharedWorkflow.find({workflowId:wf._id}).exec()
-            for(i=0; i<shwfs.length;i++){
-              if(i==0){
-                shwfs[i].organiserId=organiserId1._id
+            const shwfs = await SharedWorkflow.find({ workflowId: wf._id }).exec()
+            for (i = 0; i < shwfs.length; i++) {
+              if (i == 0) {
+                shwfs[i].organiserId = organiserId1._id
                 shwfs[i].save()
               }
-              else{
-                shwfs[i].organiserId=organiserId2._id
+              else {
+                shwfs[i].organiserId = organiserId2._id
                 shwfs[i].save()
               }
             }
-           })
+          })
         }
         else if (organiserId1) {
           Workflow.findByIdAndUpdate(req.params.id, {
-            organiserId1:organiserId1._id,
+            organiserId1: organiserId1._id,
           }).then(async (wf) => {
-            await  SharedWorkflow.findOneAndUpdate({workflowId:wf._id},{organiserId:organiserId1._id} ).exec()
+            await SharedWorkflow.findOneAndUpdate({ workflowId: wf._id }, { organiserId: organiserId1._id }).exec()
           })
         }
       })

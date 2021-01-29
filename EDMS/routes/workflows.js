@@ -5,8 +5,10 @@ const Admin = require('../models/Administrator')
 const Organiser = require('../models/Organiser')
 const Manager = require('../models/Manager')
 const mainProcess = require('../models/MainProcess')
+const MainProcess = require('../models/MainProcess')
 const sharedWorkflow = require('../models/SharedWorkflows')
 const file = require('../models/File')
+const File = require('../models/File')
 const change = require('../models/Change')
 const reject = require('../models/Reject')
 const WorkUnit = require('../models/WorkUnit')
@@ -15,14 +17,7 @@ const Administrator = require('../models/Administrator')
 router.get('/allworkflows', async (req, res) => {
 
     if (res.locals.userid) {
-        //console.log(req.session)
-        // manager ıd organıser ıd ve admın ıd
-        // const file = await File.findById(fileId).exec();
-        // const workflow = await Workflow.findById(file.workflowId).exec();
-        // const mainProcess = await MainProcess.findById(workflow.mainProcessId).exec();
-        // const workUnit = await WorkUnit.findById(file.workUnitId).exec();
-        //const file_type = await WorkflowFileType.findById(file.workflowFileTypeId).exec();
-        //console.log(workflows[0].creatorId.registeredUserId)
+
         const workflows = await Workflow.find({ deleteDate: null }).populate([{ path: 'creatorId', model: Admin }, { path: 'organiserId', model: Organiser }, { path: 'mainProcessId', model: mainProcess }
             , { path: 'organiserId1', model: Organiser }, { path: 'organiserId2', model: Organiser }, { path: 'managerId', model: Manager }]).lean().exec();
         const oldworkflows = await Workflow.find(({ deleteDate: { $exists: true, $ne: null } })).populate([{ path: 'creatorId', model: Admin }, { path: 'organiserId', model: Organiser }, { path: 'mainProcessId', model: mainProcess }
@@ -61,5 +56,75 @@ router.post('/disable', async (req, res) => {
     }
 
 })
+
+
+router.get('/treeview', async (req, res) => {
+    if (res.locals.userid) {
+  
+      var workUnits = await WorkUnit.find({
+        endDate: null
+      }).lean().exec()
+      var mainProcesses = await MainProcess.find({
+        deleteDate: null
+      }).lean().exec()
+      var workflows = await Workflow.find({
+        deleteDate: null
+      }).lean().exec()
+      var files = await File.find({
+        deleteDate: null
+      }).lean().exec()
+      //var files = await File.find({endDate:null}).exec()
+      var result = []
+      var k = []
+      var m = []
+      var n = []
+      workUnits.forEach(workUnit => {
+        m = []
+        var mainProc = mainProcesses.filter(x => x.workUnitId.toString() === workUnit._id.toString());
+        if (mainProc == null) {
+          m = [{
+            mainProcess: null,
+            workflows: []
+          }]
+        } else {
+          mainProc.forEach(mp => {
+            var workf = workflows.filter(x => x.mainProcessId.toString() === mp._id.toString());
+  
+            if (workf == null) {
+              m.push({
+                mainProcess: mp,
+                workflows: []
+              })
+            } else {
+              n = []
+              workf.forEach(wf => {
+                var fileFiltered =  files.filter(x => x.workflowId.toString() === wf._id.toString());
+                if(fileFiltered == null){
+                  n.push({workflow:wf.workprocessName,files:[]})
+                }else{
+                  n.push({workflow:wf.workprocessName,files:fileFiltered})
+                }
+  
+              })
+              m.push({
+                mainProcess: mp.mainProcessName,
+                workflows: n
+              })
+            }
+          })
+        }
+        k.push({
+          workUnit: workUnit.workUnitName,
+          mainProcesses: m
+        })
+  
+      })
+      return res.render('site/treeview', {
+        workUnits: k
+      });
+    } else {
+      res.redirect('/registeredusers/register')
+    }
+  })
 
 module.exports = router
