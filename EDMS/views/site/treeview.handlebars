@@ -2,9 +2,6 @@
   <h1 class="text-white text-center">Treeview</h1>
 </section>
 
-<!--==========================
-    ABOUTUS Section Bizim mekan
-============================-->
 
 
 <section id="aboutus" class="md-padding">
@@ -13,36 +10,52 @@
     <div class="container">
       <div class="row">
         <div class="col-md-2 text-left"></div>
-<!--
+
         <div class="col-md-12 bg-light py-3">
+          <div class="text-center">
+            <h1>Workflow File</h1>
+          </div>
           {{#each workUnits}}
             <hr>
-            <h2 onclick="getElementById('{{name}}').classList.toggle('d-block');">-{{name}}</h2>
-            <div class="col-md-11 float-right d-none" id="{{name}}">
+            <h2 onclick="getElementById('{{workUnit}}').classList.toggle('d-block');">-{{workUnit}}</h2>
+            <div class="col-md-11 float-right d-none" id="{{workUnit}}">
+              {{#unless (eq mainProcesses.length 0)}}
+                {{#each mainProcesses}}
+                  <hr>
+                  <h3 onclick="getElementById('{{../workUnit}}{{mainProcess}}').classList.toggle('d-block');">-{{mainProcess}}</h3>
+                  <div class="col-md-11 float-right d-none" id="{{../workUnit}}{{mainProcess}}">
+                    {{#unless (eq workflows.length 0)}}
+                      {{#each workflows}}
+                        <hr>
+                        <h4 onclick="getElementById('{{../../workUnit}}{{../mainProcess}}{{workflow}}').classList.toggle('d-block');">-{{workflow}}</h4>
+                        <div class="col-md-11 float-right d-none" id="{{../../workUnit}}{{../mainProcess}}{{workflow}}">
 
-              {{#each mainProcesses}}
-              <hr>
-              <h3 onclick="getElementById('{{../name}}{{name}}').classList.toggle('d-block');">-{{name}}</h3>
-              <div class="col-md-11 float-right d-none" id="{{../name}}{{name}}">
+                          {{#unless (eq files.length 0)}}
+                            <hr>
+                            {{#each files}}
+                              <form action="/createfile/download" class="col-md-12" method="POST">
+                                <button type="submit" class="btn col-md-12" style="text-align:left; background:none; none;color:#283792">
 
-                {{#each workflows}}
-                <hr>
-                  <h4 onclick="getElementById('{{../../name}}{{../name}}{{name}}').classList.toggle('d-block');">-{{name}}</h4>
-                  <div class="col-md-11 float-right d-none" id="{{../../name}}{{../name}}{{name}}">
-                    <hr>
-                    {{#each files}}
-                      <h5>File:{{name}}-{{id}}</h5>
+                                  <h5 onclick=""> {{fileNo}} </h5>
+                                </button>
+                                <input type="hidden" name="file_id" value="{{_id}}">
+                              </form>
+
+                              <hr>
+                            {{/each}}
+                          {{/unless}}
+                        </div>
+                        <div style="clear:both"></div>
+
+                      {{/each}}
                       <hr>
-                    {{/each}}
+                    {{/unless}}
                   </div>
                   <div style="clear:both"></div>
+                {{/each}}
+                <hr>
+              {{/unless}}
 
-                {{/each}}
-                <hr>
-                </div>
-                <div style="clear:both"></div>
-                {{/each}}
-                <hr>
             </div>
             <div style="clear:both"></div>
 
@@ -50,76 +63,7 @@
           {{/each}}
           <hr>
         </div>
- -->
-
-<!-- -->
-
-<div class="col-md-12 bg-light py-3">
-  <div class="text-center">
-    <h1>Workflow File</h1>
-  </div>
-  {{#each workUnits}}
-    <hr>
-    <h2 onclick="getElementById('{{workUnit}}').classList.toggle('d-block');">-{{workUnit}}</h2>
-    <div class="col-md-11 float-right d-none" id="{{workUnit}}">
-      {{#unless (eq mainProcesses.length 0)}}
-      {{#each mainProcesses}}
-      <hr>
-      <h3 onclick="getElementById('{{../workUnit}}{{mainProcess}}').classList.toggle('d-block');">-{{mainProcess}}</h3>
-      <div class="col-md-11 float-right d-none" id="{{../workUnit}}{{mainProcess}}">
-        {{#unless (eq workflows.length 0)}}
-        {{#each workflows}}
-        <hr>
-          <h4 onclick="getElementById('{{../../workUnit}}{{../mainProcess}}{{workflow}}').classList.toggle('d-block');">-{{workflow}}</h4>
-          <div class="col-md-11 float-right d-none" id="{{../../workUnit}}{{../mainProcess}}{{workflow}}">
-
-            {{#unless (eq files.length 0)}}
-            <hr>
-            {{#each files}}
-            <form action="/createfile/download" class="col-md-12" method="POST">
-              <button type="submit" class="btn col-md-12" style="text-align:left; background:none; none;color:#283792">
-
-                <h5 onclick=""> {{fileNo}} </h5>
-              </button>
-              <input type="hidden" name="file_id" value="{{_id}}">
-            </form>
-
-              <hr>
-            {{/each}}
-            {{/unless}}
-          </div>
-          <div style="clear:both"></div>
-
-        {{/each}}
-        <hr>
-        {{/unless}}
-        </div>
-        <div style="clear:both"></div>
-        {{/each}}
-        <hr>
-        {{/unless}}
-
-    </div>
-    <div style="clear:both"></div>
-
-
-  {{/each}}
-  <hr>
-</div>
       </div>
-
-
-
-
-
-
-      <!-- <div class="row text-center">
-				<div class="col-md-4 offset-md-4">
-					<div class="section-header">
-						<h2 class="title">How We Begin</h2>
-					</div>
-				</div>
-			</div> -->
 
     </div>
 </section>

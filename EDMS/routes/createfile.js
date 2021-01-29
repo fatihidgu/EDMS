@@ -34,7 +34,6 @@ function oneFileUpdate(filter, update) {
     new: true
   }, (err, doc) => {
     if (err) {
-      //console.log("Something wrong when updating data!");
     }
   });
 }
@@ -58,7 +57,6 @@ function formatDate(date) {
 function changeFilePath(currentPath, newPath) {
   fs.rename(currentPath, newPath, function(err) {
     if (err) {
-      //console.log(err);
     }
   });
 }
@@ -91,8 +89,7 @@ const upload = multer({
 
 // UPLOAD FILE
 router.post('/upload', upload.single('file'), async (req, res) => {
-  //console.log("upload");
-  //console.log(req.body);
+
   const file_type = await WorkflowFileType.findById(req.body.file_type_id).exec();
   const work_unit = await WorkUnit.findById(req.body.work_unit_id).exec();
   const work_process = await Workflow.findById(req.body.workflow_id).exec();
@@ -130,7 +127,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   const newFilePath = path.join(__dirname, '..', 'uploads', 'files', work_unit.workUnitCode, filen);
   fs.rename(oldFilePath, newFilePath, function(err) {
     if (err) {
-      //console.log(err);
+
     }
   });
   const fileObject = new File({
@@ -155,10 +152,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 // DELETE FILE
 router.post('/delete', (req, res) => {
-  console.log("delete")
 
   file_id = req.body.file_id;
-  //console.log("delete",file_id)
 
   const filterId = {
     _id: file_id
@@ -179,7 +174,6 @@ router.post('/delete', (req, res) => {
   var a = []
   File.findOne(filterId, function(err, choosenFile) {
     if (err) {
-      //console.log("File Approval Status Can Not Be Accessed", err);
       res.render('site/onchange');
     } else {
 
@@ -202,7 +196,6 @@ router.post('/delete', (req, res) => {
         oneFileUpdate(filterId, fileAttributes);
         fs.rename(oldFilePath, newFilePath, function(err) {
           if (err) {
-            //console.log(err);
           }
         });
         const address = '/onchangefiles/' + choosenFile.workflowId;
@@ -216,7 +209,6 @@ router.post('/delete', (req, res) => {
         oneFileUpdate(filterId, fileAttributes);
         fs.rename(oldFilePath, newFilePath, function(err) {
           if (err) {
-            //console.log(err);
           }
         });
         const address = '/onchangefiles/' + choosenFile.workflowId;
@@ -236,13 +228,11 @@ router.post('/delete', (req, res) => {
 // DOWNLOAD FILE
 router.post('/download', (req, res) => {
   file_id = req.body.file_id;
-  //console.log("download")
   filter = {
     fileId: file_id
   }
   File.findById(file_id).then(file => {
     fileDownload = path.basename(file.filePath);
-    //console.log(file.filePath,"-",fileDownload);
     res.download(file.filePath, fileDownload, (err) => {
       if (err) {
         res.status(500).send({
@@ -256,18 +246,13 @@ router.post('/download', (req, res) => {
 
 //UPDATE File
 router.post('/update', upload.single('file'), (req, res) => {
-  //console.log("update")
-  //const ext = path.extname(req.file.path);
-  //const oldFilePath = req.file.path;
-  //console.log("update");
-  //
+
   id = req.body.fileId;
   filterId = {
     _id: id
   }
   File.findOne(filterId, async function(err, choosenFile) {
     if (err) {
-      //console.log("File Approval Status Can Not Be Accessed", err);
       res.render('site/onchange');
     } else {
 
@@ -440,7 +425,6 @@ router.post("/change", async (req, res) => {
           new: true
         }, (err) => {
           if (err) {
-            console.log(err);
           }
         });
         oneFileUpdate({
@@ -464,7 +448,6 @@ router.post("/change", async (req, res) => {
           new: true
         }, (err) => {
           if (err) {
-            console.log(err);
           }
         });
         oneFileUpdate({
@@ -473,7 +456,6 @@ router.post("/change", async (req, res) => {
           approvalStatus: 3
         });
       } else {
-        console.log("something wrong");
       }
 
 
@@ -494,7 +476,6 @@ router.post("/change", async (req, res) => {
 
 router.post("/reject", async (req, res) => {
   if (res.locals.userid) {
-    console.log(req.body)
 
     var file = await File.findById(req.body.fileId).exec();
     var change = await Change.findOne({
@@ -594,11 +575,21 @@ router.post("/approve", async (req, res) => {
           changeId: change._id,
           deleteDate: null
         }).exec()
-        console.log(approves)
-        console.log(committee)
-        console.log("*********")
 
-        if (approves.length == (committee.length - 1)) {
+        var approvedByAll = true
+
+        for(committeeMember of committee){
+          const approves = await Approve.findOne({
+            changeId: change._id,
+            deleteDate: null,
+            approverId:committeeMember.registeredUserId
+          }).exec()
+          if(approves==null){
+            approvedByAll = false
+          }
+        }
+
+        if (approvedByAll) {
           if (file.approvalDate == null) {
             oneFileUpdate({
               _id: file._id
@@ -654,8 +645,7 @@ router.post("/approve", async (req, res) => {
           changeId: change._id,
           deleteDate: null
         }).exec()
-        console.log(approves)
-        console.log("*********")
+
 
 
         if (file.approvalDate == null) {
@@ -694,9 +684,7 @@ router.post("/approve", async (req, res) => {
         const address = '/onchangefiles/' + wf._id;
         return res.redirect(address);
 
-      } else {
-        console.log("Error occured");
-      }
+      } 
     }
   } else {
     res.redirect('/registeredusers/register')
@@ -705,7 +693,7 @@ router.post("/approve", async (req, res) => {
 
 
 router.get('/create/:workflowId', async (req, res) => {
-  //console.log('/create/:workflowId')
+
   filterIdWF = {
     _id: req.params.workflowId
   };
@@ -748,9 +736,7 @@ router.get('/create/:workflowId', async (req, res) => {
           $regex: "^" + fileType.workflowFileTypeCode
         }
       });
-      if (isExist != null) {
-        console.log("*-*",fileType.workflowFileTypeCode,"*-*")
-      }else{
+      if (isExist == null) {
       file_type.push({
         file_type_id: fileType._id,
         file_type_name: fileType.workflowFileTypeName
@@ -776,7 +762,6 @@ router.get('/create/:workflowId', async (req, res) => {
 });
 
 router.get('/upload/:fileId', async (req, res) => {
-  //console.log('/upload/:fileId')
   var fileId = req.params.fileId;
   if (req.session.userId) {
     const file = await File.findById(fileId).exec();

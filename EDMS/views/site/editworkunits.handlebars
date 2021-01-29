@@ -2,23 +2,12 @@
 
 </section>
 
-<!--==========================
-    ABOUTUS Section Bizim mekan
-============================-->
-
 
 <section id="aboutus" class="md-padding">
   <div class="container">
 
-
   </div>
 
-
-  <!-- {{#each sessionFlash}}
-      <div class="{{type}}">
-        {{message}}
-      </div>
-    {{/each}} -->
 
   <div class="container">
     {{#unless sessionFlash.personel}}
@@ -165,7 +154,7 @@
                     {{/if}}
                     <br><br>
                   </div>
-                  
+
                   {{#if sessionFlash.personel}}
                   <div class="{{sessionFlash.type}}">
                     {{sessionFlash.message}}
@@ -194,13 +183,6 @@
                             <button type="submit" class="btn" style="background:none; none;color:#283792">
                               <i class="fa fa-minus-circle" aria-hidden="true"></i></button>
                           </form>
-                          <!-- <button type="button" class="btn" onclick="changeReasonBtnClicked('{{surname}}');" data-toggle="modal" data-target="#changeReason" data-whatever="@{{surname}}" style="background:none">
-                                  <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                                </button>
-
-                                <button type="button" class="btn" onclick="rejectReasonBtnClicked('{{name}}');" data-toggle="modal" data-whatever="@{{name}}" data-target="#rejectReason" style="background:none">
-                                  <i class="fa fa-times" aria-hidden="true"></i>
-                                </button> -->
 
                           {{/if}}
                         </th>
