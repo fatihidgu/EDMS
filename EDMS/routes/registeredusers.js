@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/RegisteredUser')
 const Committee = require('../models/Committee')
+const Organiser = require('../models/Organiser')
+const Manager = require('../models/Manager')
 var bcrypt = require('bcrypt');
 var BCRYPT_SALT_ROUNDS = 12;
 
@@ -173,8 +175,26 @@ router.get('/roles', (req, res) => {
 })
 
 router.get('/secureUsers', (req, res) => {
-    User.find().lean().then(us => {
-        res.send(({ user: us }))
+    User.find().lean().then(async (us) => {
+        var isOrganiser, isManager
+        var org_email = []
+        var man_email = []
+        for (u of us) {
+            isOrganiser = await Organiser.findOne({ endDate: null, registeredUserId: u._id }).exec()
+            isManager = await Manager.findOne({ endDate: null, registeredUserId: u._id }).exec()
+          
+            if (isOrganiser != null) {
+                org_email.push(u.email)
+            }
+            if (isManager != null) {
+                man_email.push(u.email)
+            }
+         
+        }
+        console.log(man_email)
+        res.send({ user: us, org_email: org_email, man_email: man_email })
+
+
     })
 })
 

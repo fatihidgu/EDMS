@@ -63,7 +63,8 @@ router.get('/allworkunits', async (req, res) => {
               workUnitId: b.workUnitId._id,
               workUnitName: b.workUnitId.workUnitName,
               workUnitCode: b.workUnitId.workUnitCode,
-              managerEmail: b.registeredUserId.email
+              managerEmail: b.registeredUserId.email,
+              isAdministrator: (isAdministrator!=null && b.workUnitId.acad == isAdministrator.acad)
             })
           }
 

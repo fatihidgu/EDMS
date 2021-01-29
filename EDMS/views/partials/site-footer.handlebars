@@ -141,7 +141,7 @@
 				//console.log(json.user)
 				for (i = 0; i < json.user.length; i++) {
 					let usermap = json.user[i];
-
+					console.log(response.value)
 					if (response.value == usermap['email']) {
 						if (usermap['isCommittee']) {
 							document.getElementById('inlineCheckbox5').checked = true
@@ -560,40 +560,67 @@
 
 
 	function pop() {
-		if (document.getElementById('selectmail').value == 'notselectedemail') {
-			Swal.fire('You need to select an E-mail', '', 'error')
-		}
-		else {
-			Swal.fire({
-				title: 'Do you want to save the changes?',
-				showDenyButton: true,
-				confirmButtonText: `Save`,
-				denyButtonText: `Don't save`,
-			}).then((result) => {
-
-				/* Read more about isConfirmed, isDenied below */
-				if (result.isConfirmed) {
-					let form = document.getElementById("rolgonderme")
-					$.ajax({
-						type: "POST",
-						url: "/registeredusers/roles",
-						data: $(form).serialize(),
-						success: function () {
-							Swal.fire({
-								title: 'Saved!',
-								text: '',
-								icon: 'success'
-							}).then((result) => {
-								// Reload the Page
-								window.location.reload();
-							});
-						}
-					});
-				} else if (result.isDenied) {
-					Swal.fire('Changes are not saved', '', 'info')
+		$.ajax({
+			url: "/registeredusers/secureUsers", // the endpoint
+			type: "GET", // http method
+			//console.log(json.user[i]['iscommission'])
+			success: function (json) {
+				//response.value
+				//console.log(json.user)
+				//let usermap = json.user[i];
+				//console.log(response.value)
+				//usermap['email']
+				if (document.getElementById('selectmail').value == 'notselectedemail') {
+					Swal.fire('You need to select an E-mail', '', 'error')
 				}
-			})
-		}
+				else if (json.org_email.includes(document.getElementById('selectmail').value) && json.man_email.includes(document.getElementById('selectmail').value) && ( document.getElementById('inlineCheckbox7').checked == true || document.getElementById('inlineCheckbox1').checked == false|| document.getElementById('inlineCheckbox3').checked == false )) { //
+
+					Swal.fire('This user is currently working as an Manager under Work Unit, can not be removed!).', '', 'error')
+				}
+				else if (json.org_email.includes(document.getElementById('selectmail').value) && (document.getElementById('inlineCheckbox7').checked == true || document.getElementById('inlineCheckbox1').checked == false)) {
+					Swal.fire('This user is currently working as an Organiser under Work Unit, can not be removed!).', '', 'error')
+
+				}
+				else if (json.man_email.includes(document.getElementById('selectmail').value) && (document.getElementById('inlineCheckbox7').checked == true || document.getElementById('inlineCheckbox3').checked == false)) {
+					Swal.fire('This user is currently working as an Manager under Work Unit, can not be removed!).', '', 'error')
+
+				}
+				else {
+					Swal.fire({
+						title: 'Do you want to save the changes?',
+						showDenyButton: true,
+						confirmButtonText: `Save`,
+						denyButtonText: `Don't save`,
+					}).then((result) => {
+
+						/* Read more about isConfirmed, isDenied below */
+						if (result.isConfirmed) {
+							let form = document.getElementById("rolgonderme")
+							$.ajax({
+								type: "POST",
+								url: "/registeredusers/roles",
+								data: $(form).serialize(),
+								success: function () {
+									Swal.fire({
+										title: 'Saved!',
+										text: '',
+										icon: 'success'
+									}).then((result) => {
+										// Reload the Page
+										window.location.reload();
+									});
+								}
+							});
+						} else if (result.isDenied) {
+							Swal.fire('Changes are not saved', '', 'info')
+						}
+					})
+				}
+
+			}
+
+		})
+
 
 	}
 </script>
@@ -825,59 +852,61 @@
 
 
 <script>
-function arama() {
-  var input, filter, tables, tr, td, i, txtValue,j,table,td2,td3,td4;
-  input = document.getElementById("scrh");
-  filter = input.value.toUpperCase();
-  tables = document.getElementsByClassName("myTable");
-  for( j = 0; j< tables.length; j++){
-  table = tables[j];
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    td2 = tr[i].getElementsByTagName("td")[1];
-    td3 = tr[i].getElementsByTagName("td")[2];
-    td4 = tr[i].getElementsByTagName("td")[3];
-    
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      txtValue2 = td2.textContent || td2.innerText;
-      txtValue3 = td3.textContent || td3.innerText;
-      txtValue4 = td4.textContent || td4.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter)>-1 || txtValue3.toUpperCase().indexOf(filter)>-1|| txtValue4.toUpperCase().indexOf(filter)>-1 ){
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }}
-}
+	function arama() {
+		var input, filter, tables, tr, td, i, txtValue, j, table, td2, td3, td4;
+		input = document.getElementById("scrh");
+		filter = input.value.toUpperCase();
+		tables = document.getElementsByClassName("myTable");
+		for (j = 0; j < tables.length; j++) {
+			table = tables[j];
+			tr = table.getElementsByTagName("tr");
+			for (i = 0; i < tr.length; i++) {
+				td = tr[i].getElementsByTagName("td")[0];
+				td2 = tr[i].getElementsByTagName("td")[1];
+				td3 = tr[i].getElementsByTagName("td")[2];
+				td4 = tr[i].getElementsByTagName("td")[3];
+
+				if (td) {
+					txtValue = td.textContent || td.innerText;
+					txtValue2 = td2.textContent || td2.innerText;
+					txtValue3 = td3.textContent || td3.innerText;
+					txtValue4 = td4.textContent || td4.innerText;
+					if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1 || txtValue3.toUpperCase().indexOf(filter) > -1 || txtValue4.toUpperCase().indexOf(filter) > -1) {
+						tr[i].style.display = "";
+					} else {
+						tr[i].style.display = "none";
+					}
+				}
+			}
+		}
+	}
 </script>
 <script>
 
-function arama1() {
-  var input, filter, tables, tr, td, i, txtValue,j,table,td2,td3,td4;
-  input = document.getElementById("scrh1");
-  filter = input.value.toUpperCase();
-  tables = document.getElementsByClassName("myTable1");
-  for( j = 0; j< tables.length; j++){
-  table = tables[j];
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
+	function arama1() {
+		var input, filter, tables, tr, td, i, txtValue, j, table, td2, td3, td4;
+		input = document.getElementById("scrh1");
+		filter = input.value.toUpperCase();
+		tables = document.getElementsByClassName("myTable1");
+		for (j = 0; j < tables.length; j++) {
+			table = tables[j];
+			tr = table.getElementsByTagName("tr");
+			for (i = 0; i < tr.length; i++) {
+				td = tr[i].getElementsByTagName("td")[0];
 
-    
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-    
-      if (txtValue.toUpperCase().indexOf(filter) > -1 ){
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }}
-}
+
+				if (td) {
+					txtValue = td.textContent || td.innerText;
+
+					if (txtValue.toUpperCase().indexOf(filter) > -1) {
+						tr[i].style.display = "";
+					} else {
+						tr[i].style.display = "none";
+					}
+				}
+			}
+		}
+	}
 </script>
 </body>
 

@@ -21,15 +21,20 @@
 				<div class="row">
 					<div class="col-md-12">
 						<nav>
-							<div class="nav nav-tabs nav-fill" role="tablist" style="border:2px solid #ccc; font-weight: bolder;">
-								<a class="nav-item nav-link active" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All
+							<div class="nav nav-tabs nav-fill" role="tablist"
+								style="border:2px solid #ccc; font-weight: bolder;">
+								<a class="nav-item nav-link active" data-toggle="tab" href="#nav-home" role="tab"
+									aria-controls="nav-home" aria-selected="true">All
 									Work Units</a>
-								<a class="nav-item nav-link" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">My Work Units</a>
-								<a class="nav-item nav-link" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Old Work Units</a>
+								<a class="nav-item nav-link" data-toggle="tab" href="#nav-profile" role="tab"
+									aria-controls="nav-profile" aria-selected="false">My Work Units</a>
+								<a class="nav-item nav-link" data-toggle="tab" href="#nav-contact" role="tab"
+									aria-controls="nav-contact" aria-selected="false">Old Work Units</a>
 							</div>
 						</nav>
 						<div class="tab-content" id="nav-tabContent " style="border:1px solid #ccc;">
-							<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+							<div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+								aria-labelledby="nav-home-tab">
 								{{#if sessionFlash.message}}
 								<div class="{{sessionFlash.type}}">
 									{{sessionFlash.message}}
@@ -47,38 +52,41 @@
 											</tr>
 										</thead>
 										{{#each workunits}}
-											<tr>
-												<td> {{workUnitCode}} </td>
-												<td> {{workUnitName}} </td>
-												<td> {{managerEmail}}</td>
-												<td>
-													<form action="/workunits/editworkunit/{{workUnitId}}" method="GET">
-														<button type="submit" class="btn"
-															style="background:none; none;color:#283792">
-															{{#if (or isManager isAdministrator isOrganiser isCommittee)}}
-															<i class="fas fa-hand-paper" aria-hidden="true"></i>
-															{{/if}}
-															{{#unless (or isManager isAdministrator isOrganiser isCommittee)}}
-															<i class="fas fa-eye" aria-hidden="true"></i>
-															{{/unless}}
+										<tr>
+											<td> {{workUnitCode}} </td>
+											<td> {{workUnitName}} </td>
+											<td> {{managerEmail}}</td>
+											<td>
+												<form action="/workunits/editworkunit/{{workUnitId}}" method="GET">
+													<button type="submit" class="btn"
+														style="background:none; none;color:#283792">
+														{{#if (or isManager isAdministrator isOrganiser isCommittee)}}
+														<i class="fas fa-hand-paper" aria-hidden="true"></i>
+														{{/if}}
+														{{#unless (or isManager isAdministrator isOrganiser
+														isCommittee)}}
+														<i class="fas fa-eye" aria-hidden="true"></i>
+														{{/unless}}
 
-														</button>
-													</form>
-
-													{{#if isAdministrator}}
-													<form action="/workunits/deleteworkunit/{{workUnitId}}" method="POST">
-													<button type="submit" class="btn"style="background:none; none;color:#283792">
-															<i class="fas fa-trash-alt" aria-hidden="true"></i>
 													</button>
 												</form>
-													{{/if}}
-												</td>
-											</tr>
+
+												{{#if isAdministrator}}
+												<form action="/workunits/deleteworkunit/{{workUnitId}}" method="POST">
+													<button type="submit" class="btn"
+														style="background:none; none;color:#283792">
+														<i class="fas fa-trash-alt" aria-hidden="true"></i>
+													</button>
+												</form>
+												{{/if}}
+											</td>
+										</tr>
 										{{/each}}
 									</table>
 								</div>
 							</div>
-							<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+							<div class="tab-pane fade" id="nav-profile" role="tabpanel"
+								aria-labelledby="nav-profile-tab">
 
 								{{#if sessionFlash.personelMessage.message}}
 								<div class="{{sessionFlash.personelMessage.type}}">
@@ -87,9 +95,10 @@
 								{{/if}}
 								<div class="table-responsive">
 									{{#if admin}}
-										<form action="/workunits/editworkunit" method="GET">
-											<button type="submit" class="btn" style="background:none">Create New Work Unit</button>
-										</form>
+									<form action="/workunits/editworkunit" method="GET">
+										<button type="submit" class="btn" style="background:none">Create New Work
+											Unit</button>
+									</form>
 									{{/if}}
 									<table class="table table-hover" cellspacing="0">
 										<thead>
@@ -101,23 +110,35 @@
 											</tr>
 										</thead>
 										{{#each myworkunits}}
-											<tr>
-												<td> {{workUnitCode}} </td>
-												<td> {{workUnitName}}</td>
-												<td>{{managerEmail}}</td>
-												<td style="text-align:center">
-													<form action="/workunits/editworkunit/{{workUnitId}}" method="GET">
-														<input class="form-control" name="create" type="hidden" value="0">
-														<button type="submit" class="btn" style="background:none; none;color:#283792">
-															<i class="fas fa-hand-paper" aria-hidden="true" value="1"></i></button>
-													</form>
-												</td>
-											</tr>
+										<tr>
+											<td> {{workUnitCode}} </td>
+											<td> {{workUnitName}}</td>
+											<td>{{managerEmail}}</td>
+											<td style="text-align:center">
+												<form action="/workunits/editworkunit/{{workUnitId}}" method="GET">
+													<input class="form-control" name="create" type="hidden" value="0">
+													<button type="submit" class="btn"
+														style="background:none; none;color:#283792">
+														<i class="fas fa-hand-paper" aria-hidden="true"
+															value="1"></i></button>
+												</form>
+												{{#if isAdministrator}}
+												<form action="/workunits/deleteworkunit/{{workUnitId}}" method="POST">
+													<button type="submit" class="btn"
+														style="background:none; none;color:#283792">
+														<i class="fas fa-trash-alt" aria-hidden="true"></i>
+													</button>
+												</form>
+												{{/if}}
+
+											</td>
+										</tr>
 										{{/each}}
 									</table>
 								</div>
 							</div>
-							<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+							<div class="tab-pane fade" id="nav-contact" role="tabpanel"
+								aria-labelledby="nav-contact-tab">
 								<div class="table-responsive">
 									<table class="table table-hover " cellspacing="0">
 										<thead>
@@ -128,11 +149,11 @@
 											</tr>
 										</thead>
 										{{#each oldworkunits}}
-											<tr>
-												<td> {{workUnitName}} </td>
-												<td> {{workUnitCode}}</td>
-												<td></td>
-											</tr>
+										<tr>
+											<td> {{workUnitName}} </td>
+											<td> {{workUnitCode}}</td>
+											<td></td>
+										</tr>
 										{{/each}}
 									</table>
 								</div>

@@ -25,8 +25,7 @@
 					</div>
 				</div>
 			</div> -->
-		<input class=" form-control" type="text" id="scrh" onkeyup="arama()" placeholder="Search for Work Process"
-			>
+		<input class=" form-control" type="text" id="scrh" onkeyup="arama()" placeholder="Search for Work Process">
 		<br>
 		<section id="tabs" class="project-tab">
 			<div class="container">
@@ -145,7 +144,15 @@
 												<th>Options</th>
 											</tr>
 										</thead>
-										{{#each myworkflows}}
+										{{#each workflows}}
+										{{#if (or
+										(stringeq creatorId.registeredUserId ../userid)
+										(or (stringeq organiserId.registeredUserId ../userid))
+										(or (stringeq organiserId1.registeredUserId ../userid))
+										(or (stringeq organiserId2.registeredUserId ../userid))
+										(or (stringeq managerId.registeredUserId ../userid))
+										)}}
+
 										<tr>
 											<td> {{workprocessName}} </td>
 											{{#if acad}}
@@ -180,8 +187,20 @@
 														<i class="fas fa-hand-paper" aria-hidden="true"
 															value="1"></i></button>
 												</form>
+												{{#if (or
+												(stringeq creatorId.registeredUserId ../userid))
+												}}
+												<form action="/workflows/disable" method="POST" id="disableformid">
+													<input type="text" name="workflowid" value="{{_id}}" readonly
+														hidden>
+													<button type="button" class="btn" onclick="denemeon7(this)"
+														style="background:none; none;color:#283792">
+														<i class="fas fa-trash-alt" aria-hidden="true"></i></button>
+												</form>
+												{{/if}}
 											</td>
 										</tr>
+										{{/if}}
 										{{/each}}
 									</table>
 								</div>
@@ -208,7 +227,7 @@
 											{{#unless acad}}
 											<td>Administrative</td>
 											{{/unless}}
-											
+
 											<td>
 												{{#each ../wunits}}
 												{{#if (or
